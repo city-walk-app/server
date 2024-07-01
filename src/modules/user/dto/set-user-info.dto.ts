@@ -1,4 +1,38 @@
-import { IsString, IsOptional, Matches, Length } from 'class-validator'
+import {
+  IsString,
+  IsOptional,
+  Matches,
+  Length,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  registerDecorator,
+  ValidationOptions
+} from 'class-validator'
+
+import { SensitiveWord } from 'src/utils'
+
+const sensitiveWord = new SensitiveWord()
+
+@ValidatorConstraint({ async: false })
+export class IsHaveSensitiveConstraint implements ValidatorConstraintInterface {
+  validate(text: any) {
+    const res = sensitiveWord.validater(text)
+
+    return !res
+  }
+}
+
+export function IsHaveSensitive(validationOptions?: ValidationOptions) {
+  return function (object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsHaveSensitiveConstraint
+    })
+  }
+}
 
 export class SetUserInfoDTO {
   /** 手机号 */
@@ -10,12 +44,14 @@ export class SetUserInfoDTO {
   /** 昵称 */
   @IsOptional()
   @IsString()
+  @IsHaveSensitive({ message: '包含敏感词' }) // 使用自定义校验器
   @Length(1, 16, { message: '昵称长度不规范' })
   nick_name?: string
 
   /** 个性签名 */
   @IsOptional()
   @IsString()
+  // @IsHaveSensitive({ message: '包含敏感词' }) // 使用自定义校验器
   @Length(1, 30, { message: '签名长度不规范' })
   signature?: string
 

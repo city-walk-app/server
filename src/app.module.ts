@@ -58,6 +58,9 @@ import { ValidationPipe } from 'src/common'
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..') // 静态文件根路径
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', './utils/sensitive-word/libs') // 静态文件根路径
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath:

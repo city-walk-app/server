@@ -11,7 +11,7 @@ import {
 import { EmailService } from '../email'
 import { UserService } from './user.service'
 import { HttpCode, USER_INFO } from 'src/enum'
-import { getDate, Result } from 'src/utils'
+import { getDate, Result, SensitiveWord } from 'src/utils'
 import * as fs from 'fs'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
@@ -85,7 +85,15 @@ export class UserController {
   setUserInfo(@Req() req: Request, @Body() body: SetUserInfoDTO) {
     const { user_id } = req[USER_INFO]
 
-    console.log(body)
+    const sensitiveWord = new SensitiveWord()
+
+    const isHave = sensitiveWord.validater(body.nick_name)
+
+    console.log(body, isHave)
+
+    // if(isHave) {
+    //   return new
+    // }
 
     return this.userService.setUserInfo({ ...body, user_id })
   }
