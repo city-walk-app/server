@@ -76,10 +76,10 @@ import { ValidationPipe } from 'src/common'
    * @see 异常过滤器 http://nestjs.inode.club/exception-filters
    */
   providers: [
-    {
-      provide: APP_FILTER,
-      useClass: CustomExceptionFilter
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: CustomExceptionFilter
+    // },
     {
       provide: APP_PIPE,
       useClass: ValidationPipe

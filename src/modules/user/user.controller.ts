@@ -16,8 +16,7 @@ import * as fs from 'fs'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
-import { LoginEmailDTO, GetUserInfoDTO } from './dto'
-import type { UserInfo } from './entity'
+import { LoginEmailDTO, GetUserInfoDTO, SetUserInfoDTO } from './dto'
 
 /**
  * 用户相关模块
@@ -82,9 +81,11 @@ export class UserController {
    * @param body 请求参数
    * @param headers 请求头
    */
-  @Post('/info/set_user_info')
-  setUserInfo(@Req() req: Request, @Body() body: Partial<UserInfo>) {
+  @Post('/set/user_info')
+  setUserInfo(@Req() req: Request, @Body() body: SetUserInfoDTO) {
     const { user_id } = req[USER_INFO]
+
+    console.log(body)
 
     return this.userService.setUserInfo({ ...body, user_id })
   }
