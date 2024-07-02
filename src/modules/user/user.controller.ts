@@ -175,8 +175,10 @@ export class UserController {
     )
   }
 
+  @ApiOperation({ summary: '邀请朋友' })
+  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
   /**
-   * 朋友邀请
+   * 邀请朋友
    *
    * @param req 请求
    */
@@ -185,5 +187,19 @@ export class UserController {
     const { user_id } = req[USER_INFO]
 
     return this.userService.friendInvite(user_id)
+  }
+
+  @ApiOperation({ summary: '获取我的朋友列表' })
+  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  /**
+   * 获取我的朋友列表
+   *
+   * @param req 请求
+   */
+  @Post('/friend/list')
+  friendList(@Req() req: Request) {
+    const { user_id } = req[USER_INFO]
+
+    return this.userService.friendList(user_id)
   }
 }

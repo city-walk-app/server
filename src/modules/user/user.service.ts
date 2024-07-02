@@ -286,11 +286,22 @@ export class UserService {
   }
 
   /**
-   * 朋友邀请
+   * 邀请朋友
    *
    * @param user_id 用户 id
    */
   friendInvite(user_id: string) {
+    console.log(user_id)
+
+    return new Result(HttpCode.OK, 'ok', user_id)
+  }
+
+  /**
+   * 获取用户列表
+   *
+   * @param user_id 用户 id
+   */
+  friendList(user_id: string) {
     console.log(user_id)
 
     return new Result(HttpCode.OK, 'ok', user_id)
