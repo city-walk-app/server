@@ -8,6 +8,7 @@ import { UserInfo } from './entity'
 import { Result, renderID } from 'src/utils'
 import { HttpCode, PrefixID } from 'src/enum'
 import { UserRoute, UserRouteList } from '../gps'
+import { SetUserInfoDTO } from './dto'
 
 @Injectable()
 export class UserService {
@@ -137,7 +138,9 @@ export class UserService {
    *
    * @param body 参数体
    */
-  async setUserInfo(body: Partial<UserInfo>) {
+  async setUserInfo(
+    body: SetUserInfoDTO & { user_id: string; avatar?: string }
+  ) {
     /**
      * 通过 id 和邮箱查找用户
      *
@@ -153,7 +156,9 @@ export class UserService {
     }
 
     /** 获取参数键数组 */
-    const bodyKeys: string[] = Object.keys(body).filter((item) => item !== 'id')
+    const bodyKeys: string[] = Object.keys(body).filter(
+      (item) => item !== 'user_id'
+    )
 
     for (const key of bodyKeys) {
       if (body[key] && key in user) {

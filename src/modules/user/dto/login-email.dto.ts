@@ -1,5 +1,8 @@
 import { IsString, IsEmail, Length, IsNotEmpty } from 'class-validator'
 
+/**
+ * 邮箱登录参数校验规则
+ */
 export class LoginEmailDTO {
   @IsNotEmpty({ message: '邮箱缺失' })
   @IsEmail({}, { message: '邮箱格式不正确' })
