@@ -37,7 +37,7 @@ export class UserService {
    *
    * @param user 用户信息
    */
-  createToken(user: Partial<UserInfo>) {
+  private createToken(user: Partial<UserInfo>) {
     return this.jwtService.sign(user)
   }
 
@@ -283,5 +283,16 @@ export class UserService {
     const chunkedArray = chunkArray(result, 7)
 
     return new Result(HttpCode.OK, 'ok', chunkedArray)
+  }
+
+  /**
+   * 朋友邀请
+   *
+   * @param user_id 用户 id
+   */
+  friendInvite(user_id: string) {
+    console.log(user_id)
+
+    return new Result(HttpCode.OK, 'ok', user_id)
   }
 }

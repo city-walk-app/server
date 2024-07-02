@@ -69,7 +69,7 @@ export class UserController {
    * @param info 用户信息
    * @param info.user_id 用户 id
    */
-  @Get('/info')
+  @Get('/get/user_info')
   getUserInfo(@Query() query: GetUserInfoDTO) {
     return this.userService.getUserInfo(query.user_id)
   }
@@ -173,5 +173,17 @@ export class UserController {
       query.user_id || user_id,
       query.year
     )
+  }
+
+  /**
+   * 朋友邀请
+   *
+   * @param req 请求
+   */
+  @Post('/friend/invite')
+  friendInvite(@Req() req: Request) {
+    const { user_id } = req[USER_INFO]
+
+    return this.userService.friendInvite(user_id)
   }
 }
