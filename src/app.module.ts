@@ -1,7 +1,10 @@
 import { join } from 'path'
 import { Module } from '@nestjs/common'
-import { APP_FILTER, APP_PIPE } from '@nestjs/core'
-import { CustomExceptionFilter } from 'src/common'
+import {
+  // APP_FILTER,
+  APP_PIPE
+} from '@nestjs/core'
+// import { CustomExceptionFilter } from 'src/common'
 /**
  * 数据库配置
  *

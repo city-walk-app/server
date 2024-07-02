@@ -10,12 +10,12 @@ import {
 } from 'class-validator'
 import { SensitiveWord } from 'src/utils'
 
-const sensitiveWord = new SensitiveWord()
+const sensitiveWordChecker = SensitiveWord.instance
 
 @ValidatorConstraint({ async: false })
 export class IsHaveSensitiveConstraint implements ValidatorConstraintInterface {
   validate(text: string): boolean {
-    const res = sensitiveWord.validater(text)
+    const res = sensitiveWordChecker.validater(text)
 
     return !res
   }
