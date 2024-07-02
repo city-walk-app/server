@@ -14,18 +14,18 @@ import {
 /**
  * 用户表
  */
-@Entity('cw_user_info')
+@Entity({ name: 'cw_user_info', comment: '用户表' })
 export class UserInfo {
   /** 自增列 */
-  @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn({ type: 'int', comment: 'id' })
   id: number
 
   /** 用户 id */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '用户 id' })
   user_id: string
 
   /** 昵称 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '昵称' })
   nick_name: string
 
   /** 邮箱 */
@@ -53,7 +53,7 @@ export class UserInfo {
   city: string
 
   /** 注册时间 */
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'datetime', comment: '注册时间' })
   created_at: Date
 
   /** 生日 */
