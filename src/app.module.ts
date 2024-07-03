@@ -25,7 +25,7 @@ import { ServeStaticModule } from '@nestjs/serve-static'
  */
 import { ConfigModule, ConfigService } from '@nestjs/config'
 /** 模块列表 */
-import { GpsModule, UserModule, EmailModule, LocationModule } from './modules'
+import { UserModule, EmailModule, LocationModule } from './modules'
 import { AppController } from './app.controller'
 import { ValidationPipe } from 'src/common'
 
@@ -71,7 +71,6 @@ import { ValidationPipe } from 'src/common'
           ? '.env.production'
           : '.env.development'
     }),
-    GpsModule,
     UserModule,
     EmailModule,
     LocationModule

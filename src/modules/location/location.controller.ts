@@ -1,9 +1,10 @@
-import { Controller, Body, Post, Get } from '@nestjs/common'
+import { Controller, Body, Post, Get, Query } from '@nestjs/common'
 import { LocationService } from './location.service'
 import { EmailService } from '../email/email.service'
 import { Result } from 'src/utils'
 import { HttpCode } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { GetPopularRecommendsDTO } from './dto'
 
 /**
  * 邮件相关接口列表
@@ -11,18 +12,19 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 @Controller('location')
 @ApiTags('位置服务')
 export class LocationController {
-  /**
-   * @param adminService 邮件服务
-   */
   constructor(private readonly locationService: LocationService) {}
 
-  @ApiOperation({ summary: '获取用户列表' })
+  @ApiOperation({ summary: '获取周边热门地点推荐' })
   @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
   /**
-   * 获取用户列表
+   * 获取周边热门地点
+   *
+   * @param query 请求参数
    */
-  @Get('/user/list')
-  getUserList() {
-    return 123
+  @Get('/get/popular/recommend')
+  getPopularRecommends(@Query() query: GetPopularRecommendsDTO) {
+    const { latitude, longitude } = query
+
+    return this.locationService.getPopularRecommends(longitude, latitude)
   }
 }
