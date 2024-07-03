@@ -11,11 +11,24 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 29/06/2024 10:14:31
+ Date: 03/07/2024 15:15:46
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for cw_user_friend_invite
+-- ----------------------------
+DROP TABLE IF EXISTS `cw_user_friend_invite`;
+CREATE TABLE `cw_user_friend_invite` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` varchar(255) NOT NULL COMMENT '用户id',
+  `invite_id` varchar(255) NOT NULL COMMENT '邀请id',
+  `created_at` varchar(255) NOT NULL COMMENT '创建时间',
+  `state` varchar(255) NOT NULL COMMENT '邀请状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for cw_user_friend_relationship
@@ -49,6 +62,7 @@ CREATE TABLE `cw_user_info` (
   `ip_address` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT 'ip 归属地',
   `ip_info` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT 'ip 详细信息',
   `province` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT '省份',
+  `preference_type` varchar(255) DEFAULT NULL COMMENT '偏好类型',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
@@ -56,13 +70,13 @@ CREATE TABLE `cw_user_info` (
 -- Records of cw_user_info
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_info` VALUES (1, '', '_1469442737@qq.com', '15211111111', '最怕你一生碌碌无为，还安慰自己平凡可贵。', '杭州市', '2023-09-26 15:31:52', '2001-01-03', '男', '田', '/uploads/avatar/2024-05-15/1715748167980-702831789.jpg', NULL, NULL, '浙江省');
-INSERT INTO `cw_user_info` VALUES (2, '', 'haiyetianguoqiang@126.com', NULL, NULL, NULL, '2023-10-01 21:57:09', NULL, NULL, '强', '/uploads/avatar/2023-10-01/1696168654117-483818004.jpg', NULL, NULL, NULL);
-INSERT INTO `cw_user_info` VALUES (3, '', '1050527857@qq.com', NULL, NULL, NULL, '2023-10-01 21:58:56', NULL, NULL, '欢欢乐乐', '/uploads/avatar/2023-10-01/1696168799735-403821510.jpg', NULL, NULL, NULL);
-INSERT INTO `cw_user_info` VALUES (4, '', '542219987@qq.com', NULL, NULL, NULL, '2023-11-02 10:33:15', NULL, NULL, '哈哈哈', '/uploads/avatar/2023-11-02/1698892442746-825618819.jpg', NULL, NULL, NULL);
-INSERT INTO `cw_user_info` VALUES (5, '', '1741342007@qq.com', NULL, NULL, NULL, '2023-11-16 08:27:42', NULL, NULL, '维', '/uploads/avatar/2023-11-16/1700094491342-260377542.jpg', NULL, NULL, NULL);
-INSERT INTO `cw_user_info` VALUES (31, 'U300102695417628064381040124321866117463', '_1469442737@qq.com', NULL, NULL, NULL, '2024-06-27 21:38:25', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_info` VALUES (32, 'U131995175454824711531011225172573302849', '1469442737@qq.com', NULL, NULL, NULL, '2024-06-27 22:14:30', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (1, '', '_1469442737@qq.com', '15211111111', '最怕你一生碌碌无为，还安慰自己平凡可贵。', '杭州市', '2023-09-26 15:31:52', '2001-01-03', '男', '田', '/uploads/avatar/2024-05-15/1715748167980-702831789.jpg', NULL, NULL, '浙江省', NULL);
+INSERT INTO `cw_user_info` VALUES (2, '', 'haiyetianguoqiang@126.com', NULL, NULL, NULL, '2023-10-01 21:57:09', NULL, NULL, '强', '/uploads/avatar/2023-10-01/1696168654117-483818004.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (3, '', '1050527857@qq.com', NULL, NULL, NULL, '2023-10-01 21:58:56', NULL, NULL, '欢欢乐乐', '/uploads/avatar/2023-10-01/1696168799735-403821510.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (4, '', '542219987@qq.com', NULL, NULL, NULL, '2023-11-02 10:33:15', NULL, NULL, '2', '/uploads/avatar/2023-11-02/1698892442746-825618819.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (5, '111', '1741342007@qq.com', NULL, NULL, NULL, '2023-11-16 08:27:42', NULL, NULL, '维', '/uploads/avatar/2023-11-16/1700094491342-260377542.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (31, 'U300102695417628064381040124321866117463', '_1469442737@qq.com', NULL, NULL, NULL, '2024-06-27 21:38:25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (32, 'U131995175454824711531011225172573302849', '1469442737@qq.com', '15211111111', '等好久啊', NULL, '2024-06-27 22:14:30', NULL, NULL, '等好久啊好激动', NULL, NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
