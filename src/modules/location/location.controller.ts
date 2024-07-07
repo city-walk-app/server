@@ -1,8 +1,8 @@
-import { Controller, Body, Post, Get, Query } from '@nestjs/common'
+import { Controller, Body, Post, Get, Query, Req } from '@nestjs/common'
 import { LocationService } from './location.service'
-import { EmailService } from '../email/email.service'
-import { Result } from 'src/utils'
-import { HttpCode } from 'src/enum'
+// import { EmailService } from '../email/email.service'
+// import { Result } from 'src/utils'
+import { HttpCode, USER_INFO } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { GetPopularRecommendsDTO } from './dto'
 
@@ -26,5 +26,19 @@ export class LocationController {
     const { latitude, longitude } = query
 
     return this.locationService.getPopularRecommends(longitude, latitude)
+  }
+
+  @ApiOperation({ summary: '创建当前位置记录（打卡地点）' })
+  /**
+   * 创建当前位置记录，打卡当前位置
+   *
+   * @param body 请求参数
+   * @param headers 请求头
+   */
+  @Post('/create/record')
+  createPositionRecord(@Req() req: Request, @Body() body) {
+    const { user_id } = req[USER_INFO]
+
+    return this.locationService.createPositionRecord(user_id, body)
   }
 }

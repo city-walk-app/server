@@ -29,6 +29,8 @@ export class UserMiddleware implements NestMiddleware {
         .json(new Result(HttpCode.ERR, '未登录'))
     }
 
+    console.log('进入中间件', token)
+
     try {
       const decoded: DecodedType = this.jwtService.verify(token, {
         secret: this.configService.get('DB_TOKEN_KEY')

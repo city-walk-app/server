@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import { Result } from 'src/utils'
 import { HttpCode } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
+import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import axios from 'axios'
 
 @Injectable()
@@ -11,7 +12,15 @@ export class LocationService {
   /** 高德地图密钥 */
   apiKey: string
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectRepository(UserVisitedProvince)
+    private readonly userVisitedProvince: Repository<UserVisitedProvince>,
+    @InjectRepository(UserRoute)
+    private readonly userRouteEntity: Repository<UserRoute>,
+    @InjectRepository(UserRouteList)
+    private readonly userRouteListEntity: Repository<UserRouteList>
+  ) {
     this.apiKey = this.configService.get('DB_MAP_API_KEY')
   }
 
@@ -63,5 +72,15 @@ export class LocationService {
     }
 
     return new Result(HttpCode.OK, 'ok', [])
+  }
+
+  /**
+   * 创建当前位置记录，打卡当前位置
+   *
+   * @param user_id 用户 id
+   * @param params 参数列表
+   */
+  async createPositionRecord(user_id, params) {
+    return new Result(HttpCode.OK, 'ok', { user_id, ...params })
   }
 }

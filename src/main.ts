@@ -4,7 +4,7 @@ import { ExpressAdapter } from '@nestjs/platform-express'
 import * as express from 'express'
 // import * as fs from 'fs'
 // import * as https from 'https'
-import { corsMiddleware } from './middleware'
+// import { corsMiddleware } from './middleware'
 // import { ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
@@ -12,7 +12,7 @@ async function bootstrap() {
   const server = express()
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server))
 
-  app.use(corsMiddleware)
+  // app.use(corsMiddleware)
 
   // 允许跨域
   if (process.env.NODE_ENV === 'development') {
