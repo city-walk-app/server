@@ -12,6 +12,7 @@ import { UserInfo } from '../user'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { UserMiddleware } from 'src/middleware'
 import { JwtModule } from '@nestjs/jwt'
+import { HttpModule } from '@nestjs/axios'
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { JwtModule } from '@nestjs/jwt'
       UserRoute,
       UserRouteList
     ]),
-    JwtModule
+    JwtModule,
+    HttpModule
   ],
   controllers: [LocationController],
   providers: [LocationService, EmailService],

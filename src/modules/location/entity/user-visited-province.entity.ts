@@ -9,13 +9,17 @@ export class UserVisitedProvince {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number
 
-  /** 省份 code */
-  @Column({ type: 'varchar' })
-  province_code: string
-
   /** 用户 id */
   @Column({ type: 'varchar' })
   user_id: string
+
+  /** 访问 id */
+  @Column({ type: 'varchar' })
+  vis_id: string
+
+  /** 省份 code */
+  @Column({ type: 'varchar' })
+  province_code: string
 
   /** 省份名称 */
   @Column({ type: 'varchar' })
