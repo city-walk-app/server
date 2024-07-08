@@ -61,7 +61,7 @@ export class LocationController {
    * @param req 请求
    * @param query 参数
    */
-  @Get('/user/province/jigsaw')
+  @Get('/get/user/province/jigsaw')
   getUserProvinceJigsaw(@Req() req: Request, @Query() query: { user_id?: string }) {
     const { user_id } = req[USER_INFO]
 
