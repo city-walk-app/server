@@ -7,7 +7,7 @@ import { Repository } from 'typeorm'
 import { UserInfo } from './entity'
 import { Result, renderID } from 'src/utils'
 import { HttpCode, PrefixID } from 'src/enum'
-import { UserRoute, UserRouteList } from '../gps'
+// import { UserRoute, UserRouteList } from '../location'
 import { SetUserInfoDTO } from './dto'
 
 @Injectable()
@@ -23,14 +23,14 @@ export class UserService {
   constructor(
     @InjectRepository(UserInfo)
     private readonly userInfoEntity: Repository<UserInfo>,
-    @InjectRepository(UserRoute)
-    private readonly userRouteEntity: Repository<UserRoute>,
-    @InjectRepository(UserRouteList)
-    private readonly userRouteListEntity: Repository<UserRouteList>,
+    // @InjectRepository(UserRoute)
+    // private readonly userRouteEntity: Repository<UserRoute>,
+    // @InjectRepository(UserRouteList)
+    // private readonly userRouteListEntity: Repository<UserRouteList>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService
-  ) {}
+  ) { }
 
   /**
    * 生成 token
@@ -91,22 +91,22 @@ export class UserService {
     const userInfo = foundUserInfo
       ? foundUserInfo
       : await (async () => {
-          const user = new UserInfo()
+        const user = new UserInfo()
 
-          user.email = email
-          user.created_at = new Date()
-          user.user_id = renderID(PrefixID.user).toString()
+        user.email = email
+        user.created_at = new Date()
+        user.user_id = renderID(PrefixID.user).toString()
 
-          console.log(
-            renderID(PrefixID.user),
-            renderID(PrefixID.user).toString()
-          )
+        console.log(
+          renderID(PrefixID.user),
+          renderID(PrefixID.user).toString()
+        )
 
-          /** 用户参数列表 */
-          const newUser = this.userInfoEntity.create(user)
+        /** 用户参数列表 */
+        const newUser = this.userInfoEntity.create(user)
 
-          return await this.userInfoEntity.save(newUser)
-        })()
+        return await this.userInfoEntity.save(newUser)
+      })()
 
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
@@ -191,99 +191,99 @@ export class UserService {
    * @param user_id 用户 id
    * @param year 年份
    */
-  async getCalendarHeatmap(user_id, year) {
-    /** 今年的开始日期 */
-    const startDate = new Date(year, 0, 1)
-    /** 今年的结束日期 */
-    const endDate = new Date(year, 11, 31)
+  // async getCalendarHeatmap(user_id, year) {
+  //   /** 今年的开始日期 */
+  //   const startDate = new Date(year, 0, 1)
+  //   /** 今年的结束日期 */
+  //   const endDate = new Date(year, 11, 31)
 
-    /** 获取到当年指定用户打卡记录 */
-    const currentYearRouters = await this.userRouteListEntity
-      .createQueryBuilder('user_route_list')
-      .where('user_route_list.create_at >= :startDate', { startDate })
-      .andWhere('user_route_list.create_at <= :endDate', { endDate })
-      .andWhere('user_route_list.user_id = :user_id', { user_id })
-      .getMany()
+  //   /** 获取到当年指定用户打卡记录 */
+  //   const currentYearRouters = await this.userRouteListEntity
+  //     .createQueryBuilder('user_route_list')
+  //     .where('user_route_list.create_at >= :startDate', { startDate })
+  //     .andWhere('user_route_list.create_at <= :endDate', { endDate })
+  //     .andWhere('user_route_list.user_id = :user_id', { user_id })
+  //     .getMany()
 
-    const currentYearRouterLists = await Promise.all(
-      currentYearRouters.map(async (item) => {
-        /** 详细位置信息 */
-        const route_detail = await this.userRouteEntity.find({
-          where: { list_id: item.id }
-        })
+  //   const currentYearRouterLists = await Promise.all(
+  //     currentYearRouters.map(async (item) => {
+  //       /** 详细位置信息 */
+  //       const route_detail = await this.userRouteEntity.find({
+  //         where: { list_id: item.list_id }
+  //       })
 
-        return {
-          ...item,
-          route_detail: route_detail.length || 0,
-          city: route_detail[0]?.city,
-          province: route_detail[0]?.province
-        }
-      })
-    )
+  //       return {
+  //         ...item,
+  //         route_detail: route_detail.length || 0,
+  //         city: route_detail[0]?.city,
+  //         province: route_detail[0]?.province
+  //       }
+  //     })
+  //   )
 
-    // 创建日历热力图数据结构
-    const calendarHeatmap = {}
+  //   // 创建日历热力图数据结构
+  //   const calendarHeatmap = {}
 
-    // 循环生成一年中所有日期的信息
-    for (let month = 0; month < 12; month++) {
-      for (let day = 1; day <= getDaysInMonth(month, 2024); day++) {
-        const dateKey = formatDate(year, month + 1, day) // 生成形如 '2024-01-01' 的日期字符串
-        calendarHeatmap[dateKey] = { count: [], opacity: 0 } // 将日期作为键，空对象作为对应的值存储在 calendarHeatmap 中
-      }
-    }
+  //   // 循环生成一年中所有日期的信息
+  //   for (let month = 0; month < 12; month++) {
+  //     for (let day = 1; day <= getDaysInMonth(month, 2024); day++) {
+  //       const dateKey = formatDate(year, month + 1, day) // 生成形如 '2024-01-01' 的日期字符串
+  //       calendarHeatmap[dateKey] = { count: [], opacity: 0 } // 将日期作为键，空对象作为对应的值存储在 calendarHeatmap 中
+  //     }
+  //   }
 
-    // 获取指定月份的天数
-    function getDaysInMonth(month, year) {
-      return new Date(year, month + 1, 0).getDate()
-    }
+  //   // 获取指定月份的天数
+  //   function getDaysInMonth(month, year) {
+  //     return new Date(year, month + 1, 0).getDate()
+  //   }
 
-    // 格式化日期为 'YYYY-MM-DD' 形式
-    function formatDate(year, month, day) {
-      return `${year}-${month.toString().padStart(2, '0')}-${day
-        .toString()
-        .padStart(2, '0')}`
-    }
+  //   // 格式化日期为 'YYYY-MM-DD' 形式
+  //   function formatDate(year, month, day) {
+  //     return `${year}-${month.toString().padStart(2, '0')}-${day
+  //       .toString()
+  //       .padStart(2, '0')}`
+  //   }
 
-    // 将打卡记录按日期分类
-    currentYearRouterLists.forEach((route) => {
-      const dateKey = route.create_at.toISOString().split('T')[0] // 获取打卡日期，格式为YYYY-MM-DD
+  //   // 将打卡记录按日期分类
+  //   currentYearRouterLists.forEach((route) => {
+  //     const dateKey = route.create_at.toISOString().split('T')[0] // 获取打卡日期，格式为YYYY-MM-DD
 
-      calendarHeatmap[dateKey].count.push({
-        ...route,
-        type: 'route'
-      })
-    })
+  //     calendarHeatmap[dateKey].count.push({
+  //       ...route,
+  //       type: 'route'
+  //     })
+  //   })
 
-    // 设置每天的透明度
-    const dates = Object.keys(calendarHeatmap)
+  //   // 设置每天的透明度
+  //   const dates = Object.keys(calendarHeatmap)
 
-    dates.forEach((date) => {
-      const { count } = calendarHeatmap[date]
-      calendarHeatmap[date].opacity =
-        count && count.length > 0 ? (count.length / 10) * 0.9 + 0.1 : 0 // 计算透明度，根据动态数量设置
-    })
+  //   dates.forEach((date) => {
+  //     const { count } = calendarHeatmap[date]
+  //     calendarHeatmap[date].opacity =
+  //       count && count.length > 0 ? (count.length / 10) * 0.9 + 0.1 : 0 // 计算透明度，根据动态数量设置
+  //   })
 
-    const result = []
+  //   const result = []
 
-    for (const key in calendarHeatmap) {
-      result.push({
-        date: key,
-        ...calendarHeatmap[key]
-      })
-    }
+  //   for (const key in calendarHeatmap) {
+  //     result.push({
+  //       date: key,
+  //       ...calendarHeatmap[key]
+  //     })
+  //   }
 
-    function chunkArray(arr, size) {
-      const chunkedArr = []
-      for (let i = 0; i < arr.length; i += size) {
-        chunkedArr.push(arr.slice(i, i + size))
-      }
-      return chunkedArr
-    }
+  //   function chunkArray(arr, size) {
+  //     const chunkedArr = []
+  //     for (let i = 0; i < arr.length; i += size) {
+  //       chunkedArr.push(arr.slice(i, i + size))
+  //     }
+  //     return chunkedArr
+  //   }
 
-    const chunkedArray = chunkArray(result, 7)
+  //   const chunkedArray = chunkArray(result, 7)
 
-    return new Result(HttpCode.OK, 'ok', chunkedArray)
-  }
+  //   return new Result(HttpCode.OK, 'ok', chunkedArray)
+  // }
 
   /**
    * 邀请朋友

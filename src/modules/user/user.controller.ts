@@ -31,7 +31,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly emailService: EmailService
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: '邮箱验证码登录' })
   @ApiResponse({ status: HttpCode.OK, description: '登录成功' })
@@ -169,10 +169,10 @@ export class UserController {
       query.year = date.getFullYear()
     }
 
-    return this.userService.getCalendarHeatmap(
-      query.user_id || user_id,
-      query.year
-    )
+    // return this.userService.getCalendarHeatmap(
+    //   query.user_id || user_id,
+    //   query.year
+    // )
   }
 
   @ApiOperation({ summary: '邀请朋友' })

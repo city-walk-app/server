@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Result, renderID } from 'src/utils'
-import { HttpCode, AMap, PrefixID } from 'src/enum'
+import { HttpCode, AMap, PrefixID, CITY_NAME_CODE } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import { CreatePositionRecordDTO, GetUserRouteDetailDTO } from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
-import { CITY_NAME_CODE } from './data'
 import { HttpService } from '@nestjs/axios'
+import * as requestIp from 'request-ip'
 
 @Injectable()
 export class LocationService {
@@ -32,6 +32,24 @@ export class LocationService {
     private readonly userRouteListEntity: Repository<UserRouteList>,
   ) {
     this.apiKey = this.configService.get('DB_MAP_API_KEY')
+  }
+
+  /**
+   * 通过 ip 定位
+   * 
+   * @param request 请求
+   */
+  async positioning(request: Request) {
+    const ip: string = requestIp.getClientIp(request)
+
+    const response = await this.httpService.axiosRef.get(AMap.ip, {
+      params: {
+        key: this.apiKey,
+        ip
+      }
+    })
+
+    console.log('高德地图获取 ip', response)
   }
 
   /**

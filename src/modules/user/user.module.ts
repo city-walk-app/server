@@ -10,7 +10,7 @@ import { UserInfo } from './entity'
 import { UserController } from './user.controller'
 import { EmailService } from '../email'
 import { UserMiddleware } from 'src/middleware'
-import { UserRoute, UserRouteList } from '../gps'
+// import { UserRoute, UserRouteList } from '../location/entity'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 
@@ -26,7 +26,7 @@ const jwtModule = JwtModule.registerAsync({
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserInfo, UserRoute, UserRouteList]),
+    TypeOrmModule.forFeature([UserInfo]),
     jwtModule
   ],
   controllers: [UserController],

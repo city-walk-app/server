@@ -11,5 +11,12 @@ export enum AMap {
    *
    * @see 周边搜索 https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch
    */
-  place_around = 'https://restapi.amap.com/v5/place/around'
+  place_around = 'https://restapi.amap.com/v5/place/around',
+
+  /**
+   * ip 定位
+   *
+   * @see ipconfig https://lbs.amap.com/api/webservice/guide/api/ipconfig
+   */
+  ip = 'https://restapi.amap.com/v3/ip'
 }

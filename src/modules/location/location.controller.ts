@@ -83,6 +83,8 @@ export class LocationController {
   getUserRouteList(@Req() req: Request, @Body() body: { user_id?: string }) {
     const { user_id } = req[USER_INFO]
 
+    this.locationService.positioning(req)
+
     return this.locationService.getUserRouteList(body.user_id || user_id)
   }
 
