@@ -116,15 +116,11 @@ export class AppModule implements NestModule {
        *
        * RequestMethod.GET (0): 用于获取资源
        * RequestMethod.POST (1): 用于创建新资源
-       * RequestMethod.PUT (2): 用于更新资源（替换整个资源）
-       * RequestMethod.DELETE (3): 用于删除资源
-       * RequestMethod.PATCH (4): 用于更新资源（部分更新）
-       * RequestMethod.ALL (5): 用于所有 HTTP 方法
-       * RequestMethod.OPTIONS (6): 用于获取服务器支持的 HTTP 方法
-       * RequestMethod.HEAD (7): 类似于 GET 方法，但不返回响应体
        */
-      .exclude({ path: '/user/login/email', method: RequestMethod.POST })
-      .exclude({ path: '/email/send', method: RequestMethod.POST })
+      .exclude(
+        { path: '/user/login/email', method: RequestMethod.POST },
+        { path: '/email/send', method: RequestMethod.POST }
+      )
       /**
        * 注册到所有路由
        */
