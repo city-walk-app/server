@@ -2,7 +2,7 @@ import { Controller, Body, Post, Req } from '@nestjs/common'
 import { LocationService } from './location.service'
 import { HttpCode, USER_INFO } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
-import { GetPopularRecommendsDTO, CreatePositionRecordDTO } from './dto'
+import { GetPopularRecommendsDTO, CreatePositionRecordDTO, GetUserRouteDetailDTO } from './dto'
 
 /**
  * 邮件相关接口列表
@@ -93,11 +93,10 @@ export class LocationController {
   /**
    * 获取用户步行记录详情
    * 
-   * @param req 请求
    * @param body 参数
    */
   @Post('/get/user/route/detail')
-  getUserRouteDetail(@Body() body: { user_id: string, list_id: string }) {
+  getUserRouteDetail(@Body() body: GetUserRouteDetailDTO) {
     return this.locationService.getUserRouteDetail(body.user_id, body.list_id)
   }
 }

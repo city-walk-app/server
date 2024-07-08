@@ -29,7 +29,6 @@ import { HttpModule } from '@nestjs/axios'
   providers: [LocationService, EmailService],
   exports: [LocationService]
 })
-// export class LocationModule {}
 export class LocationModule implements NestModule {
   /**
    * 配置局部中间件
