@@ -2,7 +2,11 @@ import { Controller, Body, Post, Req } from '@nestjs/common'
 import { LocationService } from './location.service'
 import { HttpCode, USER_INFO } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
-import { GetPopularRecommendsDTO, CreatePositionRecordDTO, GetUserRouteDetailDTO } from './dto'
+import {
+  GetPopularRecommendsDTO,
+  CreatePositionRecordDTO,
+  GetUserRouteDetailDTO
+} from './dto'
 
 /**
  * 邮件相关接口列表
@@ -10,7 +14,7 @@ import { GetPopularRecommendsDTO, CreatePositionRecordDTO, GetUserRouteDetailDTO
 @Controller('location')
 @ApiTags('位置服务')
 export class LocationController {
-  constructor(private readonly locationService: LocationService) { }
+  constructor(private readonly locationService: LocationService) {}
 
   @ApiOperation({ summary: '获取周边热门地点推荐' })
   @ApiParam({ name: 'longitude', description: '经度', required: true })
@@ -59,12 +63,15 @@ export class LocationController {
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户解锁的省份版图列表
-   * 
+   *
    * @param req 请求
    * @param query 参数
    */
   @Post('/get/user/province/jigsaw')
-  getUserProvinceJigsaw(@Req() req: Request, @Body() body: { user_id?: string }) {
+  getUserProvinceJigsaw(
+    @Req() req: Request,
+    @Body() body: { user_id?: string }
+  ) {
     const { user_id } = req[USER_INFO]
 
     return this.locationService.getUserProvinceJigsaw(body.user_id || user_id)
@@ -75,7 +82,7 @@ export class LocationController {
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户步行记录列表
-   * 
+   *
    * @param req 请求
    * @param body 参数
    */
@@ -94,7 +101,7 @@ export class LocationController {
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户步行记录详情
-   * 
+   *
    * @param body 参数
    */
   @Post('/get/user/route/detail')

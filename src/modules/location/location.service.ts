@@ -29,14 +29,14 @@ export class LocationService {
     @InjectRepository(UserRoute)
     private readonly userRouteEntity: Repository<UserRoute>,
     @InjectRepository(UserRouteList)
-    private readonly userRouteListEntity: Repository<UserRouteList>,
+    private readonly userRouteListEntity: Repository<UserRouteList>
   ) {
     this.apiKey = this.configService.get('DB_MAP_API_KEY')
   }
 
   /**
    * 通过 ip 定位
-   * 
+   *
    * @param request 请求
    */
   async positioning(request: Request) {
@@ -65,7 +65,8 @@ export class LocationService {
         key: this.apiKey,
         location: `${longitude},${latitude}`,
         radius: 5000,
-        types: '110000|110100|110101|110102|110103|110104|110105|110106|110200|110201|110202|110203|110204|110205|110206|110207|110208|110209|110210',
+        types:
+          '110000|110100|110101|110102|110103|110104|110105|110106|110200|110201|110202|110203|110204|110205|110206|110207|110208|110209|110210',
         page_size: 25
       }
     })
@@ -95,7 +96,7 @@ export class LocationService {
 
   /**
    * 获取用户解锁的省份版图列表
-   * 
+   *
    * @param user_id 用户 id
    */
   async getUserProvinceJigsaw(user_id: string) {
@@ -109,7 +110,7 @@ export class LocationService {
 
   /**
    * 获取用户步行记录列表
-   * 
+   *
    * @param user_id 用户 id
    */
   async getUserRouteList(user_id: string) {
@@ -120,11 +121,14 @@ export class LocationService {
 
   /**
    * 获取用户步行记录详情
-   * 
+   *
    * @param user_id 用户 id
    * @param list_id 列表 id
    */
-  async getUserRouteDetail(user_id: GetUserRouteDetailDTO['user_id'], list_id: GetUserRouteDetailDTO['list_id']) {
+  async getUserRouteDetail(
+    user_id: GetUserRouteDetailDTO['user_id'],
+    list_id: GetUserRouteDetailDTO['list_id']
+  ) {
     const data = await this.userRouteEntity.findBy({ user_id, list_id })
 
     return new Result(HttpCode.OK, 'ok', data)
@@ -189,7 +193,9 @@ export class LocationService {
        */
       newProvinceExperience.experience_value = 20
 
-      const result = await this.userVisitedProvinceEntity.save(newProvinceExperience)
+      const result = await this.userVisitedProvinceEntity.save(
+        newProvinceExperience
+      )
 
       // 避免上一步创建失败
       if (!result) {
@@ -267,7 +273,7 @@ export class LocationService {
       /**
        * 城市
        */
-      city: `${city}` || '未知城市',
+      city: `${city}` || '未知城市'
     })
   }
 
