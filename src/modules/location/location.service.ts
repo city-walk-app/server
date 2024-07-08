@@ -110,6 +110,8 @@ export class LocationService {
 
     const { adcode, province, city } = locationInfo.regeocode.addressComponent
 
+    console.log('高的地图返回', locationInfo.regeocode.addressComponent)
+
     /** 格式化后的省份编码 */
     const province_code = `${adcode}`.slice(0, 2) + '0000'
 
@@ -128,8 +130,6 @@ export class LocationService {
         user_id,
         province_code
       })
-
-    console.log('获取', provinceExperience)
 
     // 判断当前省份经验值是否存在，如果存在则使用，不存在就创建一条新的
     if (!provinceExperience) {
@@ -171,13 +171,34 @@ export class LocationService {
     }
 
     // 创建步行记录
-    const createRouteRes = await this.createRouteList(
+    const createRouteListRes = await this.createRouteList(user_id)
+
+    console.log('createRouteListRes', {
+      list_id: createRouteListRes.list_id,
       user_id,
       longitude,
-      latitude
-    )
+      latitude,
+      province_code,
+      city,
+      province,
+      address: '',
+      name: ''
+    })
 
-    console.log(createRouteRes)
+    const createRouteRes = await this.createRoute({
+      list_id: createRouteListRes.list_id,
+      user_id,
+      longitude,
+      latitude,
+      province_code,
+      province: `${province}` || '未知省份',
+      city: `${city}` || '未知城市',
+      create_at: new Date(),
+      address: '',
+      name: ''
+    })
+
+    console.log('createRouteRes', createRouteRes)
 
     return new Result(HttpCode.OK, 'ok', {
       /**
@@ -197,11 +218,11 @@ export class LocationService {
       /**
        * 省份名称
        */
-      province,
+      province: `${province}` || '未知省份',
       /**
        * 城市
        */
-      city
+      city: `${city}` || '未知城市',
     })
   }
 
@@ -226,19 +247,36 @@ export class LocationService {
   }
 
   /**
-   * 创建步行记录
+   * 创建步行记录单独一项
+   *
+   * @param options 参数列表
+   */
+  private async createRoute(options: Partial<UserRoute>) {
+    const newUserRoute = new UserRoute()
+
+    newUserRoute.list_id = options.list_id
+    newUserRoute.user_id = options.user_id
+    newUserRoute.longitude = options.longitude
+    newUserRoute.latitude = options.latitude
+    newUserRoute.city = options.city
+    newUserRoute.province_code = options.province_code
+    newUserRoute.address = options.address
+    newUserRoute.name = options.name
+    newUserRoute.province = options.province
+    newUserRoute.create_at = options.create_at
+
+    const result = await this.userRouteEntity.save(newUserRoute)
+
+    return result
+  }
+
+  /**
+   * 创建步行记录集合
    *
    * @param user_id 用户 id
-   * @param longitude 经度
-   * @param latitude 纬度
    */
-  private async createRouteList(
-    user_id: string,
-    longitude: CreatePositionRecordDTO['longitude'],
-    latitude: CreatePositionRecordDTO['latitude']
-  ) {
-    // 查 route_list 今天是否有记录
-
+  private async createRouteList(user_id: string) {
+    // 1. 查看 route_list 今天是否有记录
     const currentDate = new Date()
 
     /**
@@ -268,6 +306,20 @@ export class LocationService {
         currentDate
       })
       .getOne()
-    console.log(123)
+
+    // 如果今天发布过
+    if (todayRelease) {
+      return todayRelease
+    }
+
+    const newRouteList = new UserRouteList()
+
+    newRouteList.user_id = user_id
+    newRouteList.list_id = renderID(PrefixID.route)
+    newRouteList.create_at = new Date()
+
+    const newRouteListResult = await this.userRouteListEntity.save(newRouteList)
+
+    return newRouteListResult
   }
 }

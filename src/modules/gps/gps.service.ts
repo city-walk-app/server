@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { deepClone, Result } from 'src/utils'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
-import { UserProvinceExperience } from '../experience/entity'
 import { CITY_NAME_CODE, MAP_DATA } from './data/index'
 import { HttpCode } from 'src/enum'
 
@@ -17,7 +16,6 @@ export class GpsService {
    * @param userVisitedProvince 用户访问的省份数据库
    * @param userRouteEntity 用户步行地址信息详情数据库
    * @param userRouteListEntity 用户步行地址信息详情列表数据库
-   * @param userProvinceExperience 经验数据库
    */
   constructor(
     @InjectRepository(UserVisitedProvince)
@@ -26,8 +24,6 @@ export class GpsService {
     private readonly userRouteEntity: Repository<UserRoute>,
     @InjectRepository(UserRouteList)
     private readonly userRouteListEntity: Repository<UserRouteList>,
-    @InjectRepository(UserProvinceExperience)
-    private readonly userProvinceExperience: Repository<UserProvinceExperience>
   ) {
     this.apiKey = 'ca2358293d08bfa6028bb8fb1c076130'
   }
@@ -195,35 +191,7 @@ export class GpsService {
     return new Result(HttpCode.ERR, '暂无数据')
   }
 
-  /**
-   * 添加经验值
-   *
-   * @param user_id 用户 id
-   * @param value 经验值
-   * @param get_method 获取类型
-   * @param province_code 省份编码
-   */
-  async addExperience(user_id, value, get_method, province_code) {
-    /** 创建经验 */
-    const experience = new UserProvinceExperience()
 
-    experience.created_at = new Date()
-    experience.get_method = get_method
-    experience.is_collect = '0'
-    experience.province_code = province_code
-    experience.user_id = user_id
-    experience.value = value
-
-    const newExperience = await this.userProvinceExperience.create(experience)
-
-    const data = await this.userProvinceExperience.save(newExperience)
-
-    if (data) {
-      return new Result(HttpCode.OK, '经验获取成功', data)
-    }
-
-    return new Result(HttpCode.ERR, '获取异常')
-  }
 
   /**
    * 创建用户打卡记录详情方法封装
@@ -251,17 +219,6 @@ export class GpsService {
 
     const data = await this.userRouteEntity.save(newUserRoute)
 
-    /** 添加经验值 */
-    const addExperienceRes = await this.addExperience(
-      params.user_id,
-      5,
-      'clock_location',
-      params.province_code
-    )
-
-    if (addExperienceRes.code !== HttpCode.OK) {
-      return addExperienceRes
-    }
 
     if (data) {
       return new Result(HttpCode.OK, '地点打卡成功', {

@@ -12,7 +12,7 @@ import { GetPopularRecommendsDTO, CreatePositionRecordDTO } from './dto'
 @Controller('location')
 @ApiTags('位置服务')
 export class LocationController {
-  constructor(private readonly locationService: LocationService) {}
+  constructor(private readonly locationService: LocationService) { }
 
   @ApiOperation({ summary: '获取周边热门地点推荐' })
   @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
@@ -49,5 +49,10 @@ export class LocationController {
     const { user_id } = req[USER_INFO]
 
     return this.locationService.createPositionRecord(user_id, body)
+  }
+
+  @Get('/user/province/jigsaw')
+  getUserProvinceJigsaw() { 
+    
   }
 }
