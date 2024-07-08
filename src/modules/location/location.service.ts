@@ -16,21 +16,21 @@ export class LocationService {
   private apiKey: string
 
   /**
+   * @param httpService 请求服务
    * @param configService 配置服务
-   * @param userVisitedProvince 用户访问的省份数据库
+   * @param userVisitedProvinceEntity 用户访问的省份数据库
    * @param userRouteEntity 用户步行地址信息详情
    * @param userRouteListEntity 用户步行地址信息详情列表
-   * @param httpService 请求服务
    */
   constructor(
+    private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     @InjectRepository(UserVisitedProvince)
-    private readonly userVisitedProvince: Repository<UserVisitedProvince>,
+    private readonly userVisitedProvinceEntity: Repository<UserVisitedProvince>,
     @InjectRepository(UserRoute)
     private readonly userRouteEntity: Repository<UserRoute>,
     @InjectRepository(UserRouteList)
     private readonly userRouteListEntity: Repository<UserRouteList>,
-    private readonly httpService: HttpService
   ) {
     this.apiKey = this.configService.get('DB_MAP_API_KEY')
   }
@@ -38,7 +38,7 @@ export class LocationService {
   /**
    * 获取周边热门地点
    *
-   * @param longitude 精度
+   * @param longitude 经度
    * @param latitude 纬度
    */
   async getPopularRecommends(longitude: number, latitude: number) {
@@ -91,10 +91,33 @@ export class LocationService {
    * @param user_id 用户 id
    */
   async getUserProvinceJigsaw(user_id: string) {
-    const data = await this.userVisitedProvince.find({
+    const data = await this.userVisitedProvinceEntity.find({
       where: { user_id },
       select: ['experience_value', 'province_code', 'province_name', 'vis_id']
     })
+
+    return new Result(HttpCode.OK, 'ok', data)
+  }
+
+  /**
+   * 获取用户步行记录列表
+   * 
+   * @param user_id 用户 id
+   */
+  async getUserRouteList(user_id: string) {
+    const data = await this.userRouteListEntity.findBy({ user_id })
+
+    return new Result(HttpCode.OK, 'ok', data)
+  }
+
+  /**
+   * 获取用户步行记录详情
+   * 
+   * @param user_id 用户 id
+   * @param list_id 列表 id
+   */
+  async getUserRouteDetail(user_id: string, list_id: string) {
+    const data = await this.userRouteEntity.findBy({ user_id, list_id })
 
     return new Result(HttpCode.OK, 'ok', data)
   }
@@ -140,7 +163,7 @@ export class LocationService {
      * 也可以作为是否为新省份的标识，如果没有获取到，则说明当前用户还没有在当前省份获取到过经验值，也就是未解锁
      */
     let provinceExperience: UserVisitedProvince | null =
-      await this.userVisitedProvince.findOneBy({
+      await this.userVisitedProvinceEntity.findOneBy({
         user_id,
         province_code
       })
@@ -158,7 +181,7 @@ export class LocationService {
        */
       newProvinceExperience.experience_value = 20
 
-      const result = await this.userVisitedProvince.save(newProvinceExperience)
+      const result = await this.userVisitedProvinceEntity.save(newProvinceExperience)
 
       // 避免上一步创建失败
       if (!result) {
@@ -176,7 +199,7 @@ export class LocationService {
 
       provinceExperience.experience_value = experience_value
 
-      const res = await this.userVisitedProvince.save(provinceExperience)
+      const res = await this.userVisitedProvinceEntity.save(provinceExperience)
 
       // 避免上一步创建失败
       if (!res) {
@@ -290,7 +313,6 @@ export class LocationService {
    * @param user_id 用户 id
    */
   private async createRouteList(user_id: string) {
-    // 1. 查看 route_list 今天是否有记录
     const currentDate = new Date()
 
     /**

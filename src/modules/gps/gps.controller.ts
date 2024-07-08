@@ -16,7 +16,7 @@ export class GpsController {
    * @param gpsService 定位服务
    * @param experienceService 经验服务
    */
-  constructor(private readonly gpsService: GpsService) {}
+  constructor(private readonly gpsService: GpsService) { }
 
   @ApiOperation({ summary: '获取 ip' })
   /**
@@ -149,10 +149,10 @@ export class GpsController {
     return this.gpsService.getMapData(query.code)
   }
 
-  @ApiOperation({ summary: '获取用户历史所有打开记录' })
+  @ApiOperation({ summary: '获取用户历史所有打卡记录' })
   @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
   /**
-   * 获取用户历史所有打开记录
+   * 获取用户历史所有打卡记录
    *
    * @param headers 请求头
    */

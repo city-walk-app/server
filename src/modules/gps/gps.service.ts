@@ -120,7 +120,7 @@ export class GpsService {
   /**
    * 获取当前打卡位置
    *
-   * @param longitude 精度
+   * @param longitude 经度
    * @param latitude 纬度
    * @param user_id 用户 id
    */
@@ -152,7 +152,7 @@ export class GpsService {
       user_id
     })
 
-    // 如果没有打卡过，则添加一天打开记录
+    // 如果没有打卡过，则添加一天打卡记录
     if (!result) {
       /** 创建一条新纪录 */
       const newRecord = new UserVisitedProvince()
@@ -509,7 +509,7 @@ export class GpsService {
   /**
    * 获取周边热门地点
    *
-   * @param longitude 精度
+   * @param longitude 经度
    * @param latitude 纬度
    */
   async getPopularLocations(longitude: number, latitude: number) {

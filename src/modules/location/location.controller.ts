@@ -1,7 +1,5 @@
-import { Controller, Body, Post, Get, Query, Req } from '@nestjs/common'
+import { Controller, Body, Post, Req } from '@nestjs/common'
 import { LocationService } from './location.service'
-// import { EmailService } from '../email/email.service'
-// import { Result } from 'src/utils'
 import { HttpCode, USER_INFO } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import { GetPopularRecommendsDTO, CreatePositionRecordDTO } from './dto'
@@ -15,15 +13,17 @@ export class LocationController {
   constructor(private readonly locationService: LocationService) { }
 
   @ApiOperation({ summary: '获取周边热门地点推荐' })
-  @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
+  @ApiParam({ name: 'longitude', description: '经度', required: true })
+  @ApiParam({ name: 'latitude', description: '纬度', required: true })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取周边热门地点
    *
    * @param query 请求参数
    */
-  @Get('/get/popular/recommend')
-  getPopularRecommends(@Query() query: GetPopularRecommendsDTO) {
-    const { latitude, longitude } = query
+  @Post('/get/popular/recommend')
+  getPopularRecommends(@Body() body: GetPopularRecommendsDTO) {
+    const { latitude, longitude } = body
 
     return this.locationService.getPopularRecommends(longitude, latitude)
   }
@@ -31,6 +31,7 @@ export class LocationController {
   @ApiOperation({ summary: '创建当前位置记录（打卡地点）' })
   @ApiParam({ name: 'longitude', description: '经度', required: true })
   @ApiParam({ name: 'latitude', description: '纬度', required: true })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 创建当前位置记录，打卡当前位置
    *
@@ -53,18 +54,50 @@ export class LocationController {
     return this.locationService.createPositionRecord(user_id, body)
   }
 
-  @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
+  @ApiOperation({ summary: '获取用户解锁的省份版图列表' })
   @ApiParam({ name: 'user_id', description: '用户 id', required: false })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户解锁的省份版图列表
    * 
    * @param req 请求
    * @param query 参数
    */
-  @Get('/get/user/province/jigsaw')
-  getUserProvinceJigsaw(@Req() req: Request, @Query() query: { user_id?: string }) {
+  @Post('/get/user/province/jigsaw')
+  getUserProvinceJigsaw(@Req() req: Request, @Body() body: { user_id?: string }) {
     const { user_id } = req[USER_INFO]
 
-    return this.locationService.getUserProvinceJigsaw(query.user_id || user_id)
+    return this.locationService.getUserProvinceJigsaw(body.user_id || user_id)
+  }
+
+  @ApiOperation({ summary: '获取用户步行记录列表' })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: false })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
+  /**
+   * 获取用户步行记录列表
+   * 
+   * @param req 请求
+   * @param body 参数
+   */
+  @Post('/get/user/route/list')
+  getUserRouteList(@Req() req: Request, @Body() body: { user_id?: string }) {
+    const { user_id } = req[USER_INFO]
+
+    return this.locationService.getUserRouteList(body.user_id || user_id)
+  }
+
+  @ApiOperation({ summary: '获取用户步行记录详情' })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
+  @ApiParam({ name: 'list_id', description: '列表 id', required: true })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
+  /**
+   * 获取用户步行记录详情
+   * 
+   * @param req 请求
+   * @param body 参数
+   */
+  @Post('/get/user/route/detail')
+  getUserRouteDetail(@Body() body: { user_id: string, list_id: string }) {
+    return this.locationService.getUserRouteDetail(body.user_id, body.list_id)
   }
 }
