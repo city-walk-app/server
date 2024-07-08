@@ -1,6 +1,7 @@
 import { Controller, Body, Post, Req } from '@nestjs/common'
 import { LocationService } from './location.service'
 import { HttpCode, USER_INFO } from 'src/enum'
+import { Result } from 'src/utils'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import {
   GetPopularRecommendsDTO,
@@ -55,6 +56,8 @@ export class LocationController {
   ) {
     const { user_id } = req[USER_INFO]
 
+    console.log(req.headers['user-agent'])
+
     return this.locationService.createPositionRecord(user_id, body)
   }
 
@@ -87,10 +90,21 @@ export class LocationController {
    * @param body 参数
    */
   @Post('/get/user/route/list')
-  getUserRouteList(@Req() req: Request, @Body() body: { user_id?: string }) {
+  async getUserRouteList(
+    @Req() req: Request,
+    @Body() body: { user_id?: string }
+  ) {
     const { user_id } = req[USER_INFO]
 
-    this.locationService.positioning(req)
+    // console.log(req.headers['user-agent'])
+
+    // const { ip } = await this.locationService.positioning(req)
+
+    // if (ip === '127.0.0.1') {
+    //   return new Result(HttpCode.ERR, '非法调用')
+    // }
+
+    // console.log(ip)
 
     return this.locationService.getUserRouteList(body.user_id || user_id)
   }

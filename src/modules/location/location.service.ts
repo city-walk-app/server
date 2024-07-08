@@ -51,6 +51,7 @@ export class LocationService {
 
     console.log('ip 地址', ip)
     console.log('高德地图获取结果', response)
+    return { ip, response }
   }
 
   /**
