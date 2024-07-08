@@ -3,7 +3,7 @@ import { LocationService } from './location.service'
 // import { EmailService } from '../email/email.service'
 // import { Result } from 'src/utils'
 import { HttpCode, USER_INFO } from 'src/enum'
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import { GetPopularRecommendsDTO, CreatePositionRecordDTO } from './dto'
 
 /**
@@ -29,6 +29,8 @@ export class LocationController {
   }
 
   @ApiOperation({ summary: '创建当前位置记录（打卡地点）' })
+  @ApiParam({ name: 'longitude', description: '经度', required: true })
+  @ApiParam({ name: 'latitude', description: '纬度', required: true })
   /**
    * 创建当前位置记录，打卡当前位置
    *
@@ -51,8 +53,18 @@ export class LocationController {
     return this.locationService.createPositionRecord(user_id, body)
   }
 
+  @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: false })
+  /**
+   * 获取用户解锁的省份版图列表
+   * 
+   * @param req 请求
+   * @param query 参数
+   */
   @Get('/user/province/jigsaw')
-  getUserProvinceJigsaw() { 
-    
+  getUserProvinceJigsaw(@Req() req: Request, @Query() query: { user_id?: string }) {
+    const { user_id } = req[USER_INFO]
+
+    return this.locationService.getUserProvinceJigsaw(query.user_id || user_id)
   }
 }

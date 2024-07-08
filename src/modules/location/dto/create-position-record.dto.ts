@@ -4,7 +4,7 @@ export class CreatePositionRecordDTO {
   /**
    * 经度
    */
-  @IsNotEmpty({ message: 'longitude参数缺失' })
+  @IsNotEmpty({ message: 'longitude 参数缺失' })
   // @IsNumber({}, { message: 'longitude 参数类型错误' })
   longitude: number
 

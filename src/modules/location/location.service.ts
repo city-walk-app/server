@@ -86,6 +86,20 @@ export class LocationService {
   }
 
   /**
+   * 获取用户解锁的省份版图列表
+   * 
+   * @param user_id 用户 id
+   */
+  async getUserProvinceJigsaw(user_id: string) {
+    const data = await this.userVisitedProvince.find({
+      where: { user_id },
+      select: ['experience_value', 'province_code', 'province_name', 'vis_id']
+    })
+
+    return new Result(HttpCode.OK, 'ok', data)
+  }
+
+  /**
    * 创建当前位置记录，打卡当前位置
    *
    * @param user_id 用户 id
