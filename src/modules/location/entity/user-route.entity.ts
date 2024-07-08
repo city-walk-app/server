@@ -18,6 +18,10 @@ export class UserRoute {
   @Column({ type: 'varchar' })
   user_id: string
 
+  /** 用户 id */
+  @Column({ type: 'varchar' })
+  list_id: string
+
   /** 创建时间 */
   @CreateDateColumn({ type: 'datetime', default: new Date() })
   create_at: Date
@@ -41,10 +45,6 @@ export class UserRoute {
   /** 经度 */
   @Column({ type: 'varchar' })
   longitude: number
-
-  /** 列表 id */
-  @Column({ type: 'int' })
-  list_id: number
 
   /** 地点 */
   @Column({ type: 'varchar' })

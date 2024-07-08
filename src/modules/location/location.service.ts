@@ -13,7 +13,7 @@ import { HttpService } from '@nestjs/axios'
 @Injectable()
 export class LocationService {
   /** 高德地图密钥 */
-  apiKey: string
+  private apiKey: string
 
   /**
    * @param configService 配置服务
@@ -86,26 +86,6 @@ export class LocationService {
   }
 
   /**
-   * 通过经纬度获取位置信息
-   *
-   * @param longitude 经度
-   * @param latitude 纬度
-   */
-  async getLocationInfo(
-    longitude: CreatePositionRecordDTO['longitude'],
-    latitude: CreatePositionRecordDTO['latitude']
-  ) {
-    const response = await this.httpService.axiosRef.get(AMap.geocode_regeo, {
-      params: {
-        key: this.apiKey,
-        location: `${longitude},${latitude}`
-      }
-    })
-
-    return response.data
-  }
-
-  /**
    * 创建当前位置记录，打卡当前位置
    *
    * @param user_id 用户 id
@@ -143,10 +123,11 @@ export class LocationService {
      *
      * 也可以作为是否为新省份的标识，如果没有获取到，则说明当前用户还没有在当前省份获取到过经验值，也就是未解锁
      */
-    const provinceExperience = await this.userVisitedProvince.findOneBy({
-      user_id,
-      province_code
-    })
+    let provinceExperience: UserVisitedProvince | null =
+      await this.userVisitedProvince.findOneBy({
+        user_id,
+        province_code
+      })
 
     console.log('获取', provinceExperience)
 
@@ -163,13 +144,20 @@ export class LocationService {
        */
       newProvinceExperience.experience_value = 20
 
-      const res = await this.userVisitedProvince.save(newProvinceExperience)
+      const result = await this.userVisitedProvince.save(newProvinceExperience)
 
       // 避免上一步创建失败
-      if (!res) {
+      if (!result) {
         return new Result(HttpCode.ERR, '创建新的省份错误')
       }
+
+      provinceExperience = result
     } else {
+      /**
+       * 最新的经验值
+       *
+       * 待优化
+       */
       const experience_value = Number(provinceExperience.experience_value) + 20
 
       provinceExperience.experience_value = experience_value
@@ -182,10 +170,14 @@ export class LocationService {
       }
     }
 
-    const getNewProvinceExperience = await this.userVisitedProvince.findOneBy({
+    // 创建步行记录
+    const createRouteRes = await this.createRouteList(
       user_id,
-      province_code
-    })
+      longitude,
+      latitude
+    )
+
+    console.log(createRouteRes)
 
     return new Result(HttpCode.OK, 'ok', {
       /**
@@ -201,7 +193,7 @@ export class LocationService {
       /**
        * 经验值
        */
-      experience: getNewProvinceExperience.experience_value,
+      experience: provinceExperience.experience_value,
       /**
        * 省份名称
        */
@@ -211,5 +203,71 @@ export class LocationService {
        */
       city
     })
+  }
+
+  /**
+   * 通过经纬度获取位置信息
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  private async getLocationInfo(
+    longitude: CreatePositionRecordDTO['longitude'],
+    latitude: CreatePositionRecordDTO['latitude']
+  ) {
+    const response = await this.httpService.axiosRef.get(AMap.geocode_regeo, {
+      params: {
+        key: this.apiKey,
+        location: `${longitude},${latitude}`
+      }
+    })
+
+    return response.data
+  }
+
+  /**
+   * 创建步行记录
+   *
+   * @param user_id 用户 id
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  private async createRouteList(
+    user_id: string,
+    longitude: CreatePositionRecordDTO['longitude'],
+    latitude: CreatePositionRecordDTO['latitude']
+  ) {
+    // 查 route_list 今天是否有记录
+
+    const currentDate = new Date()
+
+    /**
+     * @see Date.prototype.setHours() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date/setHours
+     */
+    currentDate.setHours(0, 0, 0, 0) // 设置时间为当天的开始时间
+
+    /**
+     * @see 使用查询生成器选择 https://typeorm.io/select-query-builder
+     * @see 什么是QueryBuilder https://typeorm.io/select-query-builder#what-is-querybuilder
+     */
+    const queryBuilder = await this.userRouteListEntity.createQueryBuilder(
+      'userRouteListEntity'
+    )
+
+    /**
+     * 查询今天是否发布过内容
+     *
+     * 要从数据库获取所有数据需要使用 getMany
+     * 要从数据库获取指定一个数据需要使用 getOne
+     *
+     * @see 使用获取值QueryBuilder https://typeorm.io/select-query-builder#getting-values-using-querybuilder
+     */
+    const todayRelease: UserRouteList = await queryBuilder
+      .where('userRouteListEntity.user_id = :userId', { userId: user_id })
+      .andWhere('userRouteListEntity.create_at >= :currentDate', {
+        currentDate
+      })
+      .getOne()
+    console.log(123)
   }
 }

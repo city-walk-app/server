@@ -14,6 +14,10 @@ export class UserRouteList {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number
 
+  /** list id */
+  @Column({ type: 'varchar' })
+  list_id: string
+
   /** 用户 id */
   @Column({ type: 'varchar' })
   user_id: string
