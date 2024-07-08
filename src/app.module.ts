@@ -128,6 +128,6 @@ export class AppModule implements NestModule {
       /**
        * 注册到所有路由
        */
-      .forRoutes({ path: '*', method: RequestMethod.ALL })
+      .forRoutes({ path: '*', method: RequestMethod.POST })
   }
 }

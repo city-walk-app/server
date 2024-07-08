@@ -2,8 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  Get,
-  Query,
   UseInterceptors,
   UploadedFile,
   Req
@@ -69,9 +67,9 @@ export class UserController {
    * @param info 用户信息
    * @param info.user_id 用户 id
    */
-  @Get('/get/user_info')
-  getUserInfo(@Query() query: GetUserInfoDTO) {
-    return this.userService.getUserInfo(query.user_id)
+  @Post('/get/user_info')
+  getUserInfo(@Body() body: GetUserInfoDTO) {
+    return this.userService.getUserInfo(body.user_id)
   }
 
   @ApiOperation({ summary: '设置用户信息' })
@@ -146,34 +144,34 @@ export class UserController {
     return this.userService.setAvatar(user_id, avatar)
   }
 
-  @ApiOperation({ summary: '获取用户的动态发布日历热力图' })
-  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
-  @ApiParam({ name: 'year', description: '年份', required: true })
-  @ApiParam({ name: 'id', description: '用户 id', required: false })
-  /**
-   * 获取用户的动态发布日历热力图
-   *
-   * @param query 参数
-   * @param query.year 年份
-   */
-  @Get('/get_calendar_heatmap')
-  getCalendarHeatmap(
-    @Req() req: Request,
-    @Query() query: { year: number; user_id?: string }
-  ) {
-    const { user_id } = req[USER_INFO]
+  // @ApiOperation({ summary: '获取用户的动态发布日历热力图' })
+  // @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  // @ApiParam({ name: 'year', description: '年份', required: true })
+  // @ApiParam({ name: 'id', description: '用户 id', required: false })
+  // /**
+  //  * 获取用户的动态发布日历热力图
+  //  *
+  //  * @param query 参数
+  //  * @param query.year 年份
+  //  */
+  // @Get('/get_calendar_heatmap')
+  // getCalendarHeatmap(
+  //   @Req() req: Request,
+  //   @Query() query: { year: number; user_id?: string }
+  // ) {
+  //   const { user_id } = req[USER_INFO]
 
-    // 默认为今年
-    if (!query.year) {
-      const date = new Date()
-      query.year = date.getFullYear()
-    }
+  //   // 默认为今年
+  //   if (!query.year) {
+  //     const date = new Date()
+  //     query.year = date.getFullYear()
+  //   }
 
-    // return this.userService.getCalendarHeatmap(
-    //   query.user_id || user_id,
-    //   query.year
-    // )
-  }
+  //   // return this.userService.getCalendarHeatmap(
+  //   //   query.user_id || user_id,
+  //   //   query.year
+  //   // )
+  // }
 
   @ApiOperation({ summary: '邀请朋友' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })

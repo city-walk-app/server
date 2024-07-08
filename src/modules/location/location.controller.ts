@@ -1,7 +1,6 @@
 import { Controller, Body, Post, Req } from '@nestjs/common'
 import { LocationService } from './location.service'
 import { HttpCode, USER_INFO } from 'src/enum'
-import { Result } from 'src/utils'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import {
   GetPopularRecommendsDTO,
