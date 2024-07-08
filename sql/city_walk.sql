@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 07/07/2024 14:34:01
+ Date: 08/07/2024 15:11:30
 */
 
 SET NAMES utf8mb4;
@@ -131,16 +131,16 @@ COMMIT;
 DROP TABLE IF EXISTS `cw_user_route`;
 CREATE TABLE `cw_user_route` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `user_id` int NOT NULL COMMENT '用户 id',
+  `list_id` varchar(255) COLLATE utf8mb3_danish_ci NOT NULL COMMENT '列表 id',
+  `user_id` varchar(255) COLLATE utf8mb3_danish_ci NOT NULL COMMENT '用户 id',
+  `province_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '省份编码',
   `create_at` datetime NOT NULL COMMENT '创建时间',
   `city` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '当前城市',
   `province` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '当前省份',
   `address` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '详细完整地址',
   `latitude` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '纬度',
   `longitude` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '经度',
-  `list_id` int NOT NULL COMMENT '列表 id',
   `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '地点名称',
-  `province_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '省份编码',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=DYNAMIC;
 
@@ -150,7 +150,8 @@ CREATE TABLE `cw_user_route` (
 DROP TABLE IF EXISTS `cw_user_route_list`;
 CREATE TABLE `cw_user_route_list` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `user_id` int NOT NULL COMMENT '用户 id',
+  `list_id` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '列表 id',
+  `user_id` varchar(255) COLLATE utf8mb3_danish_ci NOT NULL COMMENT '用户 id',
   `create_at` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=FIXED;
@@ -161,23 +162,21 @@ CREATE TABLE `cw_user_route_list` (
 DROP TABLE IF EXISTS `cw_user_visited_province`;
 CREATE TABLE `cw_user_visited_province` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `vis_id` varchar(255) COLLATE utf8mb3_danish_ci NOT NULL,
+  `user_id` varchar(255) COLLATE utf8mb3_danish_ci NOT NULL COMMENT '用户 id',
   `province_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '省份编码',
-  `user_id` int NOT NULL COMMENT '用户 id',
   `province_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '省份名称',
-  `experience_value` int NOT NULL COMMENT '当前省份获取到的经验值总和',
+  `experience_value` int NOT NULL COMMENT '访问 id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of cw_user_visited_province
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_visited_province` VALUES (1, '330000', 1, '浙江省', 125);
-INSERT INTO `cw_user_visited_province` VALUES (2, '130000', 1, '河北省', 0);
-INSERT INTO `cw_user_visited_province` VALUES (3, '130000', 2, '河北省', 0);
-INSERT INTO `cw_user_visited_province` VALUES (4, '130000', 3, '河北省', 0);
-INSERT INTO `cw_user_visited_province` VALUES (5, '330000', 4, '浙江省', 0);
-INSERT INTO `cw_user_visited_province` VALUES (7, '330000', 5, '浙江省', 5);
+INSERT INTO `cw_user_visited_province` VALUES (2, 'VIS165577110277401578717087648494990815791', 'U131995175454824711531011225172573302849', '330000', '浙江省', 280);
+INSERT INTO `cw_user_visited_province` VALUES (3, 'VIS31641110319140132264666038695908363882', 'U131995175454824711531011225172573302849', '510000', '四川省', 40);
+INSERT INTO `cw_user_visited_province` VALUES (4, 'VIS169369425513711531359349849739489571299', 'U131995175454824711531011225172573302849', '420000', '湖北省', 360);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
