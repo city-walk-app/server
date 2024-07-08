@@ -49,7 +49,8 @@ export class LocationService {
       }
     })
 
-    console.log('高德地图获取 ip', response)
+    console.log('ip 地址', ip)
+    console.log('高德地图获取结果', response)
   }
 
   /**
