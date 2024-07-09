@@ -40,9 +40,11 @@ async function bootstrap() {
   await app.init()
 
   await app.listen(1219, '0.0.0.0', () => {
-    console.log(process.env.NODE_ENV === 'production'
-      ? '生产环境端口 1219 已经启动'
-      : '开发环境 1219 端口已经启动')
+    console.log(
+      process.env.NODE_ENV === 'production'
+        ? '生产环境端口 1219 已经启动'
+        : '开发环境 1219 端口已经启动'
+    )
   })
 }
 bootstrap()

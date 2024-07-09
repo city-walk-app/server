@@ -12,9 +12,7 @@ export class FriendController {
   /**
    * @param friendService 好友服务
    */
-  constructor(
-    private readonly friendService: FriendService,
-  ) { }
+  constructor(private readonly friendService: FriendService) {}
 
   @ApiOperation({ summary: '邀请朋友' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })

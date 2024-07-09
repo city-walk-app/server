@@ -15,7 +15,7 @@ export class EmailController {
   /**
    * @param emailService 邮件服务
    */
-  constructor(private readonly emailService: EmailService) { }
+  constructor(private readonly emailService: EmailService) {}
 
   @ApiOperation({ summary: '发送获取邮箱验证码' })
   @ApiResponse({ status: HttpCode.OK, description: '获取成功' })

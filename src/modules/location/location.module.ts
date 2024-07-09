@@ -24,4 +24,4 @@ import { LoggerService } from 'src/common'
   providers: [LocationService, EmailService, LoggerService],
   exports: [LocationService]
 })
-export class LocationModule { }
+export class LocationModule {}

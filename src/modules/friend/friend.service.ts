@@ -13,8 +13,7 @@ export class FriendService {
     private readonly userFriendInviteEntity: Repository<UserFriendInvite>,
     @InjectRepository(UserFriendRelation)
     private readonly userFriendRelationEntity: Repository<UserFriendRelation>
-  ) { }
-
+  ) {}
 
   /**
    * 邀请朋友

@@ -14,7 +14,7 @@ import {
 @Controller('location')
 @ApiTags('位置服务')
 export class LocationController {
-  constructor(private readonly locationService: LocationService) { }
+  constructor(private readonly locationService: LocationService) {}
 
   @ApiOperation({ summary: '获取周边热门地点推荐' })
   @ApiParam({ name: 'longitude', description: '经度', required: true })

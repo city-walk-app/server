@@ -11,4 +11,4 @@ import { UserFriendRelation, UserFriendInvite } from './entity'
   providers: [FriendService, EmailService],
   exports: [FriendService]
 })
-export class FriendModule { }
+export class FriendModule {}

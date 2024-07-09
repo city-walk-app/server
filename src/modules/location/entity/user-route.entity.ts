@@ -23,7 +23,11 @@ export class UserRoute {
   list_id: string
 
   /** 创建时间 */
-  @CreateDateColumn({ type: 'datetime', default: new Date(), comment: '创建时间' })
+  @CreateDateColumn({
+    type: 'datetime',
+    default: new Date(),
+    comment: '创建时间'
+  })
   create_at: Date
 
   /** 城市 */

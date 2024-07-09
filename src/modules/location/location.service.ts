@@ -105,7 +105,9 @@ export class LocationService {
       select: ['experience_value', 'province_code', 'province_name', 'vis_id']
     })
 
-    this.loggerService.log('获取用户解锁的省份版图列表：' + JSON.stringify(data))
+    this.loggerService.log(
+      '获取用户解锁的省份版图列表：' + JSON.stringify(data)
+    )
 
     return new Result(HttpCode.OK, 'ok', data)
   }
@@ -161,7 +163,10 @@ export class LocationService {
 
     const { adcode, province, city } = locationInfo.regeocode.addressComponent
 
-    this.loggerService.log('创建当前位置记录，打卡当前位置，高的地图返回：' + JSON.stringify(locationInfo.regeocode.addressComponent))
+    this.loggerService.log(
+      '创建当前位置记录，打卡当前位置，高的地图返回：' +
+        JSON.stringify(locationInfo.regeocode.addressComponent)
+    )
 
     /** 格式化后的省份编码 */
     const province_code = `${adcode}`.slice(0, 2) + '0000'

@@ -44,4 +44,4 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
   controllers: [EmailController],
   providers: [EmailService]
 })
-export class EmailModule { }
+export class EmailModule {}

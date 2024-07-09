@@ -4,7 +4,7 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
-  Req,
+  Req
 } from '@nestjs/common'
 import { EmailService } from '../email'
 import { UserService } from './user.service'
@@ -29,7 +29,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly emailService: EmailService
-  ) { }
+  ) {}
 
   @ApiOperation({ summary: '邮箱验证码登录' })
   @ApiResponse({ status: HttpCode.OK, description: '登录成功' })

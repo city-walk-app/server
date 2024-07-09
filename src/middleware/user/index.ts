@@ -18,7 +18,7 @@ export class UserMiddleware implements NestMiddleware {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
-  ) { }
+  ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const token = req.headers['token'] as string
