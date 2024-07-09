@@ -32,7 +32,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 /** 模块列表 */
 import { UserModule, EmailModule, LocationModule, FriendModule } from './modules'
 import { AppController } from './app.controller'
-import { ValidationPipe } from 'src/common'
+import { ValidationPipe, LoggerService } from 'src/common'
 import { UserMiddleware } from 'src/middleware'
 import { JwtModule } from '@nestjs/jwt'
 

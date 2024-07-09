@@ -7,9 +7,7 @@ import { ConfigService } from '@nestjs/config'
 import { CreatePositionRecordDTO, GetUserRouteDetailDTO } from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { HttpService } from '@nestjs/axios'
-import { Logger } from 'src/common'
-
-const logger = new Logger()
+import { LoggerService } from 'src/common'
 
 @Injectable()
 export class LocationService {
@@ -17,6 +15,7 @@ export class LocationService {
   private apiKey: string
 
   /**
+   * @param httpService 日志服务
    * @param httpService 请求服务
    * @param configService 配置服务
    * @param userVisitedProvinceEntity 用户访问的省份数据库
@@ -24,6 +23,7 @@ export class LocationService {
    * @param userRouteListEntity 用户步行地址信息详情列表
    */
   constructor(
+    private readonly loggerService: LoggerService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     @InjectRepository(UserVisitedProvince)
@@ -105,7 +105,7 @@ export class LocationService {
       select: ['experience_value', 'province_code', 'province_name', 'vis_id']
     })
 
-    logger.log(JSON.stringify(data))
+    this.loggerService.log('获取用户解锁的省份版图列表：' + JSON.stringify(data))
 
     return new Result(HttpCode.OK, 'ok', data)
   }
@@ -161,7 +161,7 @@ export class LocationService {
 
     const { adcode, province, city } = locationInfo.regeocode.addressComponent
 
-    logger.log(`高的地图返回：${JSON.stringify(locationInfo.regeocode.addressComponent)}`)
+    this.loggerService.log('创建当前位置记录，打卡当前位置，高的地图返回：' + JSON.stringify(locationInfo.regeocode.addressComponent))
 
     /** 格式化后的省份编码 */
     const province_code = `${adcode}`.slice(0, 2) + '0000'
@@ -242,7 +242,7 @@ export class LocationService {
       name: ''
     })
 
-    logger.log(`创建新的打卡地点详情：${createRouteRes}`)
+    this.loggerService.log('创建新的打卡地点详情：' + createRouteRes)
 
     return new Result(HttpCode.OK, 'ok', {
       /**
@@ -283,7 +283,7 @@ export class LocationService {
     const response = await this.httpService.axiosRef.get(AMap.geocode_regeo, {
       params: {
         key: this.apiKey,
-        location: `${longitude},${latitude}`
+        location: `${longitude}, ${latitude}`
       }
     })
 

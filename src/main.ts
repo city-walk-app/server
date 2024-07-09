@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { Logger } from 'src/common'
+import { LoggerService } from 'src/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  const logger = new Logger()
+  const loggerService = new LoggerService()
 
-  app.useLogger(logger)
+  app.useLogger(loggerService)
 
   // 允许跨域
   if (process.env.NODE_ENV === 'development') {

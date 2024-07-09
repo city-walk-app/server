@@ -1,3 +1,3 @@
 export * from './custom-exception'
 export * from './validation-pipe'
-export * from './logger'
+export * from './logger-service'

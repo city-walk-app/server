@@ -7,6 +7,7 @@ import { UserInfo } from '../user'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { JwtModule } from '@nestjs/jwt'
 import { HttpModule } from '@nestjs/axios'
+import { LoggerService } from 'src/common'
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { HttpModule } from '@nestjs/axios'
     HttpModule
   ],
   controllers: [LocationController],
-  providers: [LocationService, EmailService],
+  providers: [LocationService, EmailService, LoggerService],
   exports: [LocationService]
 })
-export class LocationModule {}
+export class LocationModule { }

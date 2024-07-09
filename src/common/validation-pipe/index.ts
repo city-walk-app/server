@@ -6,9 +6,6 @@ import {
 } from '@nestjs/common'
 import { validate } from 'class-validator'
 import { plainToClass } from 'class-transformer'
-import { Logger } from 'src/common'
-
-
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
@@ -21,9 +18,8 @@ export class ValidationPipe implements PipeTransform<any> {
 
     if (errors && errors.length) {
       const msg = Object.values(errors[0].constraints)[0]
-      const logger = new Logger()
 
-      logger.log(`全局管道拦截错误：${msg}`)
+      console.log('全局管道拦截错误：' + msg)
 
       throw new BadRequestException(msg)
     }

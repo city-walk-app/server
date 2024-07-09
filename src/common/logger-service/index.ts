@@ -1,7 +1,8 @@
+import { Injectable } from '@nestjs/common'
 import * as winston from 'winston'
 import 'winston-daily-rotate-file'
 
-const logDir = 'logs'
+const logDir = 'logs' as const
 
 const dailyRotateFileTransport = new winston.transports.DailyRotateFile({
   filename: `${logDir}/%DATE%-results.log`,
@@ -25,7 +26,8 @@ const logger = winston.createLogger({
   ]
 })
 
-export class Logger {
+@Injectable()
+export class LoggerService {
   log = (message: string) => {
     logger.info(message)
   }
@@ -40,9 +42,5 @@ export class Logger {
 
   debug = (message: string) => {
     logger.debug(message)
-  }
-
-  verbose = (message: string) => {
-    logger.verbose(message)
   }
 }
