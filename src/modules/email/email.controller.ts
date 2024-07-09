@@ -1,13 +1,16 @@
-import { Controller, Body, Post } from '@nestjs/common'
+import { Controller, Body, Post, UseGuards } from '@nestjs/common'
 import { EmailService } from './email.service'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import { HttpCode } from 'src/enum'
+import { Throttle, SkipThrottle } from '@nestjs/throttler'
+import { CustomThrottlerGuard } from 'src/common'
 
 /**
  * 邮件相关接口列表
  */
 @Controller('email')
 @ApiTags('邮箱')
+@SkipThrottle()
 export class EmailController {
   /**
    * @param emailService 邮件服务
@@ -24,6 +27,8 @@ export class EmailController {
    * @param body.email 邮箱地址
    */
   @Post('/send')
+  @Throttle({ default: { limit: 1, ttl: 60000 } })
+  @UseGuards(CustomThrottlerGuard)
   sendEmailCode(@Body() body: { email: string }) {
     const { email } = body
 

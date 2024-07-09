@@ -8,9 +8,16 @@ import { MailerModule } from '@nestjs-modules/mailer'
 import { EmailController } from './email.controller'
 import { EmailService } from './email.service'
 import { ConfigService } from '@nestjs/config'
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 1
+      }
+    ]),
     /**
      * 邮箱模块
      *
@@ -37,4 +44,4 @@ import { ConfigService } from '@nestjs/config'
   controllers: [EmailController],
   providers: [EmailService]
 })
-export class EmailModule {}
+export class EmailModule { }

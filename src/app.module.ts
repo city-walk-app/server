@@ -3,12 +3,9 @@ import {
   Module,
   NestModule,
   RequestMethod,
-  MiddlewareConsumer
+  MiddlewareConsumer,
 } from '@nestjs/common'
-import {
-  // APP_FILTER,
-  APP_PIPE
-} from '@nestjs/core'
+import { APP_PIPE } from '@nestjs/core'
 // import { CustomExceptionFilter } from 'src/common'
 /**
  * 数据库配置
@@ -32,7 +29,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 /** 模块列表 */
 import { UserModule, EmailModule, LocationModule, FriendModule } from './modules'
 import { AppController } from './app.controller'
-import { ValidationPipe, LoggerService } from 'src/common'
+import { ValidationPipe } from 'src/common'
 import { UserMiddleware } from 'src/middleware'
 import { JwtModule } from '@nestjs/jwt'
 
@@ -82,11 +79,6 @@ import { JwtModule } from '@nestjs/jwt'
     FriendModule
   ],
   controllers: [AppController],
-  /**
-   * 异常过滤器
-   *
-   * @see 异常过滤器 http://nestjs.inode.club/exception-filters
-   */
   providers: [
     // {
     //   provide: APP_FILTER,
@@ -95,7 +87,16 @@ import { JwtModule } from '@nestjs/jwt'
     {
       provide: APP_PIPE,
       useClass: ValidationPipe
-    }
+    },
+    /**
+     * 节流阀
+     * 
+     * @see RateLimiting https://docs.nestjs.com/security/rate-limiting
+     */
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: CustomThrottlerGuard
+    // }
   ]
 })
 export class AppModule implements NestModule {
