@@ -12,5 +12,10 @@ export enum PrefixID {
   /**
    * 步行记录 id 前缀，用于记录用户打卡的地点，数据表：cw_user_route_list
    */
-  route = 'RO'
+  route = 'RO',
+
+  /**
+   * 邀请 id 前缀
+   */
+  invite = 'IN'
 }

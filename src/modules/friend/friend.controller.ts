@@ -28,6 +28,23 @@ export class FriendController {
     return this.friendService.friendInvite(user_id)
   }
 
+  @ApiOperation({ summary: '获取邀请详情' })
+  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  /**
+   * 获取邀请详情
+   *
+   * @param req 请求
+   */
+  @Post('/get/invite/info')
+  getFriendInviteInfo(
+    @Req() req: Request,
+    @Body() body: { invite_id: string }
+  ) {
+    const { user_id } = req[USER_INFO]
+
+    return this.friendService.getFriendInviteInfo(user_id, body.invite_id)
+  }
+
   @ApiOperation({ summary: '获取朋友列表' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
   /**
