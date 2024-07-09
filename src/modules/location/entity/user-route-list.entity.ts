@@ -15,11 +15,11 @@ export class UserRouteList {
   id: number
 
   /** 列表 id */
-  @Column({ type: 'varchar', comment: '列表 id' })
+  @Column({ type: 'varchar', length: 255, comment: '列表 id' })
   list_id: string
 
   /** 用户 id */
-  @Column({ type: 'varchar', comment: '用户 id' })
+  @Column({ type: 'varchar', length: 255, comment: '用户 id' })
   user_id: string
 
   /** 创建时间 */
