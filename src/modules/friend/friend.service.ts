@@ -48,7 +48,7 @@ export class FriendService {
    */
   async getFriendInviteInfo(user_id: string, invite_id: string) {
     const inviteRes = await this.userFriendInviteEntity.findOneBy({
-      user_id,
+      // user_id,
       invite_id
     })
 
@@ -77,18 +77,52 @@ export class FriendService {
   }
 
   /**
-   * 拒绝好友申请
-   *
-   * @param user_id 用户 id
-   * @param invite_id 邀请 id
-   */
-  refuseInvite(user_id: string, invite_id: string) {}
-
-  /**
    * 同意好友申请
    *
    * @param user_id 用户 id
    * @param invite_id 邀请 id
    */
-  confirmInvite(user_id: string, invite_id: string) {}
+  async confirmInvite(user_id: string, invite_id: string) {
+    const inviteInfo = await this.userFriendInviteEntity.findOneBy({
+      invite_id
+    })
+
+    console.log(inviteInfo)
+
+    /** 增加一条我的关系 */
+    const myRelation = new UserFriendRelation()
+
+    myRelation.friend_id = user_id
+    myRelation.user_id = inviteInfo.user_id
+    myRelation.state = FriendState.normal
+    myRelation.created_at = new Date()
+
+    console.log(myRelation)
+
+    const res = await this.userFriendRelationEntity.save(myRelation)
+
+    console.log('red', res)
+
+    /** 增加一条对方的关系 */
+    const friendRelation = new UserFriendRelation()
+
+    friendRelation.friend_id = inviteInfo.user_id
+    friendRelation.user_id = user_id
+    friendRelation.state = FriendState.normal
+    friendRelation.created_at = new Date()
+
+    await this.userFriendRelationEntity.save(friendRelation)
+
+    return new Result(HttpCode.OK, 'ok')
+  }
+
+  /**
+   * 拒绝好友申请
+   *
+   * @param user_id 用户 id
+   * @param invite_id 邀请 id
+   */
+  refuseInvite(user_id: string, invite_id: string) {
+    return 13
+  }
 }

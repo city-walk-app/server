@@ -22,6 +22,8 @@ export class CustomExceptionFilter implements ExceptionFilter {
       console.error('服务器内部错误', exception)
     }
 
-    response.status(status).json({ message: '服务内部错误', code: HttpCode.INTERNAL_SERVER_ERROR })
+    response
+      .status(HttpCode.INTERNAL_SERVER_ERROR)
+      .json({ message: '服务内部错误', code: HttpCode.INTERNAL_SERVER_ERROR })
   }
 }

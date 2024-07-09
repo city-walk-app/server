@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn
 } from 'typeorm'
+import { FriendState } from 'src/enum'
 
 /**
  * 用户好友关系
@@ -27,6 +28,12 @@ export class UserFriendRelation {
   created_at: Date
 
   /** 邀请状态 */
-  @Column({ type: 'varchar', length: 255, comment: '邀请状态' })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    comment: '邀请状态',
+    enum: FriendState,
+    default: FriendState.normal
+  })
   state: string
 }
