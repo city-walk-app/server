@@ -29,27 +29,27 @@ export class UserInfo {
   nick_name: string
 
   /** 邮箱 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '邮箱' })
   email: string
 
   /** 手机号 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '手机号' })
   mobile: string
 
   /** 头像 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '头像' })
   avatar: string
 
   /** 个性签名 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '个性签名' })
   signature: string
 
   /** 省份 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '省份' })
   province: string
 
   /** 城市 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '城市' })
   city: string
 
   /** 注册时间 */
@@ -57,22 +57,22 @@ export class UserInfo {
   created_at: Date
 
   /** 生日 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '生日' })
   birthday: string
 
   /** 性别 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '性别' })
   gender: string
 
   /** ip 归属地 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: 'ip 归属地' })
   ip_address: string
 
   /** ip 详细信息 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: 'ip 详细信息' })
   ip_info: string
 
   /** 偏好类型 */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, comment: '偏好类型' })
   preference_type: string
 }

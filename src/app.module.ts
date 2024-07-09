@@ -30,7 +30,7 @@ import { ServeStaticModule } from '@nestjs/serve-static'
  */
 import { ConfigModule, ConfigService } from '@nestjs/config'
 /** 模块列表 */
-import { UserModule, EmailModule, LocationModule } from './modules'
+import { UserModule, EmailModule, LocationModule, FriendModule } from './modules'
 import { AppController } from './app.controller'
 import { ValidationPipe } from 'src/common'
 import { UserMiddleware } from 'src/middleware'
@@ -78,7 +78,8 @@ import { JwtModule } from '@nestjs/jwt'
     UserModule,
     EmailModule,
     LocationModule,
-    JwtModule
+    JwtModule,
+    FriendModule
   ],
   controllers: [AppController],
   /**
@@ -97,7 +98,6 @@ import { JwtModule } from '@nestjs/jwt'
     }
   ]
 })
-// export class AppModule {}
 export class AppModule implements NestModule {
   /**
    * 配置局部中间件
@@ -122,7 +122,7 @@ export class AppModule implements NestModule {
         { path: '/email/send', method: RequestMethod.POST }
       )
       /**
-       * 注册到所有路由
+       * 注册到所有的 post 路由路由
        */
       .forRoutes({ path: '*', method: RequestMethod.POST })
   }

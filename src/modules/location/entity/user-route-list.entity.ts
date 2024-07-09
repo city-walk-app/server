@@ -8,21 +8,21 @@ import {
 /**
  * 用户步行地址信息详情列表
  */
-@Entity('cw_user_route_list')
+@Entity({ name: 'cw_user_route_list', comment: '用户步行地址信息详情列表' })
 export class UserRouteList {
   /** id */
-  @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn({ type: 'int', comment: 'id' })
   id: number
 
-  /** list id */
-  @Column({ type: 'varchar' })
+  /** 列表 id */
+  @Column({ type: 'varchar', comment: '列表 id' })
   list_id: string
 
   /** 用户 id */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', comment: '用户 id' })
   user_id: string
 
   /** 创建时间 */
-  @CreateDateColumn({ type: 'datetime', default: new Date() })
+  @CreateDateColumn({ type: 'datetime', default: new Date(), comment: '创建时间' })
   create_at: Date
 }

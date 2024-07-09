@@ -30,7 +30,7 @@ export class UserService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService
-  ) {}
+  ) { }
 
   /**
    * 生成 token
@@ -91,22 +91,22 @@ export class UserService {
     const userInfo = foundUserInfo
       ? foundUserInfo
       : await (async () => {
-          const user = new UserInfo()
+        const user = new UserInfo()
 
-          user.email = email
-          user.created_at = new Date()
-          user.user_id = renderID(PrefixID.user).toString()
+        user.email = email
+        user.created_at = new Date()
+        user.user_id = renderID(PrefixID.user).toString()
 
-          console.log(
-            renderID(PrefixID.user),
-            renderID(PrefixID.user).toString()
-          )
+        console.log(
+          renderID(PrefixID.user),
+          renderID(PrefixID.user).toString()
+        )
 
-          /** 用户参数列表 */
-          const newUser = this.userInfoEntity.create(user)
+        /** 用户参数列表 */
+        const newUser = this.userInfoEntity.create(user)
 
-          return await this.userInfoEntity.save(newUser)
-        })()
+        return await this.userInfoEntity.save(newUser)
+      })()
 
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
@@ -284,26 +284,4 @@ export class UserService {
 
   //   return new Result(HttpCode.OK, 'ok', chunkedArray)
   // }
-
-  /**
-   * 邀请朋友
-   *
-   * @param user_id 用户 id
-   */
-  friendInvite(user_id: string) {
-    console.log(user_id)
-
-    return new Result(HttpCode.OK, 'ok', user_id)
-  }
-
-  /**
-   * 获取用户列表
-   *
-   * @param user_id 用户 id
-   */
-  friendList(user_id: string) {
-    console.log(user_id)
-
-    return new Result(HttpCode.OK, 'ok', user_id)
-  }
 }

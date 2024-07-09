@@ -39,20 +39,20 @@ export class LocationService {
    *
    * @param request 请求
    */
-  async positioning(request: Request) {
-    const ip: string = requestIp.getClientIp(request)
+  // async positioning(request: Request) {
+  //   const ip: string = requestIp.getClientIp(request)
 
-    const response = await this.httpService.axiosRef.get(AMap.ip, {
-      params: {
-        key: this.apiKey,
-        ip
-      }
-    })
+  //   const response = await this.httpService.axiosRef.get(AMap.ip, {
+  //     params: {
+  //       key: this.apiKey,
+  //       ip
+  //     }
+  //   })
 
-    console.log('ip 地址', ip)
-    console.log('高德地图获取结果', response)
-    return { ip, response }
-  }
+  //   console.log('ip 地址', ip)
+  //   console.log('高德地图获取结果', response)
+  //   return { ip, response }
+  // }
 
   /**
    * 获取周边热门地点
