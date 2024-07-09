@@ -5,8 +5,8 @@ import {
   RequestMethod,
   MiddlewareConsumer
 } from '@nestjs/common'
-import { APP_PIPE } from '@nestjs/core'
-// import { CustomExceptionFilter } from 'src/common'
+import { APP_PIPE, APP_FILTER } from '@nestjs/core'
+import { CustomExceptionFilter } from 'src/common'
 /**
  * 数据库配置
  *
@@ -85,10 +85,10 @@ import { JwtModule } from '@nestjs/jwt'
   ],
   controllers: [AppController],
   providers: [
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: CustomExceptionFilter
-    // },
+    {
+      provide: APP_FILTER,
+      useClass: CustomExceptionFilter
+    },
     {
       provide: APP_PIPE,
       useClass: ValidationPipe
