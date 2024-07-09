@@ -3,16 +3,16 @@ import { UserInfo } from '../user'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Result } from 'src/utils'
-import { UserAdmin } from './entity'
+import { UserFriendInvite, UserFriendRelation } from './entity'
 import { HttpCode } from 'src/enum'
 
 @Injectable()
 export class FriendService {
   constructor(
-    @InjectRepository(UserInfo)
-    private readonly userInfoEntity: Repository<UserInfo>,
-    @InjectRepository(UserAdmin)
-    private readonly userAdminEntity: Repository<UserAdmin>
+    @InjectRepository(UserFriendInvite)
+    private readonly userFriendInviteEntity: Repository<UserFriendInvite>,
+    @InjectRepository(UserFriendRelation)
+    private readonly userFriendRelationEntity: Repository<UserFriendRelation>
   ) { }
 
 
