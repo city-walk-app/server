@@ -1,34 +1,18 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { ExpressAdapter } from '@nestjs/platform-express'
-import * as express from 'express'
-// import * as fs from 'fs'
-// import * as https from 'https'
-// import { corsMiddleware } from './middleware'
-// import { ValidationPipe } from '@nestjs/common'
+import { Logger } from 'src/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 async function bootstrap() {
-  const server = express()
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server))
+  const app = await NestFactory.create(AppModule)
+  const logger = new Logger()
 
-  // app.use(corsMiddleware)
+  app.useLogger(logger)
 
   // 允许跨域
   if (process.env.NODE_ENV === 'development') {
     app.enableCors()
   }
-
-  // 为每个HTTP路由路径注册一个前缀
-  // app.setGlobalPrefix('/api')
-
-  // app.useGlobalPipes(new ValidationPipe({
-  //   transform: true,
-  //   whitelist: true,
-  //   forbidNonWhitelisted: true,
-  //   forbidUnknownValues: true,
-  //   validationError: { target: false, value: false },
-  // }))
 
   /**
    * Swagger 配置
@@ -53,29 +37,12 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api-docs', app, document, customOptions)
 
-  // 生产环境
-  if (process.env.NODE_ENV === 'production') {
-    // const httpsOptions = {
-    //   key: fs.readFileSync('/home/project/city-walk-end/ssl/city-walk.top.key'),
-    //   cert: fs.readFileSync('/home/project/city-walk-end/ssl/city-walk.top.pem')
-    // }
+  await app.init()
 
-    // const httpsServer = await https.createServer(httpsOptions, server)
-
-    await app.init()
-    // await httpsServer.listen(1219, '0.0.0.0', () => {
-    //   console.log('生产环境端口 1219 已经启动')
-    // })
-
-    await app.listen(1219, '0.0.0.0', () => {
-      console.log('生产环境端口 1219 已经启动')
-    })
-    return
-  }
-
-  // 开发环境
   await app.listen(1219, '0.0.0.0', () => {
-    console.log('开发环境 1219 端口已经启动')
+    console.log(process.env.NODE_ENV === 'production'
+      ? '生产环境端口 1219 已经启动'
+      : '开发环境 1219 端口已经启动')
   })
 }
 bootstrap()

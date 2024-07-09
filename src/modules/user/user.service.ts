@@ -97,11 +97,6 @@ export class UserService {
         user.created_at = new Date()
         user.user_id = renderID(PrefixID.user).toString()
 
-        console.log(
-          renderID(PrefixID.user),
-          renderID(PrefixID.user).toString()
-        )
-
         /** 用户参数列表 */
         const newUser = this.userInfoEntity.create(user)
 

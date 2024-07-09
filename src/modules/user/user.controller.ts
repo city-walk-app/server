@@ -4,7 +4,7 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
-  Req
+  Req,
 } from '@nestjs/common'
 import { EmailService } from '../email'
 import { UserService } from './user.service'

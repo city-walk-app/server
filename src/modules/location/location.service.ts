@@ -7,7 +7,9 @@ import { ConfigService } from '@nestjs/config'
 import { CreatePositionRecordDTO, GetUserRouteDetailDTO } from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { HttpService } from '@nestjs/axios'
-import * as requestIp from 'request-ip'
+import { Logger } from 'src/common'
+
+const logger = new Logger()
 
 @Injectable()
 export class LocationService {
@@ -48,9 +50,6 @@ export class LocationService {
   //       ip
   //     }
   //   })
-
-  //   console.log('ip 地址', ip)
-  //   console.log('高德地图获取结果', response)
   //   return { ip, response }
   // }
 
@@ -106,6 +105,8 @@ export class LocationService {
       select: ['experience_value', 'province_code', 'province_name', 'vis_id']
     })
 
+    logger.log(JSON.stringify(data))
+
     return new Result(HttpCode.OK, 'ok', data)
   }
 
@@ -160,7 +161,7 @@ export class LocationService {
 
     const { adcode, province, city } = locationInfo.regeocode.addressComponent
 
-    console.log('高的地图返回', locationInfo.regeocode.addressComponent)
+    logger.log(`高的地图返回：${JSON.stringify(locationInfo.regeocode.addressComponent)}`)
 
     /** 格式化后的省份编码 */
     const province_code = `${adcode}`.slice(0, 2) + '0000'
@@ -225,18 +226,9 @@ export class LocationService {
     // 创建步行记录
     const createRouteListRes = await this.createRouteList(user_id)
 
-    console.log('createRouteListRes', {
-      list_id: createRouteListRes.list_id,
-      user_id,
-      longitude,
-      latitude,
-      province_code,
-      city,
-      province,
-      address: '',
-      name: ''
-    })
-
+    /**
+     * 创建新的打卡地点详情
+     */
     const createRouteRes = await this.createRoute({
       list_id: createRouteListRes.list_id,
       user_id,
@@ -250,7 +242,7 @@ export class LocationService {
       name: ''
     })
 
-    console.log('createRouteRes', createRouteRes)
+    logger.log(`创建新的打卡地点详情：${createRouteRes}`)
 
     return new Result(HttpCode.OK, 'ok', {
       /**

@@ -105,8 +105,6 @@ export class LocationController {
     //   return new Result(HttpCode.ERR, '非法调用')
     // }
 
-    // console.log(ip)
-
     return this.locationService.getUserRouteList(body.user_id || user_id)
   }
 
