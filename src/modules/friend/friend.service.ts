@@ -75,4 +75,20 @@ export class FriendService {
 
     return new Result(HttpCode.OK, 'ok', user_id)
   }
+
+  /**
+   * 拒绝好友申请
+   *
+   * @param user_id 用户 id
+   * @param invite_id 邀请 id
+   */
+  refuseInvite(user_id: string, invite_id: string) {}
+
+  /**
+   * 同意好友申请
+   *
+   * @param user_id 用户 id
+   * @param invite_id 邀请 id
+   */
+  confirmInvite(user_id: string, invite_id: string) {}
 }

@@ -45,6 +45,34 @@ export class FriendController {
     return this.friendService.getFriendInviteInfo(user_id, body.invite_id)
   }
 
+  @ApiOperation({ summary: '拒绝邀请' })
+  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  /**
+   * 拒绝邀请
+   *
+   * @param req 请求
+   */
+  @Post('/refuse/invite')
+  refuseInvite(@Req() req: Request, @Body() body: { invite_id: string }) {
+    const { user_id } = req[USER_INFO]
+
+    return this.friendService.refuseInvite(user_id, body.invite_id)
+  }
+
+  @ApiOperation({ summary: '同意邀请' })
+  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  /**
+   * 同意邀请
+   *
+   * @param req 请求
+   */
+  @Post('/confirm/invite')
+  confirmInvite(@Req() req: Request, @Body() body: { invite_id: string }) {
+    const { user_id } = req[USER_INFO]
+
+    return this.friendService.confirmInvite(user_id, body.invite_id)
+  }
+
   @ApiOperation({ summary: '获取朋友列表' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
   /**
