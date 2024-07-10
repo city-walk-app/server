@@ -124,8 +124,6 @@ export class LocationController {
   }
 
   @ApiOperation({ summary: '完善步行打卡记录详情' })
-  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
-  @ApiParam({ name: 'list_id', description: '列表 id', required: true })
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 完善步行打卡记录详情

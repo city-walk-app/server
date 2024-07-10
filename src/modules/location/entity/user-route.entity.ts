@@ -23,6 +23,10 @@ export class UserRoute {
   @Column({ type: 'varchar', length: 255, comment: '列表 id' })
   list_id: string
 
+  /** 步行 id */
+  @Column({ type: 'varchar', length: 255, comment: '步行 id' })
+  route_id: string
+
   /** 省份编码 */
   @Column({ type: 'varchar', length: 255, comment: '省份编码' })
   province_code: string

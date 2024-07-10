@@ -199,7 +199,7 @@ export class LocationService {
       newProvinceExperience.user_id = user_id
       newProvinceExperience.province_code = province_code
       newProvinceExperience.province_name = province
-      newProvinceExperience.vis_id = renderID(PrefixID.vis)
+      newProvinceExperience.vis_id = renderID(PrefixID.visitedProvince)
       newProvinceExperience.experience_value = Experience.entry
 
       const result = await this.userVisitedProvinceEntity.save(
@@ -248,6 +248,7 @@ export class LocationService {
     this.loggerService.log('创建新的打卡地点详情：' + createRouteRes)
 
     return new Result(HttpCode.OK, 'ok', {
+      route_id: createRouteRes.route_id,
       /**
        * 是否为中国大陆
        *
@@ -301,6 +302,7 @@ export class LocationService {
   private async createRoute(options: Partial<UserRoute>) {
     const newUserRoute = new UserRoute()
 
+    newUserRoute.route_id = renderID(PrefixID.route)
     newUserRoute.list_id = options.list_id
     newUserRoute.user_id = options.user_id
     newUserRoute.longitude = options.longitude
@@ -360,7 +362,7 @@ export class LocationService {
     const newRouteList = new UserRouteList()
 
     newRouteList.user_id = user_id
-    newRouteList.list_id = renderID(PrefixID.route)
+    newRouteList.list_id = renderID(PrefixID.routeList)
     newRouteList.create_at = new Date()
 
     const newRouteListResult = await this.userRouteListEntity.save(newRouteList)
