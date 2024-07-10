@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 09/07/2024 23:02:34
+ Date: 10/07/2024 09:08:59
 */
 
 SET NAMES utf8mb4;
@@ -28,18 +28,7 @@ CREATE TABLE `cw_user_friend_invite` (
   `created_at` varchar(255) NOT NULL COMMENT '创建时间',
   `state` varchar(255) NOT NULL COMMENT '邀请状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Records of cw_user_friend_invite
--- ----------------------------
-BEGIN;
-INSERT INTO `cw_user_friend_invite` VALUES (1, 'U131995175454824711531011225172573302849', 'IN214230897728240844607989755687623907924', '2024-07-09 20:21:02.548', 'applying');
-INSERT INTO `cw_user_friend_invite` VALUES (2, 'U131995175454824711531011225172573302849', 'IN151468169879649233411951305077639826939', '2024-07-09 20:32:53.497', 'applying');
-INSERT INTO `cw_user_friend_invite` VALUES (3, 'U131995175454824711531011225172573302849', 'IN78279122650278867027710712286673239497', '2024-07-09 20:34:37.856', 'applying');
-INSERT INTO `cw_user_friend_invite` VALUES (4, 'U131995175454824711531011225172573302849', 'IN146562849938855846715619853247899569698', '2024-07-09 20:35:50.062', 'applying');
-INSERT INTO `cw_user_friend_invite` VALUES (5, 'U131995175454824711531011225172573302849', 'IN77210835065231874646362583150850271196', '2024-07-09 22:05:17.225', 'applying');
-COMMIT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for cw_user_friend_relation
@@ -52,15 +41,7 @@ CREATE TABLE `cw_user_friend_relation` (
   `state` varchar(255) NOT NULL COMMENT '当前状态',
   `created_at` varchar(255) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Records of cw_user_friend_relation
--- ----------------------------
-BEGIN;
-INSERT INTO `cw_user_friend_relation` VALUES (1, 'U131995175454824711531011225172573302849', 'U295968060973022087457575540143943214943', 'normal', '2024-07-09 23:01:43.229');
-INSERT INTO `cw_user_friend_relation` VALUES (2, 'U295968060973022087457575540143943214943', 'U131995175454824711531011225172573302849', 'normal', '2024-07-09 23:01:43.238');
-COMMIT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for cw_user_info
