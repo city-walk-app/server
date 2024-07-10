@@ -9,10 +9,15 @@ import { UserRoute } from '../location'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserFriendRelation, UserFriendInvite, UserInfo, UserRoute])
+    TypeOrmModule.forFeature([
+      UserFriendRelation,
+      UserFriendInvite,
+      UserInfo,
+      UserRoute
+    ])
   ],
   controllers: [FriendController],
   providers: [FriendService, EmailService],
   exports: [FriendService]
 })
-export class FriendModule { }
+export class FriendModule {}

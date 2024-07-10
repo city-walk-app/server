@@ -12,8 +12,8 @@ export class AdminService {
    */
   constructor(
     @InjectRepository(UserInfo)
-    private readonly userInfoEntity: Repository<UserInfo>,
-  ) { }
+    private readonly userInfoEntity: Repository<UserInfo>
+  ) {}
 
   /**
    * 获取用户列表

@@ -12,7 +12,6 @@ import { SetUserInfoDto } from './dto'
 @Injectable()
 export class UserService {
   /**
-   *
    * @param userInfoEntity 用户信息表
    * @param jwtService jwt 服务
    * @param configService 配置服务

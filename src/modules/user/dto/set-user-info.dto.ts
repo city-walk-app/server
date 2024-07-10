@@ -43,7 +43,7 @@ export const IsHaveSensitive = (validationOptions?: ValidationOptions) => {
  * 设置用户信息参数校验规则
  */
 export class SetUserInfoDto {
-  /** 
+  /**
    * 手机号
    */
   @IsOptional()
@@ -52,7 +52,7 @@ export class SetUserInfoDto {
   @ApiProperty()
   mobile?: string
 
-  /** 
+  /**
    * 昵称
    */
   @IsOptional()
@@ -62,7 +62,7 @@ export class SetUserInfoDto {
   @ApiProperty()
   nick_name?: string
 
-  /** 
+  /**
    * 个性签名
    */
   @IsOptional()
@@ -72,7 +72,7 @@ export class SetUserInfoDto {
   @ApiProperty()
   signature?: string
 
-  /** 
+  /**
    * 省份
    */
   @IsOptional()
@@ -80,7 +80,7 @@ export class SetUserInfoDto {
   @ApiProperty()
   province?: string
 
-  /** 
+  /**
    * 城市
    */
   @IsOptional()
@@ -88,7 +88,7 @@ export class SetUserInfoDto {
   @ApiProperty()
   city?: string
 
-  /** 
+  /**
    * 生日
    */
   @IsOptional()
@@ -96,7 +96,7 @@ export class SetUserInfoDto {
   @ApiProperty()
   birthday?: string
 
-  /** 
+  /**
    * 性别
    */
   @IsOptional()

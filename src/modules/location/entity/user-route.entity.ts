@@ -76,7 +76,12 @@ export class UserRoute {
   picture: string
 
   /** 出行方式 */
-  @Column({ type: 'varchar', length: 255, comment: '出行方式', enum: TravelType })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    comment: '出行方式',
+    enum: TravelType
+  })
   travel_type: string
 
   /** 心情颜色 */

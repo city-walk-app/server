@@ -30,5 +30,5 @@ export enum Experience {
   /**
    * 专家的
    */
-  expert = 70,
+  expert = 70
 }

@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException
-} from '@nestjs/common'
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 import { HttpCode } from 'src/enum'
 
 /**

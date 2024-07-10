@@ -30,5 +30,5 @@ export enum MoodColor {
   /**
    * 疲惫
    */
-  tired = '#808080', // 灰色
+  tired = '#808080' // 灰色
 }

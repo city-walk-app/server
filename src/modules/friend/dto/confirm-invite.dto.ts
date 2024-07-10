@@ -6,8 +6,8 @@ import { ApiProperty } from '@nestjs/swagger'
  */
 export class ConfirmInviteDto {
   /**
-  * 邀请 id
-  */
+   * 邀请 id
+   */
   @IsNotEmpty({ message: '参数缺失' })
   @IsString({ message: '类型错误' })
   @ApiProperty()

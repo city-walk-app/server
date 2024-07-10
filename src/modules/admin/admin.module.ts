@@ -11,4 +11,4 @@ import { UserInfo } from '../user'
   providers: [AdminService, EmailService],
   exports: [AdminService]
 })
-export class AdminModule { }
+export class AdminModule {}

@@ -12,7 +12,7 @@ export class AdminController {
   /**
    * @param adminService 管理服务
    */
-  constructor(private readonly adminService: AdminService) { }
+  constructor(private readonly adminService: AdminService) {}
 
   @ApiOperation({ summary: '获取用户列表' })
   @ApiResponse({ status: HttpCode.OK, description: '获取成功' })

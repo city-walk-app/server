@@ -24,7 +24,7 @@ export class FriendService {
     private readonly userInfoEntity: Repository<UserInfo>,
     @InjectRepository(UserRoute)
     private readonly userRouteEntity: Repository<UserRoute>
-  ) { }
+  ) {}
 
   /**
    * 邀请朋友
@@ -182,7 +182,7 @@ export class FriendService {
 
   /**
    * 获取朋友经验排名
-   * 
+   *
    * @param user_id 用户 id
    */
   async getFriendExperienceRanking(user_id: string) {
@@ -203,15 +203,22 @@ export class FriendService {
         /**
          * 获取当前用户身份信息
          */
-        const userInfo = await this.userInfoEntity.findOneBy({ user_id: item.user_id })
+        const userInfo = await this.userInfoEntity.findOneBy({
+          user_id: item.user_id
+        })
         /**
          * 查询当前用户当天所打卡的所有地点
          */
-        const friendTodayExperience = await this.getFriendTodayExperience(item.user_id)
+        const friendTodayExperience = await this.getFriendTodayExperience(
+          item.user_id
+        )
         /**
          * 所获经验值
          */
-        const experiences = friendTodayExperience.reduce((sum, item) => sum + (item.experience_value || 0), 0)
+        const experiences = friendTodayExperience.reduce(
+          (sum, item) => sum + (item.experience_value || 0),
+          0
+        )
 
         return {
           nick_name: userInfo.nick_name,
