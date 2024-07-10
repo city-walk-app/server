@@ -209,6 +209,9 @@ export class LocationService {
         province_code
       })
 
+    /** 是否为解锁的新省份 */
+    const is_new_province = !provinceExperience
+
     // 判断当前省份经验值是否存在，如果存在则使用，不存在就创建一条新的
     if (!provinceExperience) {
       const newProvinceExperience = new UserVisitedProvince()
@@ -275,7 +278,7 @@ export class LocationService {
       /**
        * 是否为新省份
        */
-      is_new_province: !provinceExperience,
+      is_new_province,
       /**
        * 经验值
        */
