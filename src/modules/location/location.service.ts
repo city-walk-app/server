@@ -4,7 +4,11 @@ import { Repository } from 'typeorm'
 import { Result, renderID } from 'src/utils'
 import { HttpCode, AMap, PrefixID, CITY_NAME_CODE, Experience } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
-import { CreatePositionRecordDto, GetUserRouteDetailDto, UpdateUserRouteDetailDto } from './dto'
+import {
+  CreatePositionRecordDto,
+  GetUserRouteDetailDto,
+  UpdateUserRouteDetailDto
+} from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { HttpService } from '@nestjs/axios'
 import { LoggerService } from 'src/common'
@@ -53,15 +57,17 @@ export class LocationService {
   //   return { ip, response }
   // }
 
-
   /**
    * 完善步行打卡记录详情
-   * 
+   *
    * @param user_id 用户 id
    * @param body 数据参数
    */
   async updateRouteDetail(user_id: string, body: UpdateUserRouteDetailDto) {
-    const routeDetail = await this.userRouteEntity.findOneBy({ user_id, route_id: body.route_id })
+    const routeDetail = await this.userRouteEntity.findOneBy({
+      user_id,
+      route_id: body.route_id
+    })
 
     routeDetail.content = body.content // 内容
     routeDetail.mood_color = body.mood_color // 出行方式
@@ -187,7 +193,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-      JSON.stringify(locationInfo.regeocode.addressComponent)
+        JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -236,7 +242,8 @@ export class LocationService {
       /**
        * 最新的经验值
        */
-      const experience_value = Number(provinceExperience.experience_value || '0') + Experience.entry
+      const experience_value =
+        Number(provinceExperience.experience_value || '0') + Experience.entry
 
       provinceExperience.experience_value = experience_value
 
@@ -262,7 +269,7 @@ export class LocationService {
       province_code,
       province: `${province}` || '未知省份',
       city: `${city}` || '未知城市',
-      create_at: new Date(),
+      create_at: new Date()
     })
 
     this.loggerService.log('创建新的打卡地点详情：' + createRouteRes)

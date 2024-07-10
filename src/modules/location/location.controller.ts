@@ -17,7 +17,7 @@ import {
 @Controller('location')
 @ApiTags('位置服务')
 export class LocationController {
-  constructor(private readonly locationService: LocationService) { }
+  constructor(private readonly locationService: LocationService) {}
 
   @ApiOperation({ summary: '获取周边热门地点推荐' })
   @ApiParam({ name: 'longitude', description: '经度', required: true })
@@ -113,7 +113,10 @@ export class LocationController {
    * @param body 请求参数
    */
   @Post('/update/user/route/detail')
-  updateRouteDetail(@Req() req: Request, @Body() body: UpdateUserRouteDetailDto) {
+  updateRouteDetail(
+    @Req() req: Request,
+    @Body() body: UpdateUserRouteDetailDto
+  ) {
     const { user_id } = req[USER_INFO]
 
     return this.locationService.updateRouteDetail(user_id, body)

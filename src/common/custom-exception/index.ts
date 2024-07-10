@@ -22,11 +22,9 @@ export class CustomExceptionFilter implements ExceptionFilter {
       console.error('全局错误拦截：' + exception.message)
     }
 
-    response
-      .status(HttpCode.INTERNAL_SERVER_ERROR)
-      .json({
-        message: exception.message || '服务器内部错误',
-        code: exception ? HttpCode.ERR : HttpCode.INTERNAL_SERVER_ERROR
-      })
+    response.status(HttpCode.INTERNAL_SERVER_ERROR).json({
+      message: exception.message || '服务器内部错误',
+      code: exception ? HttpCode.ERR : HttpCode.INTERNAL_SERVER_ERROR
+    })
   }
 }

@@ -31,7 +31,8 @@ import {
   UserModule,
   EmailModule,
   LocationModule,
-  FriendModule
+  FriendModule,
+  WxModule
 } from './modules'
 import { AppController } from './app.controller'
 import { ValidationPipe } from 'src/common'
@@ -81,7 +82,8 @@ import { JwtModule } from '@nestjs/jwt'
     EmailModule,
     LocationModule,
     JwtModule,
-    FriendModule
+    FriendModule,
+    WxModule
   ],
   controllers: [AppController],
   providers: [
