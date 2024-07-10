@@ -19,7 +19,9 @@ export class ValidationPipe implements PipeTransform<any> {
     if (errors && errors.length) {
       const msg = Object.values(errors[0].constraints)[0]
 
-      console.log('全局管道拦截错误：' + msg)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('全局管道错误拦截：' + msg)
+      }
 
       throw new BadRequestException(msg)
     }

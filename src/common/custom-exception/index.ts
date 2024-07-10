@@ -19,11 +19,14 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse()
 
     if (process.env.NODE_ENV === 'development') {
-      console.error('服务器内部错误', exception)
+      console.error('全局错误拦截：' + exception.message)
     }
 
     response
       .status(HttpCode.INTERNAL_SERVER_ERROR)
-      .json({ message: '服务内部错误', code: HttpCode.INTERNAL_SERVER_ERROR })
+      .json({
+        message: exception.message || '服务器内部错误',
+        code: exception ? HttpCode.ERR : HttpCode.INTERNAL_SERVER_ERROR
+      })
   }
 }
