@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger'
 /**
  * 邮箱登录参数校验规则
  */
-export class LoginEmailDTO {
+export class LoginEmailDto {
   /**
    * 邮箱
    */

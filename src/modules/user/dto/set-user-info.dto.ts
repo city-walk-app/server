@@ -41,7 +41,7 @@ export const IsHaveSensitive = (validationOptions?: ValidationOptions) => {
 /**
  * 设置用户信息参数校验规则
  */
-export class SetUserInfoDTO {
+export class SetUserInfoDto {
   /** 手机号 */
   @IsOptional()
   @IsString()

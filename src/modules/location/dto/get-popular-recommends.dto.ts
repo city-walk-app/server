@@ -1,6 +1,9 @@
 import { IsNotEmpty } from 'class-validator'
 
-export class GetPopularRecommendsDTO {
+/**
+ * 获取周边热门地点
+ */
+export class GetPopularRecommendsDto {
   /**
    * 经度
    */

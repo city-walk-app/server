@@ -1,6 +1,9 @@
 import { IsNotEmpty, IsString } from 'class-validator'
 
-export class GetUserRouteDetailDTO {
+/**
+ * 获取用户步行记录详情
+ */
+export class GetUserRouteDetailDto {
   /**
    * 用户 id
    */

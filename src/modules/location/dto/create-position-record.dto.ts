@@ -1,6 +1,9 @@
 import { IsNotEmpty } from 'class-validator'
 
-export class CreatePositionRecordDTO {
+/**
+ * 创建当前位置记录，打卡当前位置
+ */
+export class CreatePositionRecordDto {
   /**
    * 经度
    */

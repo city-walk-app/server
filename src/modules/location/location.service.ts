@@ -4,7 +4,7 @@ import { Repository } from 'typeorm'
 import { Result, renderID } from 'src/utils'
 import { HttpCode, AMap, PrefixID, CITY_NAME_CODE, Experience } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
-import { CreatePositionRecordDTO, GetUserRouteDetailDTO } from './dto'
+import { CreatePositionRecordDto, GetUserRouteDetailDto } from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { HttpService } from '@nestjs/axios'
 import { LoggerService } from 'src/common'
@@ -52,6 +52,11 @@ export class LocationService {
   //   })
   //   return { ip, response }
   // }
+
+
+  async updateRouteDetail() {
+
+  }
 
   /**
    * 获取周边热门地点
@@ -130,8 +135,8 @@ export class LocationService {
    * @param list_id 列表 id
    */
   async getUserRouteDetail(
-    user_id: GetUserRouteDetailDTO['user_id'],
-    list_id: GetUserRouteDetailDTO['list_id']
+    user_id: GetUserRouteDetailDto['user_id'],
+    list_id: GetUserRouteDetailDto['list_id']
   ) {
     const data = await this.userRouteEntity.findBy({ user_id, list_id })
 
@@ -144,7 +149,7 @@ export class LocationService {
    * @param user_id 用户 id
    * @param body 请求参数
    */
-  async createPositionRecord(user_id: string, body: CreatePositionRecordDTO) {
+  async createPositionRecord(user_id: string, body: CreatePositionRecordDto) {
     const { longitude, latitude } = body
 
     /**
@@ -275,8 +280,8 @@ export class LocationService {
    * @param latitude 纬度
    */
   private async getLocationInfo(
-    longitude: CreatePositionRecordDTO['longitude'],
-    latitude: CreatePositionRecordDTO['latitude']
+    longitude: CreatePositionRecordDto['longitude'],
+    latitude: CreatePositionRecordDto['latitude']
   ) {
     const response = await this.httpService.axiosRef.get(AMap.geocode_regeo, {
       params: {

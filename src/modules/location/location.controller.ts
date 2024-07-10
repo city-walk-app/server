@@ -3,9 +3,10 @@ import { LocationService } from './location.service'
 import { HttpCode, USER_INFO } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import {
-  GetPopularRecommendsDTO,
-  CreatePositionRecordDTO,
-  GetUserRouteDetailDTO
+  GetPopularRecommendsDto,
+  CreatePositionRecordDto,
+  GetUserRouteDetailDto,
+  UpdateUserRouteDetailDto
 } from './dto'
 
 /**
@@ -14,7 +15,7 @@ import {
 @Controller('location')
 @ApiTags('位置服务')
 export class LocationController {
-  constructor(private readonly locationService: LocationService) {}
+  constructor(private readonly locationService: LocationService) { }
 
   @ApiOperation({ summary: '获取周边热门地点推荐' })
   @ApiParam({ name: 'longitude', description: '经度', required: true })
@@ -26,7 +27,7 @@ export class LocationController {
    * @param query 请求参数
    */
   @Post('/get/popular/recommend')
-  getPopularRecommends(@Body() body: GetPopularRecommendsDTO) {
+  getPopularRecommends(@Body() body: GetPopularRecommendsDto) {
     const { latitude, longitude } = body
 
     return this.locationService.getPopularRecommends(longitude, latitude)
@@ -51,7 +52,7 @@ export class LocationController {
   @Post('/create/record')
   createPositionRecord(
     @Req() req: Request,
-    @Body() body: CreatePositionRecordDTO
+    @Body() body: CreatePositionRecordDto
   ) {
     const { user_id } = req[USER_INFO]
 
@@ -118,7 +119,24 @@ export class LocationController {
    * @param body 参数
    */
   @Post('/get/user/route/detail')
-  getUserRouteDetail(@Body() body: GetUserRouteDetailDTO) {
+  getUserRouteDetail(@Body() body: GetUserRouteDetailDto) {
     return this.locationService.getUserRouteDetail(body.user_id, body.list_id)
+  }
+
+  @ApiOperation({ summary: '完善步行打卡记录详情' })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
+  @ApiParam({ name: 'list_id', description: '列表 id', required: true })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
+  /**
+   * 完善步行打卡记录详情
+   *
+   * @param req 请求
+   * @param body 参数
+   */
+  @Post('/update/user/route/detail')
+  updateRouteDetail(@Req() req: Request, @Body() body: UpdateUserRouteDetailDto) {
+    const { user_id } = req[USER_INFO]
+
+    return this.locationService.updateRouteDetail()
   }
 }

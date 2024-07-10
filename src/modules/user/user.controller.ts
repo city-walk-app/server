@@ -14,7 +14,7 @@ import * as fs from 'fs'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
-import { LoginEmailDTO, GetUserInfoDTO, SetUserInfoDTO } from './dto'
+import { LoginEmailDto, GetUserInfoDto, SetUserInfoDto } from './dto'
 
 /**
  * 用户相关模块
@@ -43,7 +43,7 @@ export class UserController {
    * @param body.code 验证码
    */
   @Post('/login/email')
-  async loginEmail(@Body() body: LoginEmailDTO) {
+  async loginEmail(@Body() body: LoginEmailDto) {
     const { email, code } = body
 
     /** 检测验证码是否正确 */
@@ -68,7 +68,7 @@ export class UserController {
    * @param info.user_id 用户 id
    */
   @Post('/get/user_info')
-  getUserInfo(@Body() body: GetUserInfoDTO) {
+  getUserInfo(@Body() body: GetUserInfoDto) {
     return this.userService.getUserInfo(body.user_id)
   }
 
@@ -80,7 +80,7 @@ export class UserController {
    * @param headers 请求头
    */
   @Post('/set/user_info')
-  setUserInfo(@Req() req: Request, @Body() body: SetUserInfoDTO) {
+  setUserInfo(@Req() req: Request, @Body() body: SetUserInfoDto) {
     const { user_id } = req[USER_INFO]
 
     return this.userService.setUserInfo({ ...body, user_id })
