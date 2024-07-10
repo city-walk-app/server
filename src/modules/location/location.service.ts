@@ -210,10 +210,8 @@ export class LocationService {
     } else {
       /**
        * 最新的经验值
-       *
-       * 待优化
        */
-      const experience_value = Number(provinceExperience.experience_value) + Experience.entry
+      const experience_value = Number(provinceExperience.experience_value || '0') + Experience.entry
 
       provinceExperience.experience_value = experience_value
 
@@ -306,6 +304,7 @@ export class LocationService {
     newUserRoute.province_code = options.province_code
     newUserRoute.province = options.province
     newUserRoute.create_at = options.create_at
+    newUserRoute.experience_value = Experience.entry
 
     const result = await this.userRouteEntity.save(newUserRoute)
 

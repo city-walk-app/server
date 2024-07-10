@@ -5,6 +5,7 @@ import { Result, renderID } from 'src/utils'
 import { UserFriendInvite, UserFriendRelation } from './entity'
 import { HttpCode, FriendState, PrefixID } from 'src/enum'
 import { UserInfo } from '../user'
+import { UserRoute } from '../location'
 
 @Injectable()
 export class FriendService {
@@ -12,6 +13,7 @@ export class FriendService {
    * @param userFriendInviteEntity 用户好友关系表
    * @param userFriendRelationEntity 用户好友邀请表
    * @param userInfoEntity 用户表
+   * @param userRouteEntity 用户步行地址信息详情表
    */
   constructor(
     @InjectRepository(UserFriendInvite)
@@ -19,7 +21,9 @@ export class FriendService {
     @InjectRepository(UserFriendRelation)
     private readonly userFriendRelationEntity: Repository<UserFriendRelation>,
     @InjectRepository(UserInfo)
-    private readonly userInfoEntity: Repository<UserInfo>
+    private readonly userInfoEntity: Repository<UserInfo>,
+    @InjectRepository(UserRoute)
+    private readonly userRouteEntity: Repository<UserRoute>
   ) { }
 
   /**
@@ -196,15 +200,51 @@ export class FriendService {
 
     const data = await Promise.all(
       friends.map(async (item) => {
-        const userInfo = this.userInfoEntity.findOne({
-          where: { user_id: item.user_id },
-          select: ['avatar', 'user_id', 'nick_name']
-        })
+        /**
+         * 获取当前用户身份信息
+         */
+        const userInfo = await this.userInfoEntity.findOneBy({ user_id: item.user_id })
+        /**
+         * 查询当前用户当天所打卡的所有地点
+         */
+        const friendTodayExperience = await this.getFriendTodayExperience(item.user_id)
+        /**
+         * 所获经验值
+         */
+        const experiences = friendTodayExperience.reduce((sum, item) => sum + (item.experience_value || 0), 0)
 
-        return userInfo
+        return {
+          nick_name: userInfo.nick_name,
+          avatar: userInfo.avatar,
+          experiences,
+          count: friendTodayExperience.length
+        }
       })
     )
 
+    /**
+     * 按照 experiences 从高到低排序
+     */
+    data.sort((a, b) => b.experiences - a.experiences)
+
+    console.log('进入所有打卡记录', data)
+
     return new Result(HttpCode.OK, 'ok', data)
+  }
+
+  private async getFriendTodayExperience(user_id: string) {
+    const currentDate = new Date()
+    currentDate.setHours(0, 0, 0, 0) // 设置时间为当天的开始时间
+
+    const queryBuilder = await this.userRouteEntity.createQueryBuilder(
+      'userRouteEntity'
+    )
+
+    const todayRelease = await queryBuilder
+      .where('userRouteEntity.user_id = :userId', { userId: user_id })
+      .andWhere('userRouteEntity.create_at >= :currentDate', { currentDate })
+      .getMany()
+
+    return todayRelease
   }
 }
