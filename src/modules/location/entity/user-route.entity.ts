@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn
 } from 'typeorm'
+import { TravelType } from 'src/enum'
 
 /**
  * 用户步行地址信息详情
@@ -22,6 +23,10 @@ export class UserRoute {
   @Column({ type: 'varchar', length: 255, comment: '列表 id' })
   list_id: string
 
+  /** 省份编码 */
+  @Column({ type: 'varchar', length: 255, comment: '省份编码' })
+  province_code: string
+
   /** 创建时间 */
   @CreateDateColumn({
     type: 'datetime',
@@ -34,13 +39,9 @@ export class UserRoute {
   @Column({ type: 'varchar', length: 255, comment: '城市' })
   city: string
 
-  /** 当前省份 */
+  /** 省份 */
   @Column({ type: 'varchar', length: 255, comment: '当前省份' })
   province: string
-
-  /** 详细地址 */
-  @Column({ type: 'varchar', length: 255, comment: '详细地址' })
-  address: string
 
   /** 纬度 */
   @Column({ type: 'varchar', length: 255, comment: '纬度' })
@@ -50,11 +51,31 @@ export class UserRoute {
   @Column({ type: 'varchar', length: 255, comment: '经度' })
   longitude: number
 
-  /** 地点 */
-  @Column({ type: 'varchar', length: 255, comment: '地点' })
-  name: string
+  /** 所获得的经验值 */
+  @Column({ type: 'int', comment: '所获得的经验值' })
+  experience_value: number
 
-  /** 省份编码 */
-  @Column({ type: 'varchar', length: 255, comment: '省份编码' })
-  province_code: string
+  /** 发布的内容 */
+  @Column({ type: 'varchar', length: 255, comment: '发布的内容' })
+  content: string
+
+  /** 地点名称 */
+  @Column({ type: 'varchar', length: 255, comment: '地点名称' })
+  location_name: string
+
+  /** 详细地址 */
+  @Column({ type: 'varchar', length: 255, comment: '详细地址' })
+  address: string
+
+  /** 照片 */
+  @Column({ type: 'varchar', length: 255, comment: '照片' })
+  picture: string
+
+  /** 出行方式 */
+  @Column({ type: 'varchar', length: 255, comment: '出行方式', enum: TravelType })
+  travel_type: string
+
+  /** 心情颜色 */
+  @Column({ type: 'varchar', length: 255, comment: '心情颜色' })
+  mood_color: string
 }

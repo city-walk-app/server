@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Result, renderID } from 'src/utils'
-import { HttpCode, AMap, PrefixID, CITY_NAME_CODE } from 'src/enum'
+import { HttpCode, AMap, PrefixID, CITY_NAME_CODE, Experience } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import { CreatePositionRecordDTO, GetUserRouteDetailDTO } from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
@@ -165,7 +165,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-        JSON.stringify(locationInfo.regeocode.addressComponent)
+      JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -195,10 +195,7 @@ export class LocationService {
       newProvinceExperience.province_code = province_code
       newProvinceExperience.province_name = province
       newProvinceExperience.vis_id = renderID(PrefixID.vis)
-      /**
-       * 待优化，经验值应该设置个枚举
-       */
-      newProvinceExperience.experience_value = 20
+      newProvinceExperience.experience_value = Experience.entry
 
       const result = await this.userVisitedProvinceEntity.save(
         newProvinceExperience
@@ -216,7 +213,7 @@ export class LocationService {
        *
        * 待优化
        */
-      const experience_value = Number(provinceExperience.experience_value) + 20
+      const experience_value = Number(provinceExperience.experience_value) + Experience.entry
 
       provinceExperience.experience_value = experience_value
 
@@ -243,8 +240,6 @@ export class LocationService {
       province: `${province}` || '未知省份',
       city: `${city}` || '未知城市',
       create_at: new Date(),
-      address: '',
-      name: ''
     })
 
     this.loggerService.log('创建新的打卡地点详情：' + createRouteRes)
@@ -309,8 +304,6 @@ export class LocationService {
     newUserRoute.latitude = options.latitude
     newUserRoute.city = options.city
     newUserRoute.province_code = options.province_code
-    newUserRoute.address = options.address
-    newUserRoute.name = options.name
     newUserRoute.province = options.province
     newUserRoute.create_at = options.create_at
 

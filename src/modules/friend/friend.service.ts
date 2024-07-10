@@ -175,4 +175,36 @@ export class FriendService {
 
     return new Result(HttpCode.OK, '拒绝成功')
   }
+
+  /**
+   * 获取朋友经验排名
+   * 
+   * @param user_id 用户 id
+   */
+  async getFriendExperienceRanking(user_id: string) {
+    /**
+     * 获取的我朋友列表
+     */
+    const friends = await this.userFriendRelationEntity.findBy({
+      friend_id: user_id,
+      state: FriendState.normal
+    })
+
+    if (!friends || !friends.length) {
+      return new Result(HttpCode.OK, 'ok', [])
+    }
+
+    const data = await Promise.all(
+      friends.map(async (item) => {
+        const userInfo = this.userInfoEntity.findOne({
+          where: { user_id: item.user_id },
+          select: ['avatar', 'user_id', 'nick_name']
+        })
+
+        return userInfo
+      })
+    )
+
+    return new Result(HttpCode.OK, 'ok', data)
+  }
 }

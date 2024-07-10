@@ -1,3 +1,6 @@
+/**
+ * ID 前缀
+ */
 export enum PrefixID {
   /**
    * 用户 id 前缀

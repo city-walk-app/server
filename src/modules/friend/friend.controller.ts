@@ -90,4 +90,18 @@ export class FriendController {
 
     return this.friendService.friendList(user_id)
   }
+
+  @ApiOperation({ summary: '获取朋友经验排名' })
+  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  /**
+   * 获取朋友经验排名
+   *
+   * @param req 请求
+   */
+  @Post('/get/experience/ranking')
+  getFriendExperienceRanking(@Req() req: Request) {
+    const { user_id } = req[USER_INFO]
+
+    return this.friendService.getFriendExperienceRanking(user_id)
+  }
 }
