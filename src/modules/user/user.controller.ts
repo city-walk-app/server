@@ -29,7 +29,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly emailService: EmailService
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: '邮箱验证码登录' })
   @ApiResponse({ status: HttpCode.OK, description: '登录成功' })
@@ -143,33 +143,4 @@ export class UserController {
 
     return this.userService.setAvatar(user_id, avatar)
   }
-
-  // @ApiOperation({ summary: '获取用户的动态发布日历热力图' })
-  // @ApiResponse({ status: HttpCode.OK, description: 'ok' })
-  // @ApiParam({ name: 'year', description: '年份', required: true })
-  // @ApiParam({ name: 'id', description: '用户 id', required: false })
-  // /**
-  //  * 获取用户的动态发布日历热力图
-  //  *
-  //  * @param query 参数
-  //  * @param query.year 年份
-  //  */
-  // @Get('/get_calendar_heatmap')
-  // getCalendarHeatmap(
-  //   @Req() req: Request,
-  //   @Query() query: { year: number; user_id?: string }
-  // ) {
-  //   const { user_id } = req[USER_INFO]
-
-  //   // 默认为今年
-  //   if (!query.year) {
-  //     const date = new Date()
-  //     query.year = date.getFullYear()
-  //   }
-
-  //   // return this.userService.getCalendarHeatmap(
-  //   //   query.user_id || user_id,
-  //   //   query.year
-  //   // )
-  // }
 }
