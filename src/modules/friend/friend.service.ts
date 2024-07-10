@@ -47,9 +47,12 @@ export class FriendService {
    * @param invite_id 邀请 id
    */
   async getFriendInviteInfo(user_id: string, invite_id: string) {
+    /**
+     * 通过邀请 id，查找申请中的一条数据
+     */
     const inviteRes = await this.userFriendInviteEntity.findOneBy({
-      // user_id,
-      invite_id
+      invite_id,
+      state: FriendState.applying
     })
 
     if (!inviteRes) {
@@ -70,10 +73,28 @@ export class FriendService {
    *
    * @param user_id 用户 id
    */
-  friendList(user_id: string) {
-    console.log(user_id)
+  async friendList(user_id: string) {
+    const friends = await this.userFriendRelationEntity.findBy({
+      friend_id: user_id,
+      state: FriendState.normal
+    })
 
-    return new Result(HttpCode.OK, 'ok', user_id)
+    if (!friends || !friends.length) {
+      return new Result(HttpCode.OK, 'ok', [])
+    }
+
+    const data = await Promise.all(
+      friends.map(async (item) => {
+        const userInfo = this.userInfoEntity.findOne({
+          where: { user_id: item.user_id },
+          select: ['avatar', 'user_id', 'nick_name']
+        })
+
+        return userInfo
+      })
+    )
+
+    return new Result(HttpCode.OK, 'ok', data)
   }
 
   /**
@@ -84,8 +105,13 @@ export class FriendService {
    */
   async confirmInvite(user_id: string, invite_id: string) {
     const inviteInfo = await this.userFriendInviteEntity.findOneBy({
-      invite_id
+      invite_id,
+      state: FriendState.applying
     })
+
+    if (!inviteInfo) {
+      return new Result(HttpCode.ERR, '邀请不存在')
+    }
 
     console.log(inviteInfo)
 
@@ -99,9 +125,7 @@ export class FriendService {
 
     console.log(myRelation)
 
-    const res = await this.userFriendRelationEntity.save(myRelation)
-
-    console.log('red', res)
+    await this.userFriendRelationEntity.save(myRelation)
 
     /** 增加一条对方的关系 */
     const friendRelation = new UserFriendRelation()
@@ -113,6 +137,10 @@ export class FriendService {
 
     await this.userFriendRelationEntity.save(friendRelation)
 
+    // 将邀请数据的状态改为过期的
+    inviteInfo.state = FriendState.overdue
+    await this.userFriendInviteEntity.save(inviteInfo)
+
     return new Result(HttpCode.OK, 'ok')
   }
 
@@ -122,7 +150,20 @@ export class FriendService {
    * @param user_id 用户 id
    * @param invite_id 邀请 id
    */
-  refuseInvite(user_id: string, invite_id: string) {
-    return 13
+  async refuseInvite(invite_id: string) {
+    const inviteInfo = await this.userFriendInviteEntity.findOneBy({
+      invite_id,
+      state: FriendState.applying
+    })
+
+    if (!inviteInfo) {
+      return new Result(HttpCode.ERR, '邀请不存在')
+    }
+
+    inviteInfo.state = FriendState.rejected
+
+    await this.userFriendInviteEntity.save(inviteInfo)
+
+    return new Result(HttpCode.OK, '拒绝成功')
   }
 }

@@ -53,10 +53,8 @@ export class FriendController {
    * @param req 请求
    */
   @Post('/refuse/invite')
-  refuseInvite(@Req() req: Request, @Body() body: { invite_id: string }) {
-    const { user_id } = req[USER_INFO]
-
-    return this.friendService.refuseInvite(user_id, body.invite_id)
+  refuseInvite(@Body() body: { invite_id: string }) {
+    return this.friendService.refuseInvite(body.invite_id)
   }
 
   @ApiOperation({ summary: '同意邀请' })
