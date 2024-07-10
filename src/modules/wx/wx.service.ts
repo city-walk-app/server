@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { HttpCode, Wx } from 'src/enum'
 import { Result } from 'src/utils'
-// import axios from 'axios'
 import { HttpService } from '@nestjs/axios'
 
 @Injectable()
@@ -14,10 +13,6 @@ export class WxService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService
   ) {}
-
-  async getQrCode() {
-    return 123
-  }
 
   /**
    * 获取 AccessToken
