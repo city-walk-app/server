@@ -26,7 +26,7 @@ export class LocationController {
   /**
    * 获取周边热门地点
    *
-   * @param query 请求参数
+   * @param body 请求参数
    */
   @Post('/get/popular/recommend')
   getPopularRecommends(@Body() body: GetPopularRecommendsDto) {
@@ -48,8 +48,8 @@ export class LocationController {
    *
    * 这里一定要验证位置的合法性
    *
+   * @param req 请求
    * @param body 请求参数
-   * @param headers 请求头
    */
   @Post('/create/record')
   createPositionRecord(
@@ -70,7 +70,7 @@ export class LocationController {
    * 获取用户解锁的省份版图列表
    *
    * @param req 请求
-   * @param query 参数
+   * @param body 请求参数
    */
   @Post('/get/user/province/jigsaw')
   getUserProvinceJigsaw(@Body() body: GetUserProvinceJigsawDto) {
@@ -83,8 +83,7 @@ export class LocationController {
   /**
    * 获取用户步行记录列表
    *
-   * @param req 请求
-   * @param body 参数
+   * @param body 请求参数
    */
   @Post('/get/user/route/list')
   async getUserRouteList(@Body() body: GetUserRouteListDto) {
@@ -98,7 +97,7 @@ export class LocationController {
   /**
    * 获取用户步行记录详情
    *
-   * @param body 参数
+   * @param body 请求参数
    */
   @Post('/get/user/route/detail')
   getUserRouteDetail(@Body() body: GetUserRouteDetailDto) {
@@ -111,7 +110,7 @@ export class LocationController {
    * 完善步行打卡记录详情
    *
    * @param req 请求
-   * @param body 参数
+   * @param body 请求参数
    */
   @Post('/update/user/route/detail')
   updateRouteDetail(@Req() req: Request, @Body() body: UpdateUserRouteDetailDto) {

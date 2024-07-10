@@ -24,8 +24,7 @@ export class EmailController {
   /**
    * 发送获取邮箱验证码
    *
-   * @param body 请求体
-   * @param body.email 邮箱地址
+   * @param body 请求参数
    */
   @Post('/send')
   @Throttle({ default: { limit: 1, ttl: 60000 } })

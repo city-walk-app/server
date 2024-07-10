@@ -2,6 +2,7 @@ import { Controller, Body, Post, Req } from '@nestjs/common'
 import { FriendService } from './friend.service'
 import { HttpCode, USER_INFO } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
+import { ConfirmInviteDto } from './dto'
 
 /**
  * 邮件相关接口列表
@@ -40,38 +41,38 @@ export class FriendController {
   @Post('/get/invite/info')
   getFriendInviteInfo(
     @Req() req: Request,
-    @Body() body: { invite_id: string }
+    @Body() body: ConfirmInviteDto
   ) {
     const { user_id } = req[USER_INFO]
 
     return this.friendService.getFriendInviteInfo(user_id, body.invite_id)
   }
 
-  @ApiOperation({ summary: '拒绝邀请' })
+  @ApiOperation({ summary: '拒绝好友申请' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
   @ApiParam({ name: 'invite_id', description: '邀请 id', required: true })
   /**
-   * 拒绝邀请
+   * 拒绝好友申请
    *
    * @param req 请求
    * @param body 请求体
    */
   @Post('/refuse/invite')
-  refuseInvite(@Body() body: { invite_id: string }) {
+  refuseInvite(@Body() body: ConfirmInviteDto) {
     return this.friendService.refuseInvite(body.invite_id)
   }
 
-  @ApiOperation({ summary: '同意邀请' })
+  @ApiOperation({ summary: '同意好友申请' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
   @ApiParam({ name: 'invite_id', description: '邀请 id', required: true })
   /**
-   * 同意邀请
+   * 同意好友申请
    *
    * @param req 请求
    * @param body 请求体
    */
   @Post('/confirm/invite')
-  confirmInvite(@Req() req: Request, @Body() body: { invite_id: string }) {
+  confirmInvite(@Req() req: Request, @Body() body: ConfirmInviteDto) {
     const { user_id } = req[USER_INFO]
 
     return this.friendService.confirmInvite(user_id, body.invite_id)

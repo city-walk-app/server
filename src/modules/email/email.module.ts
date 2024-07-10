@@ -8,7 +8,7 @@ import { MailerModule } from '@nestjs-modules/mailer'
 import { EmailController } from './email.controller'
 import { EmailService } from './email.service'
 import { ConfigService } from '@nestjs/config'
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
+import { ThrottlerModule } from '@nestjs/throttler'
 
 @Module({
   imports: [
@@ -44,4 +44,4 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
   controllers: [EmailController],
   providers: [EmailService]
 })
-export class EmailModule {}
+export class EmailModule { }

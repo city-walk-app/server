@@ -38,9 +38,7 @@ export class UserController {
   /**
    * 邮箱验证码登录
    *
-   * @param body 请求体
-   * @param body.email 邮箱
-   * @param body.code 验证码
+   * @param body 请求参数
    */
   @Post('/login/email')
   async loginEmail(@Body() body: LoginEmailDto) {
@@ -64,8 +62,7 @@ export class UserController {
   /**
    * 获取指定用户信息
    *
-   * @param info 用户信息
-   * @param info.user_id 用户 id
+   * @param body 请求参数
    */
   @Post('/get/user_info')
   getUserInfo(@Body() body: GetUserInfoDto) {
@@ -76,8 +73,8 @@ export class UserController {
   /**
    * 设置用户信息
    *
+   * @param req 请求
    * @param body 请求参数
-   * @param headers 请求头
    */
   @Post('/set/user_info')
   setUserInfo(@Req() req: Request, @Body() body: SetUserInfoDto) {
