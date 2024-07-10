@@ -1,7 +1,7 @@
 import { Controller, Body, Post, Req } from '@nestjs/common'
 import { FriendService } from './friend.service'
 import { HttpCode, USER_INFO } from 'src/enum'
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 
 /**
  * 邮件相关接口列表
@@ -12,7 +12,7 @@ export class FriendController {
   /**
    * @param friendService 好友服务
    */
-  constructor(private readonly friendService: FriendService) {}
+  constructor(private readonly friendService: FriendService) { }
 
   @ApiOperation({ summary: '邀请朋友' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
@@ -30,10 +30,12 @@ export class FriendController {
 
   @ApiOperation({ summary: '获取邀请详情' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  @ApiParam({ name: 'invite_id', description: '邀请 id', required: true })
   /**
    * 获取邀请详情
    *
    * @param req 请求
+   * @param body 请求体
    */
   @Post('/get/invite/info')
   getFriendInviteInfo(
@@ -47,10 +49,12 @@ export class FriendController {
 
   @ApiOperation({ summary: '拒绝邀请' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  @ApiParam({ name: 'invite_id', description: '邀请 id', required: true })
   /**
    * 拒绝邀请
    *
    * @param req 请求
+   * @param body 请求体
    */
   @Post('/refuse/invite')
   refuseInvite(@Body() body: { invite_id: string }) {
@@ -59,10 +63,12 @@ export class FriendController {
 
   @ApiOperation({ summary: '同意邀请' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  @ApiParam({ name: 'invite_id', description: '邀请 id', required: true })
   /**
    * 同意邀请
    *
    * @param req 请求
+   * @param body 请求体
    */
   @Post('/confirm/invite')
   confirmInvite(@Req() req: Request, @Body() body: { invite_id: string }) {

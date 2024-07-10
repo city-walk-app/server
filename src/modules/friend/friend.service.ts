@@ -8,6 +8,11 @@ import { UserInfo } from '../user'
 
 @Injectable()
 export class FriendService {
+  /**
+   * @param userFriendInviteEntity 用户好友关系表
+   * @param userFriendRelationEntity 用户好友邀请表
+   * @param userInfoEntity 用户表
+   */
   constructor(
     @InjectRepository(UserFriendInvite)
     private readonly userFriendInviteEntity: Repository<UserFriendInvite>,
@@ -15,7 +20,7 @@ export class FriendService {
     private readonly userFriendRelationEntity: Repository<UserFriendRelation>,
     @InjectRepository(UserInfo)
     private readonly userInfoEntity: Repository<UserInfo>
-  ) {}
+  ) { }
 
   /**
    * 邀请朋友
@@ -57,6 +62,10 @@ export class FriendService {
 
     if (!inviteRes) {
       return new Result(HttpCode.ERR, '暂无邀请')
+    }
+
+    if (inviteRes.user_id === user_id) {
+      return new Result(HttpCode.ERR, '不能添加自己')
     }
 
     /** 获取邀请人信息 */
