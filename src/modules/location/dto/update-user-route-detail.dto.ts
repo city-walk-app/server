@@ -1,5 +1,5 @@
 import { TravelType } from 'src/enum'
-import { IsString } from 'class-validator'
+import { IsString, IsNotEmpty } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 /**
@@ -7,23 +7,28 @@ import { ApiProperty } from '@nestjs/swagger'
  */
 export class UpdateUserRouteDetailDto {
   /**
+   * 步行 id
+   */
+  @IsNotEmpty({ message: 'route_id 参数缺失' })
+  @IsString({ message: 'route_id 参数类型错误' })
+  @ApiProperty()
+  route_id: string
+
+  /**
    * 内容
    */
-  @IsString()
   @ApiProperty()
   content?: string
 
   /**
    * 出行方式
    */
-  @IsString()
   @ApiProperty()
   travel_type?: TravelType
 
   /**
    * 心情颜色
    */
-  @IsString()
   @ApiProperty()
   mood_color?: string
 }

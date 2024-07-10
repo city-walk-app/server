@@ -4,7 +4,7 @@ import { Repository } from 'typeorm'
 import { Result, renderID } from 'src/utils'
 import { HttpCode, AMap, PrefixID, CITY_NAME_CODE, Experience } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
-import { CreatePositionRecordDto, GetUserRouteDetailDto } from './dto'
+import { CreatePositionRecordDto, GetUserRouteDetailDto, UpdateUserRouteDetailDto } from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { HttpService } from '@nestjs/axios'
 import { LoggerService } from 'src/common'
@@ -54,8 +54,24 @@ export class LocationService {
   // }
 
 
-  async updateRouteDetail() {
+  /**
+   * 完善步行打卡记录详情
+   * 
+   * @param user_id 用户 id
+   * @param body 数据参数
+   */
+  async updateRouteDetail(user_id: string, body: UpdateUserRouteDetailDto) {
+    const routeDetail = await this.userRouteEntity.findOneBy({ user_id, route_id: body.route_id })
 
+    routeDetail.content = body.content // 内容
+    routeDetail.mood_color = body.mood_color // 出行方式
+    routeDetail.travel_type = body.travel_type // 心情颜色
+
+    const data = await this.userRouteEntity.save(routeDetail)
+
+    console.log('完善步行打卡记录详情', data)
+
+    return new Result(HttpCode.OK, 'ok')
   }
 
   /**

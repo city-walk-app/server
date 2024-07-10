@@ -135,6 +135,6 @@ export class LocationController {
   updateRouteDetail(@Req() req: Request, @Body() body: UpdateUserRouteDetailDto) {
     const { user_id } = req[USER_INFO]
 
-    return this.locationService.updateRouteDetail()
+    return this.locationService.updateRouteDetail(user_id, body)
   }
 }
