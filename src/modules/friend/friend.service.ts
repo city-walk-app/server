@@ -215,6 +215,7 @@ export class FriendService {
 
         return {
           nick_name: userInfo.nick_name,
+          user_id: userInfo.user_id,
           avatar: userInfo.avatar,
           experiences,
           count: friendTodayExperience.length

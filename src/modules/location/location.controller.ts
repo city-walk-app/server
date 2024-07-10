@@ -6,7 +6,9 @@ import {
   GetPopularRecommendsDto,
   CreatePositionRecordDto,
   GetUserRouteDetailDto,
-  UpdateUserRouteDetailDto
+  UpdateUserRouteDetailDto,
+  GetUserRouteListDto,
+  GetUserProvinceJigsawDto
 } from './dto'
 
 /**
@@ -62,7 +64,7 @@ export class LocationController {
   }
 
   @ApiOperation({ summary: '获取用户解锁的省份版图列表' })
-  @ApiParam({ name: 'user_id', description: '用户 id', required: false })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户解锁的省份版图列表
@@ -71,19 +73,12 @@ export class LocationController {
    * @param query 参数
    */
   @Post('/get/user/province/jigsaw')
-  getUserProvinceJigsaw(
-    @Req() req: Request,
-    @Body() body: { user_id?: string }
-  ) {
-    const { user_id } = req[USER_INFO]
-
-    console.log(req.headers['user-agent'])
-
-    return this.locationService.getUserProvinceJigsaw(body.user_id || user_id)
+  getUserProvinceJigsaw(@Body() body: GetUserProvinceJigsawDto) {
+    return this.locationService.getUserProvinceJigsaw(body.user_id)
   }
 
   @ApiOperation({ summary: '获取用户步行记录列表' })
-  @ApiParam({ name: 'user_id', description: '用户 id', required: false })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户步行记录列表
@@ -92,21 +87,8 @@ export class LocationController {
    * @param body 参数
    */
   @Post('/get/user/route/list')
-  async getUserRouteList(
-    @Req() req: Request,
-    @Body() body: { user_id?: string }
-  ) {
-    const { user_id } = req[USER_INFO]
-
-    // console.log(req.headers['user-agent'])
-
-    // const { ip } = await this.locationService.positioning(req)
-
-    // if (ip === '127.0.0.1') {
-    //   return new Result(HttpCode.ERR, '非法调用')
-    // }
-
-    return this.locationService.getUserRouteList(body.user_id || user_id)
+  async getUserRouteList(@Body() body: GetUserRouteListDto) {
+    return this.locationService.getUserRouteList(body.user_id)
   }
 
   @ApiOperation({ summary: '获取用户步行记录详情' })

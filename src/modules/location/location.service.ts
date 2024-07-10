@@ -139,6 +139,7 @@ export class LocationService {
    * @param user_id 用户 id
    */
   async getUserRouteList(user_id: string) {
+    console.log(user_id)
     const data = await this.userRouteListEntity.findBy({ user_id })
 
     return new Result(HttpCode.OK, 'ok', data)
