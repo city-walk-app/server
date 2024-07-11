@@ -12,7 +12,7 @@ export class WxService {
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService
-  ) {}
+  ) { }
 
   /**
    * 获取微信饿二维码
@@ -44,9 +44,9 @@ export class WxService {
   }
 
   /**
-   * 获取邀请二维码
+   * 获取 access_token
    */
-  async getInviteQrCode() {
+  private async getAccessToken() {
     const res = await this.httpService.axiosRef.get(Wx.CgiBinToken, {
       params: {
         grant_type: this.configService.get('DB_WX_GRANT_TYPE'),
@@ -56,11 +56,24 @@ export class WxService {
     })
 
     if (!res.data || !res.data.access_token) {
-      return new Result(HttpCode.ERR, '获取异常')
+      return new Result(HttpCode.ERR, '获取 access_token 异常')
     }
 
-    const qrCode = await this.getWeChartQrCode(res.data.access_token)
-    // const qrCode = await this.getWeChartQrCode('123')
+    return res.data
+  }
+
+  /**
+   * 获取邀请二维码
+   */
+  async getInviteQrCode() {
+    /**
+     * 获取 access_token
+     */
+    const accessTokenRes = await this.getAccessToken()
+    /**
+     * 获取二维码
+     */
+    const qrCode = await this.getWeChartQrCode(accessTokenRes.access_token)
 
     return new Result(HttpCode.OK, 'ok', qrCode)
   }
