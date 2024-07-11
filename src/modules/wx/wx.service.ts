@@ -59,8 +59,8 @@ export class WxService {
       return new Result(HttpCode.ERR, '获取异常')
     }
 
-    // const qrCode = await this.getWeChartQrCode(res.data.access_token)
-    const qrCode = await this.getWeChartQrCode('123')
+    const qrCode = await this.getWeChartQrCode(res.data.access_token)
+    // const qrCode = await this.getWeChartQrCode('123')
 
     return new Result(HttpCode.OK, 'ok', qrCode)
   }
