@@ -2,6 +2,11 @@ import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common'
 import Redis from 'ioredis'
 import { ConfigService } from '@nestjs/config'
 
+/**
+ * Redis 服务
+ * 
+ * @see ioredis https://github.com/redis/ioredis
+ */
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
   /**
@@ -22,10 +27,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     if (!this.instance) {
       this.instance = new Redis({
+        /**
+         * 主机地址
+         */
         host: this.configService.get('DB_REDIS_HOST'),
+        /**
+         * 端口
+         */
         port: this.configService.get('DB_REDIS_PORT'),
-        // password: this.configService.get('DB_REDIS_PASSWORD'),
-        // db: this.configService.get('DB_REDIS_DB')
       })
 
       this.instance.on('error', (err) => {
