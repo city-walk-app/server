@@ -38,6 +38,7 @@ import { AppController } from './app.controller'
 import { ValidationPipe } from 'src/common'
 import { UserMiddleware } from 'src/middleware'
 import { JwtModule } from '@nestjs/jwt'
+import { RedisModule } from 'src/service'
 
 @Module({
   imports: [
@@ -83,7 +84,8 @@ import { JwtModule } from '@nestjs/jwt'
     LocationModule,
     JwtModule,
     FriendModule,
-    WxModule
+    WxModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [

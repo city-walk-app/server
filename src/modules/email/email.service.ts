@@ -3,23 +3,31 @@ import { MailerService } from '@nestjs-modules/mailer'
 import Redis from 'ioredis'
 import { ConfigService } from '@nestjs/config'
 import { Result } from 'src/utils'
+import { RedisService } from 'src/service'
 import { HttpCode } from 'src/enum'
 
 /** 过期时间 */
 const EXPIRE_TIME = 300000
-/** 初始化 redis */
-const redis = new Redis()
 
 @Injectable()
 export class EmailService {
   /**
+   * redis 实例
+   */
+  private redisInstance: Redis
+
+  /**
    * @param mailerService 邮箱服务
    * @param configService 配置服务
+   * @param redisService redis 服务
    */
   constructor(
     private readonly mailerService: MailerService,
-    private readonly configService: ConfigService
-  ) {}
+    private readonly configService: ConfigService,
+    private readonly redisService: RedisService,
+  ) {
+    this.redisInstance = this.redisService.getInstance()
+  }
 
   /**
    * 获取邮箱验证码
@@ -59,10 +67,10 @@ export class EmailService {
      *
      * @see hash https://github.com/luin/ioredis/blob/main/examples/hash.js
      */
-    await redis.hmset(email, data)
+    await this.redisInstance.hmset(email, data)
 
     // 设置失效时间
-    await redis.expire(email, EXPIRE_TIME)
+    await this.redisInstance.expire(email, EXPIRE_TIME)
 
     return new Result(HttpCode.OK, '获取成功')
   }
@@ -79,7 +87,7 @@ export class EmailService {
    */
   async validatorCode(email: string, code: string) {
     /** 获取到所有的邮箱验证码键值对 */
-    const all = await redis.hgetall(email)
+    const all = await this.redisInstance.hgetall(email)
 
     // 如果没有查找到该邮箱的
     if (!all) {
@@ -91,13 +99,13 @@ export class EmailService {
 
     // 验证码过期
     if (time - Number(all.time) > EXPIRE_TIME) {
-      redis.del(email)
+      this.redisInstance.del(email)
       return new Result(HttpCode.ERR, '验证码已失效，请重新获取')
     }
 
     // 验证码正确
     if (all.code === code) {
-      redis.del(email)
+      this.redisInstance.del(email)
       return new Result(HttpCode.OK, '验证码正确')
     }
 

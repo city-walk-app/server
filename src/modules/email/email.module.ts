@@ -12,6 +12,9 @@ import { ThrottlerModule } from '@nestjs/throttler'
 
 @Module({
   imports: [
+    /**
+     * 速率限制模块
+     */
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
@@ -39,9 +42,9 @@ import { ThrottlerModule } from '@nestjs/throttler'
           }
         }
       }
-    })
+    }),
   ],
   controllers: [EmailController],
   providers: [EmailService]
 })
-export class EmailModule {}
+export class EmailModule { }
