@@ -19,6 +19,8 @@ export enum Wx {
 
   /**
    * 获取手机号
+   *
+   * @see 获取手机号 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
    */
   Getuserphonenumber = 'https://api.weixin.qq.com/wxa/business/getuserphonenumber'
 }

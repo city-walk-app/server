@@ -28,4 +28,11 @@ export class LoginEmailDto {
   @Length(6, 6, { message: '验证码长度不正确' })
   @ApiProperty()
   code: string
+
+  /**
+   * 微信 open id
+   */
+  @IsString({ message: 'open id 必须是字符串' })
+  @ApiProperty()
+  wx_open_id?: string
 }

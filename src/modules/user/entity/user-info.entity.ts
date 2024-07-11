@@ -36,6 +36,10 @@ export class UserInfo {
   @Column({ type: 'varchar', length: 255, comment: '手机号' })
   mobile: string
 
+  /** 微信 open id */
+  @Column({ type: 'varchar', length: 255, comment: '微信 open id' })
+  wx_open_id: string
+
   /** 头像 */
   @Column({ type: 'varchar', length: 255, comment: '头像' })
   avatar: string

@@ -49,7 +49,7 @@ export class UserController {
 
     // 验证码正确
     if (codeResult.code === HttpCode.OK) {
-      return await this.userService.loginEmail(body.email)
+      return await this.userService.loginEmail(body.email, body.wx_open_id)
     }
 
     // 验证码不正确

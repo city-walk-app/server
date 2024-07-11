@@ -64,8 +64,9 @@ export class UserService {
    * 电子邮箱验证码登录
    *
    * @param email 邮箱
+   * @param wx_open_id 微信 open id
    */
-  async loginEmail(email: string) {
+  async loginEmail(email: string, wx_open_id?: string) {
     /** 用户信息 */
     const foundUserInfo = await this.userInfoEntity.findOneBy({ email })
     /** 是否为新用户 */
@@ -89,6 +90,11 @@ export class UserService {
           user.email = email
           user.created_at = new Date()
           user.user_id = renderID(PrefixID.user).toString()
+
+          // 设置 open id
+          if (wx_open_id) {
+            user.wx_open_id = wx_open_id
+          }
 
           /** 用户参数列表 */
           const newUser = this.userInfoEntity.create(user)

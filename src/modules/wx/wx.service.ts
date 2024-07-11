@@ -12,7 +12,7 @@ export class WxService {
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService
-  ) { }
+  ) {}
 
   /**
    * 获取微信饿二维码
@@ -80,10 +80,10 @@ export class WxService {
 
   /**
    * open id 登录
-   * 
+   *
    * @param code code
    */
-  async loginOpenId(code: string) {
+  async getOpenId(code: string) {
     const res = await this.httpService.axiosRef.get(Wx.SnsJscode2session, {
       params: {
         grant_type: 'authorization_code',
@@ -98,28 +98,12 @@ export class WxService {
     return new Result(HttpCode.OK, 'ok', res.data)
   }
 
-  async wechatLogin(mobile_code: string, open_id_code: string) {
-    /**
-     * 获取 access_token
-     */
-    const accessTokenRes = await this.getAccessToken()
-
-    console.log(accessTokenRes.access_token)
-
-    const res = await this.httpService.axiosRef.post(Wx.Getuserphonenumber + `?access_token=${accessTokenRes.access_token}`, {
-      // params: {
-      //   access_token: accessTokenRes.access_token,
-      // },
-      data: {
-        code: mobile_code
-      },
-      headers: {
-        'content-type': 'application/json'
-      }
-    })
-
-    console.log(res.data)
-
-    return new Result(HttpCode.OK, 'ok', res.data)
+  /**
+   * open id 登录
+   *
+   * @param wx_open_id 微信 open id
+   */
+  async loginOpenId(wx_open_id: string) {
+    return new Result(HttpCode.OK, 'ok', wx_open_id)
   }
 }

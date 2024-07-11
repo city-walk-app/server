@@ -12,7 +12,7 @@ export class WxController {
   /**
    * @param wxService 管理服务
    */
-  constructor(private readonly wxService: WxService) { }
+  constructor(private readonly wxService: WxService) {}
 
   @ApiOperation({ summary: '获取邀请二维码' })
   @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
@@ -25,18 +25,22 @@ export class WxController {
   }
 
   /**
-   * open id 登录
-   * 
-   * @param body 
-   * @returns 
+   * 获取 open id
+   *
+   * @param body 请求参数
    */
-  @Post('/login/open_id')
-  loginOpenId(@Body() body: { code: string }) {
-    return this.wxService.loginOpenId(body.code)
+  @Post('/get/open_id')
+  getOpenId(@Body() body: { code: string }) {
+    return this.wxService.getOpenId(body.code)
   }
 
-  @Post('/login')
-  wechatLogin(@Body() body: { mobile_code: string, open_id_code: string }) {
-    return this.wxService.wechatLogin(body.mobile_code, body.open_id_code)
+  /**
+   * open id 登录
+   *
+   * @param body 请求参数
+   */
+  @Post('/login/open_id')
+  loginOpenId(@Body() body: { wx_open_id: string }) {
+    return this.wxService.loginOpenId(body.wx_open_id)
   }
 }
