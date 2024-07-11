@@ -14,13 +14,13 @@ export class WxController {
    */
   constructor(private readonly wxService: WxService) {}
 
-  @ApiOperation({ summary: '获取 AccessToken' })
+  @ApiOperation({ summary: '获取邀请二维码' })
   @ApiResponse({ status: HttpCode.OK, description: '获取成功' })
   /**
-   * 获取 AccessToken
+   * 获取邀请二维码
    */
-  @Post('/get/access_token')
-  getParams() {
-    return this.wxService.getAccessToken()
+  @Post('/get/invite/qr_code')
+  getInviteQrCode() {
+    return this.wxService.getInviteQrCode()
   }
 }

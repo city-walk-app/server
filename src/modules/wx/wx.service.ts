@@ -15,9 +15,38 @@ export class WxService {
   ) {}
 
   /**
-   * 获取 AccessToken
+   * 获取微信饿二维码
+   *
+   * @param access_token access_token
    */
-  async getAccessToken() {
+  private async getWeChartQrCode(access_token: string) {
+    const res = await this.httpService.axiosRef.post(
+      Wx.WxaGetwxacode + `?access_token=${access_token}`,
+      JSON.stringify({ path: 'pages/home/index?code=1212211' }),
+      {
+        responseType: 'arraybuffer',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+
+    console.log(res.data)
+
+    if (!res.data || !Buffer.isBuffer(res.data)) {
+      return new Result(HttpCode.ERR, '二维码生成错误')
+    }
+
+    const base64Image = Buffer.from(res.data).toString('base64')
+    const qrCodeBase64 = `data:image/png;base64,${base64Image}`
+
+    return qrCodeBase64
+  }
+
+  /**
+   * 获取邀请二维码
+   */
+  async getInviteQrCode() {
     const res = await this.httpService.axiosRef.get(Wx.CgiBinToken, {
       params: {
         grant_type: this.configService.get('DB_WX_GRANT_TYPE'),
@@ -26,6 +55,13 @@ export class WxService {
       }
     })
 
-    return new Result(HttpCode.OK, 'ok', res.data)
+    if (!res.data || !res.data.access_token) {
+      return new Result(HttpCode.ERR, '获取异常')
+    }
+
+    // const qrCode = await this.getWeChartQrCode(res.data.access_token)
+    const qrCode = await this.getWeChartQrCode('123')
+
+    return new Result(HttpCode.OK, 'ok', qrCode)
   }
 }
