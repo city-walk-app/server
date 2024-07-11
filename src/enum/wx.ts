@@ -10,5 +10,15 @@ export enum Wx {
   /**
    * 生成二维码
    */
-  WxaGetwxacode = 'https://api.weixin.qq.com/wxa/getwxacode'
+  WxaGetwxacode = 'https://api.weixin.qq.com/wxa/getwxacode',
+
+  /**
+   * 获取 open id 登录参数
+   */
+  SnsJscode2session = 'https://api.weixin.qq.com/sns/jscode2session',
+
+  /**
+   * 获取手机号
+   */
+  Getuserphonenumber = 'https://api.weixin.qq.com/wxa/business/getuserphonenumber'
 }

@@ -77,4 +77,49 @@ export class WxService {
 
     return new Result(HttpCode.OK, 'ok', qrCode)
   }
+
+  /**
+   * open id 登录
+   * 
+   * @param code code
+   */
+  async loginOpenId(code: string) {
+    const res = await this.httpService.axiosRef.get(Wx.SnsJscode2session, {
+      params: {
+        grant_type: 'authorization_code',
+        appid: this.configService.get('DB_WX_APPID'),
+        secret: this.configService.get('DB_WX_SECRET'),
+        js_code: code
+      }
+    })
+
+    console.log(res.data)
+
+    return new Result(HttpCode.OK, 'ok', res.data)
+  }
+
+  async wechatLogin(mobile_code: string, open_id_code: string) {
+    /**
+     * 获取 access_token
+     */
+    const accessTokenRes = await this.getAccessToken()
+
+    console.log(accessTokenRes.access_token)
+
+    const res = await this.httpService.axiosRef.post(Wx.Getuserphonenumber + `?access_token=${accessTokenRes.access_token}`, {
+      // params: {
+      //   access_token: accessTokenRes.access_token,
+      // },
+      data: {
+        code: mobile_code
+      },
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+
+    console.log(res.data)
+
+    return new Result(HttpCode.OK, 'ok', res.data)
+  }
 }
