@@ -30,7 +30,7 @@ export class UserService {
    *
    * @param user 用户信息
    */
-  private createToken(user: Partial<UserInfo>) {
+  createToken(user: Partial<UserInfo>) {
     return this.jwtService.sign(user)
   }
 
@@ -105,6 +105,30 @@ export class UserService {
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
       is_new_user: isNewUser,
+      user_id: userInfo.user_id,
+      email: userInfo.email,
+      avatar: userInfo.avatar
+    })
+  }
+
+  /**
+   * open id 登录
+   *
+   * @param wx_open_id 微信 open id
+   */
+  async loginOpenId(wx_open_id: string) {
+    /** 用户信息 */
+    const userInfo = await this.userInfoEntity.findOneBy({ wx_open_id })
+
+    console.log('openid', userInfo)
+
+    if (!userInfo) {
+      return new Result(HttpCode.ERR, '未注册')
+    }
+
+    return new Result(HttpCode.OK, '登录成功', {
+      token: this.createToken({ user_id: userInfo.user_id }),
+      is_new_user: false,
       user_id: userInfo.user_id,
       email: userInfo.email,
       avatar: userInfo.avatar

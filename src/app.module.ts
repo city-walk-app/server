@@ -85,7 +85,7 @@ import { RedisModule } from 'src/service'
     JwtModule,
     FriendModule,
     WxModule,
-    RedisModule,
+    RedisModule
   ],
   controllers: [AppController],
   providers: [
@@ -129,7 +129,9 @@ export class AppModule implements NestModule {
        */
       .exclude(
         { path: '/user/login/email', method: RequestMethod.POST },
-        { path: '/email/send', method: RequestMethod.POST }
+        { path: '/email/send', method: RequestMethod.POST },
+        { path: '/wx/get/open_id', method: RequestMethod.POST },
+        { path: '/wx/login/open_id', method: RequestMethod.POST }
       )
       /**
        * 注册到所有的 post 路由路由
