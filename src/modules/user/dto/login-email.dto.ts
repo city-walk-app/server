@@ -32,7 +32,7 @@ export class LoginEmailDto {
   /**
    * 微信 open id
    */
-  @IsString({ message: 'open id 必须是字符串' })
+  // @IsString({ message: 'open id 必须是字符串' })
   @ApiProperty()
   wx_open_id?: string
 }

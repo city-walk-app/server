@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config'
 import { HttpCode, Wx } from 'src/enum'
 import { Result } from 'src/utils'
 import { HttpService } from '@nestjs/axios'
-import { UserService } from '../user'
 
 @Injectable()
 export class WxService {
@@ -12,8 +11,7 @@ export class WxService {
    */
   constructor(
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
-    private readonly userService: UserService
+    private readonly httpService: HttpService
   ) {}
 
   /**
@@ -98,14 +96,5 @@ export class WxService {
     console.log(res.data)
 
     return new Result(HttpCode.OK, 'ok', res.data)
-  }
-
-  /**
-   * open id 登录
-   *
-   * @param wx_open_id 微信 open id
-   */
-  async loginOpenId(wx_open_id: string) {
-    return await this.userService.loginOpenId(wx_open_id)
   }
 }

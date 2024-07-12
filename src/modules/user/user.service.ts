@@ -126,10 +126,18 @@ export class UserService {
       return new Result(HttpCode.ERR, '未注册')
     }
 
-    console.log(this.createToken({ user_id: userInfo.user_id }))
+    /**
+     * token: this.jwtService.sign(payload, { secret: jwtConstants.secret, expiresIn: jwtConstants.expiresIn })
+     */
+
+    try {
+      console.log(this.createToken({ user_id: userInfo.user_id }))
+    } catch (err) {
+      console.log(err)
+    }
 
     return new Result(HttpCode.OK, '登录成功', {
-      // token: this.createToken({ user_id: userInfo.user_id }),
+      token: this.createToken({ user_id: userInfo.user_id }),
       is_new_user: false,
       user_id: userInfo.user_id,
       email: userInfo.email,

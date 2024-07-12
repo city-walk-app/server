@@ -33,14 +33,4 @@ export class WxController {
   getOpenId(@Body() body: { code: string }) {
     return this.wxService.getOpenId(body.code)
   }
-
-  /**
-   * open id 登录
-   *
-   * @param body 请求参数
-   */
-  @Post('/login/open_id')
-  loginOpenId(@Body() body: { wx_open_id: string }) {
-    return this.wxService.loginOpenId(body.wx_open_id)
-  }
 }

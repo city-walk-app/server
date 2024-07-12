@@ -49,7 +49,7 @@ export class UserController {
 
     // 验证码正确
     if (codeResult.code === HttpCode.OK) {
-      return await this.userService.loginEmail(body.email, body.wx_open_id)
+      return await this.userService.loginEmail(body.email)
     }
 
     // 验证码不正确
@@ -81,6 +81,16 @@ export class UserController {
     const { user_id } = req[USER_INFO]
 
     return this.userService.setUserInfo({ ...body, user_id })
+  }
+
+  /**
+   * open id 登录
+   *
+   * @param body 请求参数
+   */
+  @Post('/login/open_id')
+  loginOpenId(@Body() body: { wx_open_id: string }) {
+    return this.userService.loginOpenId(body.wx_open_id)
   }
 
   @ApiOperation({ summary: '用户头像上传' })
