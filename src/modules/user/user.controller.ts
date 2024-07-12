@@ -14,7 +14,12 @@ import * as fs from 'fs'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
-import { LoginEmailDto, GetUserInfoDto, SetUserInfoDto } from './dto'
+import {
+  LoginEmailDto,
+  GetUserInfoDto,
+  SetUserInfoDto,
+  LoginOpenIdDto
+} from './dto'
 
 /**
  * 用户相关模块
@@ -83,13 +88,16 @@ export class UserController {
     return this.userService.setUserInfo({ ...body, user_id })
   }
 
+  @ApiOperation({ summary: 'open id 登录' })
+  @ApiResponse({ status: HttpCode.OK, description: 'ok' })
+  @ApiParam({ name: 'wx_open_id', description: 'open id', required: true })
   /**
    * open id 登录
    *
    * @param body 请求参数
    */
   @Post('/login/open_id')
-  loginOpenId(@Body() body: { wx_open_id: string }) {
+  loginOpenId(@Body() body: LoginOpenIdDto) {
     return this.userService.loginOpenId(body.wx_open_id)
   }
 
