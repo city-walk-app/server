@@ -23,7 +23,7 @@ export class UserService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService
-  ) {}
+  ) { }
 
   /**
    * 生成 token
@@ -85,22 +85,22 @@ export class UserService {
     const userInfo = foundUserInfo
       ? foundUserInfo
       : await (async () => {
-          const user = new UserInfo()
+        const user = new UserInfo()
 
-          user.email = email
-          user.created_at = new Date()
-          user.user_id = renderID(PrefixID.user).toString()
+        user.email = email
+        user.created_at = new Date()
+        user.user_id = renderID(PrefixID.user).toString()
 
-          // 设置 open id
-          if (wx_open_id) {
-            user.wx_open_id = wx_open_id
-          }
+        // 设置 open id
+        if (wx_open_id) {
+          user.wx_open_id = wx_open_id
+        }
 
-          /** 用户参数列表 */
-          const newUser = this.userInfoEntity.create(user)
+        /** 用户参数列表 */
+        const newUser = this.userInfoEntity.create(user)
 
-          return await this.userInfoEntity.save(newUser)
-        })()
+        return await this.userInfoEntity.save(newUser)
+      })()
 
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
