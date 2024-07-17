@@ -72,6 +72,16 @@ export class FriendService {
       return new Result(HttpCode.ERR, '不能添加自己')
     }
 
+    /** 是否已经存在用户关系 */
+    const isHaveRelation = await this.userFriendRelationEntity.findOneBy({
+      user_id,
+      friend_id: inviteRes.user_id
+    })
+
+    if (isHaveRelation) {
+      return new Result(HttpCode.ERR, '已经是好友了')
+    }
+
     /** 获取邀请人信息 */
     const userInfo = await this.userInfoEntity.findOneBy({ user_id })
 
