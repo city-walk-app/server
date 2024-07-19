@@ -124,6 +124,7 @@ export class LocationController {
   }
 
   @ApiOperation({ summary: '获取用户指定月份打卡热力图' })
+  @ApiParam({ name: 'date', description: '日期', required: true })
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户指定月份打卡热力图
