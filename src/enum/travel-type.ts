@@ -23,6 +23,11 @@ export enum TravelType {
   bus = 'bus',
 
   /**
+   * 地铁
+   */
+  metro = 'metro',
+
+  /**
    * 火车
    */
   train = 'train',
@@ -31,4 +36,9 @@ export enum TravelType {
    * 飞机
    */
   airplane = 'airplane',
+
+  /**
+   * 船
+   */
+  ship = 'ship'
 }
