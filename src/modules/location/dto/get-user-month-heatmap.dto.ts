@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsString, Matches } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 /**
@@ -10,6 +10,7 @@ export class GetUserMonthHeatmapDto {
    */
   @IsNotEmpty({ message: '参数缺失' })
   @IsString({ message: '类型错误' })
+  @Matches(/^\d{4}-\d{2}$/, { message: '日期格式错误，正确格式为 yyyy-mm' })
   @ApiProperty()
   date: string
 }
