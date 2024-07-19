@@ -138,6 +138,6 @@ export class LocationController {
   ) {
     const { user_id } = req[USER_INFO]
 
-    return this.locationService.getUserMonthHeatmap(user_id)
+    return this.locationService.getUserMonthHeatmap(user_id, body.date)
   }
 }

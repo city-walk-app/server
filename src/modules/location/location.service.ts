@@ -7,7 +7,8 @@ import { ConfigService } from '@nestjs/config'
 import {
   CreatePositionRecordDto,
   GetUserRouteDetailDto,
-  UpdateUserRouteDetailDto
+  UpdateUserRouteDetailDto,
+  GetUserMonthHeatmapDto
 } from './dto'
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { HttpService } from '@nestjs/axios'
@@ -402,7 +403,57 @@ export class LocationService {
    *
    * @param user_id 用户 id
    */
-  getUserMonthHeatmap(user_id: string) {
-    return new Result(HttpCode.OK, 'ok', user_id)
+  async getUserMonthHeatmap(
+    user_id: string,
+    date: GetUserMonthHeatmapDto['date']
+  ) {
+    const [year, month] = date.split('-')
+
+    const startDate = new Date(`${year}-${month}-01`)
+    const endDate = new Date(`${year}-${(parseInt(month) % 12) + 1}-01`)
+
+    /** 获取到当年指定用户打卡记录 */
+    const currentYearRouters = await this.userRouteListEntity
+      .createQueryBuilder('user_route_list')
+      .where('user_route_list.create_at >= :startDate', { startDate })
+      .andWhere('user_route_list.create_at <= :endDate', { endDate })
+      .andWhere('user_route_list.user_id = :user_id', { user_id })
+      .getMany()
+
+    /** 获取指定月份的天数 */
+    const monthDays = new Date(Number(year), Number(month), 0).getDate()
+
+    console.log(year, month, monthDays, currentYearRouters)
+
+    const detailMap = await Promise.all(
+      currentYearRouters.map(async (item) => {
+        const routeDetail = await this.userRouteEntity.findBy({
+          list_id: item.list_id
+        })
+
+        return {
+          ...item,
+          detail: routeDetail.length
+        }
+      })
+    )
+
+    return detailMap
+
+    // 创建日历热力图数据结构
+    const data = []
+
+    for (let day = 1; day <= monthDays; day++) {
+      data.push({
+        date:
+          year +
+          '-' +
+          month.padStart(2, '0') +
+          '-' +
+          day.toString().padStart(2, '0')
+      })
+    }
+
+    return new Result(HttpCode.OK, 'ok', data)
   }
 }
