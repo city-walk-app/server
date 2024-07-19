@@ -146,7 +146,6 @@ export class LocationService {
    * @param user_id 用户 id
    */
   async getUserRouteList(user_id: string) {
-    console.log(user_id)
     const data = await this.userRouteListEntity.findBy({ user_id })
 
     return new Result(HttpCode.OK, 'ok', data)
@@ -409,11 +408,13 @@ export class LocationService {
   ) {
     const [year, month] = date.split('-')
 
+    /** 开始时间 */
     const startDate = new Date(`${year}-${month}-01`)
+    /** 结束时间 */
     const endDate = new Date(`${year}-${(parseInt(month) % 12) + 1}-01`)
 
     /** 获取到当年指定用户打卡记录 */
-    const currentYearRouters = await this.userRouteListEntity
+    const routeList = await this.userRouteListEntity
       .createQueryBuilder('user_route_list')
       .where('user_route_list.create_at >= :startDate', { startDate })
       .andWhere('user_route_list.create_at <= :endDate', { endDate })
@@ -423,36 +424,66 @@ export class LocationService {
     /** 获取指定月份的天数 */
     const monthDays = new Date(Number(year), Number(month), 0).getDate()
 
-    console.log(year, month, monthDays, currentYearRouters)
-
-    const detailMap = await Promise.all(
-      currentYearRouters.map(async (item) => {
-        const routeDetail = await this.userRouteEntity.findBy({
-          list_id: item.list_id
-        })
-
-        return {
-          ...item,
-          detail: routeDetail.length
-        }
-      })
-    )
-
-    return detailMap
-
-    // 创建日历热力图数据结构
-    const data = []
-
-    for (let day = 1; day <= monthDays; day++) {
-      data.push({
+    /**
+     * 初始化一个月的天数数组
+     *
+     * @see Array.from() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/from
+     */
+    const data = Array.from({ length: monthDays }, (_, i: number) => {
+      return {
         date:
           year +
           '-' +
           month.padStart(2, '0') +
           '-' +
-          day.toString().padStart(2, '0')
+          (i + 1).toString().padStart(2, '0'),
+        day: i + 1,
+        routes: null
+      }
+    })
+
+    /**
+     * 步行全部列表
+     */
+    const routerAll = await Promise.all(
+      routeList.map(async (item) => {
+        /** 获取当天打卡记录列表 */
+        const routes = await this.userRouteEntity.find({
+          where: { list_id: item.list_id },
+          select: [
+            'list_id',
+            'route_id',
+            'province_code',
+            'create_at',
+            'city',
+            'province',
+            'latitude',
+            'longitude',
+            'content',
+            'location_name',
+            'address',
+            'picture',
+            'travel_type',
+            'mood_color'
+          ]
+        })
+
+        /** 获取到当天的日期 */
+        const day = new Date(item.create_at).getDate()
+
+        return {
+          day,
+          routes,
+          list_id: item.list_id,
+          route_count: routes.length
+        } as const
       })
-    }
+    )
+
+    // 将查询结果插入到天数数组中
+    routerAll.forEach((item) => {
+      data[item.day - 1].routes = item.routes
+    })
 
     return new Result(HttpCode.OK, 'ok', data)
   }
