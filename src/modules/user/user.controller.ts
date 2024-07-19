@@ -20,7 +20,7 @@ import {
   SetUserInfoDto,
   LoginOpenIdDto
 } from './dto'
-import OSS from 'ali-oss'
+// import OSS from 'ali-oss'
 
 /**
  * 阿里云 OSS 配置
@@ -29,12 +29,12 @@ import OSS from 'ali-oss'
  * @see 教程 https://juejin.cn/post/7364427985599037449
  * @see 文档 https://help.aliyun.com/zh/oss/developer-reference/getting-started-with-oss-sdk-for-node-js?spm=a2c4g.11186623.0.0.39ad49d1BT7Bf0
  */
-const store = new OSS({
-  region: 'oss-cn-beijing', // 区域
-  accessKeyId: 'LTAI5tGF2HyV2439kCahKUda',
-  accessKeySecret: '9ncKiflzYHLiGV1pX90HrgRTmKkizy',
-  bucket: 'city-walk'
-})
+// const store = new OSS({
+//   region: 'oss-cn-beijing', // 区域
+//   accessKeyId: 'LTAI5tGF2HyV2439kCahKUda',
+//   accessKeySecret: '9ncKiflzYHLiGV1pX90HrgRTmKkizy',
+//   bucket: 'city-walk'
+// })
 
 /**
  * 用户相关模块

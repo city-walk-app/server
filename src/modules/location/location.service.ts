@@ -396,4 +396,13 @@ export class LocationService {
 
     return newRouteListResult
   }
+
+  /**
+   * 获取用户指定月份的热力图
+   *
+   * @param user_id 用户 id
+   */
+  getUserMonthHeatmap(user_id: string) {
+    return new Result(HttpCode.OK, 'ok', user_id)
+  }
 }

@@ -8,7 +8,8 @@ import {
   GetUserRouteDetailDto,
   UpdateUserRouteDetailDto,
   GetUserRouteListDto,
-  GetUserProvinceJigsawDto
+  GetUserProvinceJigsawDto,
+  GetUserMonthHeatmapDto
 } from './dto'
 
 /**
@@ -120,5 +121,23 @@ export class LocationController {
     const { user_id } = req[USER_INFO]
 
     return this.locationService.updateRouteDetail(user_id, body)
+  }
+
+  @ApiOperation({ summary: '获取用户指定月份打卡热力图' })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
+  /**
+   * 获取用户指定月份打卡热力图
+   *
+   * @param req 请求
+   * @param body 请求参数
+   */
+  @Post('/get/user/heatmap')
+  getUserMonthHeatmap(
+    @Req() req: Request,
+    @Body() body: GetUserMonthHeatmapDto
+  ) {
+    const { user_id } = req[USER_INFO]
+
+    return this.locationService.getUserMonthHeatmap(user_id)
   }
 }
