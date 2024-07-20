@@ -27,13 +27,22 @@ export class LocationController {
   /**
    * 获取周边热门地点
    *
+   * @param req 请求
    * @param body 请求参数
    */
   @Post('/get/popular/recommend')
-  getPopularRecommends(@Body() body: GetPopularRecommendsDto) {
+  getPopularRecommends(
+    @Req() req: Request,
+    @Body() body: GetPopularRecommendsDto
+  ) {
     const { latitude, longitude } = body
+    const { user_id } = req[USER_INFO]
 
-    return this.locationService.getPopularRecommends(longitude, latitude)
+    return this.locationService.getPopularRecommends(
+      user_id,
+      longitude,
+      latitude
+    )
   }
 
   @ApiOperation({ summary: '创建当前位置记录（打卡地点）' })

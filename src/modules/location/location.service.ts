@@ -2,7 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Result, renderID } from 'src/utils'
-import { HttpCode, AMap, PrefixID, CITY_NAME_CODE, Experience } from 'src/enum'
+import {
+  HttpCode,
+  AMap,
+  PrefixID,
+  CITY_NAME_CODE,
+  Experience,
+  PreferenceMap,
+  PreferenceKey
+} from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import {
   CreatePositionRecordDto,
@@ -13,6 +21,8 @@ import {
 import { UserVisitedProvince, UserRoute, UserRouteList } from './entity'
 import { HttpService } from '@nestjs/axios'
 import { LoggerService } from 'src/common'
+import { UserInfo } from '../user'
+// import requestIp from 'request-ip'
 
 @Injectable()
 export class LocationService {
@@ -26,6 +36,7 @@ export class LocationService {
    * @param userVisitedProvinceEntity 用户访问的省份数据库
    * @param userRouteEntity 用户步行地址信息详情
    * @param userRouteListEntity 用户步行地址信息详情列表
+   * @param userInfoEntity 用户表
    */
   constructor(
     private readonly loggerService: LoggerService,
@@ -36,7 +47,9 @@ export class LocationService {
     @InjectRepository(UserRoute)
     private readonly userRouteEntity: Repository<UserRoute>,
     @InjectRepository(UserRouteList)
-    private readonly userRouteListEntity: Repository<UserRouteList>
+    private readonly userRouteListEntity: Repository<UserRouteList>,
+    @InjectRepository(UserInfo)
+    private readonly userInfoEntity: Repository<UserInfo>
   ) {
     this.apiKey = this.configService.get('DB_MAP_API_KEY')
   }
@@ -46,7 +59,7 @@ export class LocationService {
    *
    * @param request 请求
    */
-  // async positioning(request: Request) {
+  // async positioning(request: any) {
   //   const ip: string = requestIp.getClientIp(request)
 
   //   const response = await this.httpService.axiosRef.get(AMap.ip, {
@@ -55,6 +68,7 @@ export class LocationService {
   //       ip
   //     }
   //   })
+
   //   return { ip, response }
   // }
 
@@ -84,17 +98,55 @@ export class LocationService {
   /**
    * 获取周边热门地点
    *
+   * @param user_id 用户 id
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async getPopularRecommends(longitude: number, latitude: number) {
+  async getPopularRecommends(
+    user_id: string,
+    longitude: number,
+    latitude: number
+  ) {
+    /** 获取用户信息 */
+    const userInfo = await this.userInfoEntity.findOneBy({ user_id })
+    /** 地图获取类型 */
+    let types = ''
+
+    // 如果用户设置了喜欢的类型
+    if (userInfo.preference_type) {
+      try {
+        const preferenceType = JSON.parse(userInfo.preference_type)
+
+        // 如果喜欢类型解析正确
+        if (preferenceType && preferenceType.length) {
+          let userTypes = ''
+
+          preferenceType.forEach((item: PreferenceKey, index: number) => {
+            if (index + 1 === preferenceType.length) {
+              userTypes = userTypes + PreferenceMap[item]
+              return
+            }
+
+            userTypes = userTypes + PreferenceMap[item] + '|'
+          })
+
+          types = userTypes
+        }
+      } catch (err) {
+        types = PreferenceMap.DEFAULT
+      }
+    }
+    // 如果用户没有设置喜欢类型，则设置为默认
+    else {
+      types = PreferenceMap.DEFAULT
+    }
+
     const response = await this.httpService.axiosRef.get(AMap.place_around, {
       params: {
         key: this.apiKey,
         location: `${longitude},${latitude}`,
         radius: 5000,
-        types:
-          '110000|110100|110101|110102|110103|110104|110105|110106|110200|110201|110202|110203|110204|110205|110206|110207|110208|110209|110210',
+        types,
         page_size: 25
       }
     })
