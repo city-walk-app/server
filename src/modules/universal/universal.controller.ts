@@ -1,7 +1,8 @@
-import { Controller, Post } from '@nestjs/common'
+import { Controller, Post, Body } from '@nestjs/common'
 import { UniversalService } from './universal.service'
 import { HttpCode } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ContentUploadDto } from './dto'
 
 /**
  * 基本的接口列表
@@ -20,7 +21,7 @@ export class UniversalController {
    * 上传公开文件
    */
   @Post('/content/upload')
-  contentUpload() {
+  contentUpload(@Body() body: ContentUploadDto) {
     return this.universalService.contentUpload()
   }
 }

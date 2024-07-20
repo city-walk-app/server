@@ -26,10 +26,15 @@ export class UniversalService {
 
     const client = this.ossService.getClient()
 
+    /**
+     * 授权第三方
+     *
+     * @see Node.js https://help.aliyun.com/zh/oss/use-cases/node-js?spm=a2c4g.11186623.0.0.15db5d03oLk0cl
+     */
     const policy = {
-      expiration: date.toISOString(), //设置签名过期日期
+      expiration: date.toISOString(), // 设置签名过期日期
       conditions: [
-        ['content-length-range', 0, 1048576000] //设置文件大小限制
+        ['content-length-range', 0, 1048576000] // 设置文件大小限制
       ]
     }
 
