@@ -32,7 +32,8 @@ import {
   EmailModule,
   LocationModule,
   FriendModule,
-  WxModule
+  WxModule,
+  UniversalModule
 } from './modules'
 import { AppController } from './app.controller'
 import { ValidationPipe } from 'src/common'
@@ -86,7 +87,8 @@ import { RedisModule } from 'src/service'
     JwtModule,
     FriendModule,
     WxModule,
-    RedisModule
+    RedisModule,
+    UniversalModule
   ],
   controllers: [AppController],
   providers: [
