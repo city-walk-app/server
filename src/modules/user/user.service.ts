@@ -126,16 +126,6 @@ export class UserService {
       return new Result(HttpCode.ERR, '未注册')
     }
 
-    /**
-     * token: this.jwtService.sign(payload, { secret: jwtConstants.secret, expiresIn: jwtConstants.expiresIn })
-     */
-
-    try {
-      console.log(this.createToken({ user_id: userInfo.user_id }))
-    } catch (err) {
-      console.log(err)
-    }
-
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
       is_new_user: false,
@@ -201,15 +191,5 @@ export class UserService {
     }
 
     return new Result(HttpCode.ERR, '修改失败')
-  }
-
-  /**
-   * 头像上传
-   *
-   * @param id id
-   * @param avatar 文件地址
-   */
-  setAvatar(user_id: string, avatar: string) {
-    return this.setUserInfo({ user_id, avatar })
   }
 }

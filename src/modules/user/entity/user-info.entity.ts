@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn
 } from 'typeorm'
+import { Gender } from 'src/enum'
 
 /**
  * TypeORM 是一个强大的对象关系映射器，支持多种关系数据库。
@@ -64,8 +65,12 @@ export class UserInfo {
   @Column({ type: 'varchar', length: 255, comment: '生日' })
   birthday: string
 
-  /** 性别 */
-  @Column({ type: 'varchar', length: 255, comment: '性别' })
+  /**
+   * 性别
+   *
+   * 0-不愿透露 1-男 2-女
+   */
+  @Column({ type: 'varchar', length: 255, comment: '性别', enum: Gender })
   gender: string
 
   /** ip 归属地 */

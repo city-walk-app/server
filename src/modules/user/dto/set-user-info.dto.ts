@@ -6,12 +6,11 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
   registerDecorator,
-  ValidationOptions,
-  isArray
+  ValidationOptions
 } from 'class-validator'
 import { SensitiveWord } from 'src/utils'
 import { ApiProperty } from '@nestjs/swagger'
-import { PreferenceMap } from 'src/enum'
+import { PreferenceMap, Gender } from 'src/enum'
 
 const sensitiveWordChecker = SensitiveWord.instance
 
@@ -75,22 +74,6 @@ export class SetUserInfoDto {
   signature?: string
 
   /**
-   * 省份
-   */
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
-  province?: string
-
-  /**
-   * 城市
-   */
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
-  city?: string
-
-  /**
    * 生日
    */
   @IsOptional()
@@ -104,7 +87,7 @@ export class SetUserInfoDto {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  gender?: string
+  gender?: Gender
 
   /**
    * 头像
