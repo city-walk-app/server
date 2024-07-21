@@ -107,6 +107,14 @@ export class SetUserInfoDto {
   gender?: string
 
   /**
+   * 头像
+   */
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  avatar?: string
+
+  /**
    * 喜欢的地点类型
    */
   @IsOptional()

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsString, IsNotEmpty, Matches } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 /**
@@ -10,6 +10,7 @@ export class ContentUploadDto {
    */
   @IsNotEmpty({ message: '后缀名参数缺失' })
   @IsString({ message: '后缀名类型错误' })
+  @Matches(/^\.[a-zA-Z0-9]+$/, { message: '后缀名格式错误' })
   @ApiProperty()
   suffix: string
 }
