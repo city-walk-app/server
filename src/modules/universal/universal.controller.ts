@@ -22,6 +22,6 @@ export class UniversalController {
    */
   @Post('/content/upload')
   contentUpload(@Body() body: ContentUploadDto) {
-    return this.universalService.contentUpload()
+    return this.universalService.contentUpload(body)
   }
 }

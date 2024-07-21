@@ -6,10 +6,10 @@ import { ApiProperty } from '@nestjs/swagger'
  */
 export class ContentUploadDto {
   /**
-   * 文件名称
+   * 后缀名
    */
-  // @IsNotEmpty({ message: '参数缺失' })
-  // @IsString({ message: '类型错误' })
-  // @ApiProperty()
-  file_name: string
+  @IsNotEmpty({ message: '后缀名参数缺失' })
+  @IsString({ message: '后缀名类型错误' })
+  @ApiProperty()
+  suffix: string
 }
