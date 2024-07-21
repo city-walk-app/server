@@ -1,4 +1,4 @@
-export * from './user'
+export * from './date'
 export * from './is'
 export * from './result'
 export * from './id'

@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common'
-// import { UserInfo } from '../user'
-// import { InjectRepository } from '@nestjs/typeorm'
-// import { Repository } from 'typeorm'
-// import { Result } from 'src/utils'
-// import { HttpCode } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import { HttpCode } from 'src/enum'
 import { OssService } from 'src/service'
-import { Result } from 'src/utils'
-import crypto from 'crypto'
+import { Result, getCurrentDateFormatted } from 'src/utils'
+import * as crypto from 'crypto'
 import { ContentUploadDto } from './dto'
 
 @Injectable()
@@ -17,18 +12,6 @@ export class UniversalService {
     private readonly configService: ConfigService,
     private readonly ossService: OssService
   ) {}
-
-  /**
-   * 获取当前时间格式化
-   */
-  private getCurrentDateFormatted() {
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0') // 月份从0开始，故+1
-    const day = String(date.getDate()).padStart(2, '0')
-
-    return `${year}-${month}-${day}`
-  }
 
   /**
    * 生成文件名
@@ -74,8 +57,7 @@ export class UniversalService {
     const fileName = this.renderFileName() + body.suffix // 可以通过某种方式生成唯一的文件名称
     /** 上传的路径 */
     const filePath =
-      this.configService.get('DB_OSS_FILE_PARTH') +
-      this.getCurrentDateFormatted()
+      this.configService.get('DB_OSS_FILE_PARTH') + getCurrentDateFormatted()
 
     const data = {
       host, // 返回上传的 url
