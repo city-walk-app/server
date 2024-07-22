@@ -202,7 +202,16 @@ export class LocationService {
    * @param user_id 用户 id
    */
   async getUserRouteList(user_id: string) {
-    const data = await this.userRouteListEntity.findBy({ user_id })
+    const routeList = await this.userRouteListEntity.findBy({ user_id })
+
+    const data = await Promise.all(routeList.map(async item => {
+      const route = await this.userRouteEntity.findBy({ list_id: item.list_id })
+
+      return {
+        ...item,
+        count: route.length
+      }
+    }))
 
     return new Result(HttpCode.OK, 'ok', data)
   }
@@ -249,7 +258,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-        JSON.stringify(locationInfo.regeocode.addressComponent)
+      JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
