@@ -9,7 +9,8 @@ import {
   CITY_NAME_CODE,
   Experience,
   PreferenceMap,
-  PreferenceKey
+  PreferenceKey,
+  heatmapColor
 } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import {
@@ -204,14 +205,18 @@ export class LocationService {
   async getUserRouteList(user_id: string) {
     const routeList = await this.userRouteListEntity.findBy({ user_id })
 
-    const data = await Promise.all(routeList.map(async item => {
-      const route = await this.userRouteEntity.findBy({ list_id: item.list_id })
+    const data = await Promise.all(
+      routeList.map(async (item) => {
+        const route = await this.userRouteEntity.findBy({
+          list_id: item.list_id
+        })
 
-      return {
-        ...item,
-        count: route.length
-      }
-    }))
+        return {
+          ...item,
+          count: route.length
+        }
+      })
+    )
 
     return new Result(HttpCode.OK, 'ok', data)
   }
@@ -258,7 +263,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-      JSON.stringify(locationInfo.regeocode.addressComponent)
+        JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -463,6 +468,25 @@ export class LocationService {
   }
 
   /**
+   * 获取热力图颜色
+   *
+   * @param count 打卡数量
+   */
+  private getHeatmapColor(count: number) {
+    /**
+     * 计算索引值（将数字转为0基索引）
+     */
+    const index = Math.floor((count - 1) / 3)
+
+    if (index > heatmapColor.length - 1) {
+      return heatmapColor[heatmapColor.length - 1]
+    }
+
+    // 根据索引值返回相应的色号
+    return heatmapColor[index] || null
+  }
+
+  /**
    * 获取用户指定月份的热力图
    *
    * @param user_id 用户 id
@@ -494,16 +518,16 @@ export class LocationService {
      *
      * @see Array.from() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/from
      */
-    const data = Array.from({ length: monthDays }, (_, i: number) => {
+    const monthMap = Array.from({ length: monthDays }, (_, i: number) => {
       return {
+        routes: null,
         date:
           year +
           '-' +
           month.padStart(2, '0') +
           '-' +
           (i + 1).toString().padStart(2, '0'),
-        day: i + 1,
-        routes: null
+        day: i + 1
       }
     })
 
@@ -540,16 +564,22 @@ export class LocationService {
           day,
           routes,
           list_id: item.list_id,
-          route_count: routes.length
+          route_count: routes.length,
+          heatmap_color: this.getHeatmapColor(routes.length)
         } as const
       })
     )
 
     // 将查询结果插入到天数数组中
     routerAll.forEach((item) => {
-      data[item.day - 1].routes = item.routes
+      const dayDetail = monthMap[item.day - 1]
+
+      monthMap[item.day - 1] = {
+        ...dayDetail,
+        ...item
+      }
     })
 
-    return new Result(HttpCode.OK, 'ok', data)
+    return new Result(HttpCode.OK, 'ok', monthMap)
   }
 }
