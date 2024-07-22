@@ -141,6 +141,8 @@ export class LocationService {
       types = PreferenceMap.DEFAULT
     }
 
+    console.log(types)
+
     const response = await this.httpService.axiosRef.get(AMap.place_around, {
       params: {
         key: this.apiKey,
@@ -150,6 +152,8 @@ export class LocationService {
         page_size: 25
       }
     })
+
+    console.log(response.status)
 
     if (
       response.data.status === '1' &&
