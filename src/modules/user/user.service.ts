@@ -137,9 +137,17 @@ export class UserService {
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
       is_new_user: false,
-      user_id: userInfo.user_id,
-      email: userInfo.email,
-      avatar: userInfo.avatar
+      user_info: {
+        user_id: userInfo.user_id,
+        nick_name: userInfo.nick_name,
+        email: userInfo.email,
+        mobile: userInfo.mobile,
+        avatar: userInfo.avatar,
+        signature: userInfo.signature,
+        birthday: userInfo.birthday,
+        gender: userInfo.gender,
+        preference_type: userInfo.preference_type
+      }
     })
   }
 
