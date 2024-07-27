@@ -179,20 +179,56 @@ export class LocationService {
     return new Result(HttpCode.OK, '暂无推荐地点', [])
   }
 
+
+  /**
+   * 获取省份经验值颜色
+   * 
+   * @param value 经验值
+   */
+  private getJigsawColor(value: number) {
+    if (value < 1000) {
+      return heatmapColor[0]
+    }
+    else if (value >= 1000 && value < 2000) {
+      return heatmapColor[1]
+    }
+    else if (value >= 2000 && value < 3000) {
+      return heatmapColor[2]
+    }
+    else if (value >= 3000 && value < 4000) {
+      return heatmapColor[3]
+    }
+    else if (value >= 4000 && value < 5000) {
+      return heatmapColor[4]
+    }
+
+    return heatmapColor[0]
+  }
+
   /**
    * 获取用户解锁的省份版图列表
    *
    * @param user_id 用户 id
    */
   async getUserProvinceJigsaw(user_id: string) {
-    const data = await this.userVisitedProvinceEntity.find({
+    const provinceList = await this.userVisitedProvinceEntity.find({
       where: { user_id },
       select: ['experience_value', 'province_code', 'province_name', 'vis_id']
+    })
+
+    const data = provinceList.map(item => {
+      return {
+        ...item,
+        background_color: this.getJigsawColor(item.experience_value)
+      }
     })
 
     this.loggerService.log(
       '获取用户解锁的省份版图列表：' + JSON.stringify(data)
     )
+
+
+    //  background_color: this.getHeatmapColor(routes.length)
 
     return new Result(HttpCode.OK, 'ok', data)
   }
@@ -263,7 +299,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-        JSON.stringify(locationInfo.regeocode.addressComponent)
+      JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -565,7 +601,7 @@ export class LocationService {
           routes,
           list_id: item.list_id,
           route_count: routes.length,
-          heatmap_color: this.getHeatmapColor(routes.length)
+          background_color: this.getHeatmapColor(routes.length)
         } as const
       })
     )

@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware, HttpStatus } from '@nestjs/common'
+import { Injectable, NestMiddleware, HttpStatus, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { Request, Response, NextFunction } from 'express'
@@ -18,7 +18,7 @@ export class UserMiddleware implements NestMiddleware {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
-  ) {}
+  ) { }
 
   async use(req: Request, res: Response, next: NextFunction) {
     const token = req.headers['token'] as string
@@ -38,18 +38,20 @@ export class UserMiddleware implements NestMiddleware {
 
       // 后面很多地方都需要用到用户 id，所以必须确保用户 id 是存在的
       if (!decoded || !decoded.user_id) {
-        return res
-          .status(HttpStatus.UNAUTHORIZED)
-          .json(new Result(HttpCode.ERR, '无效的身份'))
+        throw new UnauthorizedException('未登录')
+        // return res
+        //   .status(HttpStatus.UNAUTHORIZED)
+        // .json(new Result(HttpCode.ERR, '无效的身份'))
       }
 
       req[USER_INFO] = decoded
 
       next()
     } catch (err) {
-      return res
-        .status(HttpStatus.UNAUTHORIZED)
-        .json(new Result(HttpCode.ERR, '无效的身份'))
+      throw new UnauthorizedException('未登录')
+      // return res
+      //   .status(HttpStatus.UNAUTHORIZED)
+      // .json(new Result(HttpCode.ERR, '无效的身份'))
     }
   }
 }

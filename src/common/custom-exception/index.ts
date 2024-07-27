@@ -1,5 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
-import { HttpCode } from 'src/enum'
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common'
 
 /**
  * 异常过滤器
@@ -12,14 +11,22 @@ export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse()
+    // const request = ctx.getRequest()
+    const status = exception instanceof HttpException
+      ? exception.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR
+
+    const message = exception.message || '服务错误'
 
     if (process.env.NODE_ENV === 'development') {
-      console.error('全局错误拦截：' + exception.message)
+      console.error('全局错误拦截：', exception)
     }
 
-    response.status(HttpCode.INTERNAL_SERVER_ERROR).json({
-      message: exception.message || '服务器内部错误',
-      code: exception ? HttpCode.ERR : HttpCode.INTERNAL_SERVER_ERROR
+    response.status(status).json({
+      code: status,
+      // timestamp: new Date().toISOString(),
+      // path: request.url,
+      message: message,
     })
   }
 }
