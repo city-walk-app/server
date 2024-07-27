@@ -198,7 +198,7 @@ export class LocationService {
     else if (value >= 3000 && value < 4000) {
       return heatmapColor[3]
     }
-    else if (value >= 4000 && value < 5000) {
+    else if (value >= 4000) {
       return heatmapColor[4]
     }
 
@@ -311,6 +311,8 @@ export class LocationService {
     }
 
     /**
+     * 获取当前省份的版图
+     * 
      * 通过用户 id 和省份 code 获取到当前用户所获的的当前省份的累积经验值
      *
      * 也可以作为是否为新省份的标识，如果没有获取到，则说明当前用户还没有在当前省份获取到过经验值，也就是未解锁
@@ -403,7 +405,11 @@ export class LocationService {
       /**
        * 城市
        */
-      city: `${city}` || '未知城市'
+      city: `${city}` || '未知城市',
+      /**
+       * 当前经验值颜色
+       */
+      background_color: this.getJigsawColor(provinceExperience.experience_value),
     })
   }
 
