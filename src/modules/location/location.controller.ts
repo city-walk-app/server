@@ -18,7 +18,7 @@ import {
 @Controller('location')
 @ApiTags('位置服务')
 export class LocationController {
-  constructor(private readonly locationService: LocationService) {}
+  constructor(private readonly locationService: LocationService) { }
 
   @ApiOperation({ summary: '获取周边热门地点推荐' })
   @ApiParam({ name: 'longitude', description: '经度', required: true })
@@ -149,5 +149,25 @@ export class LocationController {
     const { user_id } = req[USER_INFO]
 
     return this.locationService.getUserMonthHeatmap(user_id, body.date)
+  }
+
+  @ApiOperation({ summary: '获取当前地区的天气' })
+  @ApiParam({ name: 'longitude', description: '经度', required: true })
+  @ApiParam({ name: 'latitude', description: '纬度', required: true })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
+  /**
+   * 获取当前地区的天气
+   *
+   * @param req 请求
+   * @param body 请求参数
+   */
+  @Post('/get/weather/info')
+  getWeatherInfo(@Body() body: CreatePositionRecordDto) {
+    const { latitude, longitude } = body
+
+    return this.locationService.getWeatherInfo(
+      longitude,
+      latitude
+    )
   }
 }

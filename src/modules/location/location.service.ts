@@ -34,7 +34,7 @@ export class LocationService {
   /**
    * 一个月默认天数
    */
-  private monthHeatmapDays = 30
+  private monthHeatmapDays = 31
 
   /**
    * @param httpService 日志服务
@@ -62,22 +62,49 @@ export class LocationService {
   }
 
   /**
-   * 通过 ip 定位
+   * 获取当前地区的天气
    *
-   * @param request 请求
+   * @param longitude 经度
+   * @param latitude 纬度
    */
-  // async positioning(request: any) {
-  //   const ip: string = requestIp.getClientIp(request)
+  async getWeatherInfo(longitude: number, latitude: number) {
+    /**
+     * 通过经纬度调用高德地图 API 获取当前的位置信息
+     */
+    const locationInfo = await this.getLocationInfo(longitude, latitude)
 
-  //   const response = await this.httpService.axiosRef.get(AMap.ip, {
-  //     params: {
-  //       key: this.apiKey,
-  //       ip
-  //     }
-  //   })
+    // 避免高德地图接口响应错误
+    if (
+      !locationInfo ||
+      locationInfo.status !== '1' ||
+      !locationInfo.regeocode.addressComponent
+    ) {
+      return new Result(HttpCode.ERR, '获取位置错误')
+    }
 
-  //   return { ip, response }
-  // }
+    const { adcode } = locationInfo.regeocode.addressComponent
+
+    /** 格式化后的省份编码 */
+    const province_code = `${adcode}`.slice(0, 2) + '0000'
+
+    // 如果数组中不存在格式化后的数组，则说明编码不正确，提前拦截
+    if (!(province_code in CITY_NAME_CODE)) {
+      return new Result(HttpCode.ERR, '无效省份编码')
+    }
+
+    const response = await this.httpService.axiosRef.get(AMap.weather, {
+      params: {
+        key: this.apiKey,
+        city: province_code, // 城市编码
+      }
+    })
+
+    if (response.data.status === '1') {
+      return new Result(HttpCode.OK, 'ok', response.data.lives[0])
+    }
+
+    return new Result(HttpCode.ERR, '天气获取异常')
+  }
 
   /**
    * 完善步行打卡记录详情

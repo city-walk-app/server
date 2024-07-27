@@ -21,5 +21,12 @@ export enum AMap {
    *
    * @see ipconfig https://lbs.amap.com/api/webservice/guide/api/ipconfig
    */
-  ip = 'https://restapi.amap.com/v3/ip'
+  ip = 'https://restapi.amap.com/v3/ip',
+
+  /**
+   * 天气查询
+   * 
+   * @see weatherinfo https://lbs.amap.com/api/webservice/guide/api/weatherinfo
+   */
+  weather = 'https://restapi.amap.com/v3/weather/weatherInfo'
 }
