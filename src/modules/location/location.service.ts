@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { Result, renderID } from 'src/utils'
+import { Result, renderID, getCurrentDateFormatted } from 'src/utils'
 import {
   HttpCode,
   AMap,
@@ -27,8 +27,14 @@ import { UserInfo } from '../user'
 
 @Injectable()
 export class LocationService {
-  /** 高德地图密钥 */
+  /** 
+   * 高德地图密钥
+   */
   private apiKey: string
+  /**
+   * 一个月默认天数
+   */
+  private monthHeatmapDays = 30
 
   /**
    * @param httpService 日志服务
@@ -179,32 +185,6 @@ export class LocationService {
     return new Result(HttpCode.OK, '暂无推荐地点', [])
   }
 
-
-  /**
-   * 获取省份经验值颜色
-   * 
-   * @param value 经验值
-   */
-  private getJigsawColor(value: number) {
-    if (value < 1000) {
-      return heatmapColor[0]
-    }
-    else if (value >= 1000 && value < 2000) {
-      return heatmapColor[1]
-    }
-    else if (value >= 2000 && value < 3000) {
-      return heatmapColor[2]
-    }
-    else if (value >= 3000 && value < 4000) {
-      return heatmapColor[3]
-    }
-    else if (value >= 4000) {
-      return heatmapColor[4]
-    }
-
-    return heatmapColor[0]
-  }
-
   /**
    * 获取用户解锁的省份版图列表
    *
@@ -226,9 +206,6 @@ export class LocationService {
     this.loggerService.log(
       '获取用户解锁的省份版图列表：' + JSON.stringify(data)
     )
-
-
-    //  background_color: this.getHeatmapColor(routes.length)
 
     return new Result(HttpCode.OK, 'ok', data)
   }
@@ -414,6 +391,74 @@ export class LocationService {
   }
 
   /**
+   * 获取用户指定月份的热力图
+   *
+   * @param user_id 用户 id
+   */
+  async getUserMonthHeatmap(
+    user_id: string,
+    date?: GetUserMonthHeatmapDto['date']
+  ) {
+    /**
+     * 获取开始和结束时间
+     */
+    const { startDate, endDate } = this.getUserMonthHeatmapDate(date)
+    /** 
+     * 获取到当年指定用户打卡记录
+     */
+    const routeList = await this.userRouteListEntity
+      .createQueryBuilder('user_route_list')
+      .where('user_route_list.create_at >= :startDate', { startDate })
+      .andWhere('user_route_list.create_at <= :endDate', { endDate })
+      .andWhere('user_route_list.user_id = :user_id', { user_id })
+      .getMany()
+
+    /**
+     * 初始化一个月的天数数组
+     */
+    const monthMap = this.getDatesBetween(startDate, endDate)
+    /**
+     * 步行全部列表
+     */
+    const routeListMap = await Promise.all(
+      routeList.map(async (item) => {
+        /** 获取当天打卡记录列表 */
+        const routes = await this.userRouteEntity.find({
+          where: { list_id: item.list_id },
+          select: [
+            'list_id',
+            'route_id',
+            'province_code',
+            'create_at',
+            'city',
+            'province',
+            'latitude',
+            'longitude',
+            'content',
+            'location_name',
+            'address',
+            'picture',
+            'travel_type',
+            'mood_color'
+          ]
+        })
+
+        return {
+          date: getCurrentDateFormatted(new Date(item.create_at)),
+          routes,
+          list_id: item.list_id,
+          route_count: routes.length,
+          background_color: this.getHeatmapColor(routes.length)
+        } as const
+      })
+    )
+
+    const data = this.mergeData(monthMap, routeListMap)
+
+    return new Result(HttpCode.OK, 'ok', data)
+  }
+
+  /**
    * 通过经纬度获取位置信息
    *
    * @param longitude 经度
@@ -529,99 +574,106 @@ export class LocationService {
   }
 
   /**
-   * 获取用户指定月份的热力图
-   *
-   * @param user_id 用户 id
+   * 获取热力图开始和结束时间
+   * 
+   * @param date 日期
    */
-  async getUserMonthHeatmap(
-    user_id: string,
-    date: GetUserMonthHeatmapDto['date']
-  ) {
-    const [year, month] = date.split('-')
+  private getUserMonthHeatmapDate(date?: GetUserMonthHeatmapDto['date']) {
+    if (date) {
+      const [year, month] = date.split('-')
+      /** 开始时间 */
+      const startDate = new Date(`${year}-${month}-01`)
+      /** 结束时间 */
+      const endDate = new Date(`${year}-${(parseInt(month) % 12) + 1}-01`)
+
+      return { startDate, endDate }
+    }
 
     /** 开始时间 */
-    const startDate = new Date(`${year}-${month}-01`)
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - this.monthHeatmapDays)
+
     /** 结束时间 */
-    const endDate = new Date(`${year}-${(parseInt(month) % 12) + 1}-01`)
+    const endDate = new Date()
 
-    /** 获取到当年指定用户打卡记录 */
-    const routeList = await this.userRouteListEntity
-      .createQueryBuilder('user_route_list')
-      .where('user_route_list.create_at >= :startDate', { startDate })
-      .andWhere('user_route_list.create_at <= :endDate', { endDate })
-      .andWhere('user_route_list.user_id = :user_id', { user_id })
-      .getMany()
+    return { startDate, endDate }
+  }
 
-    /** 获取指定月份的天数 */
-    const monthDays = new Date(Number(year), Number(month), 0).getDate()
+  /**
+   * 获取一个时间段区间的日期映射
+   * 
+   * @param start 开始时间
+   * @param end 结束时间
+   */
+  private getDatesBetween(start: Date, end: Date) {
+    const startDate = new Date(start)
+    const endDate = new Date(end)
+    const dates = []
 
-    /**
-     * 初始化一个月的天数数组
-     *
-     * @see Array.from() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/from
-     */
-    const monthMap = Array.from({ length: monthDays }, (_, i: number) => {
-      return {
+    while (startDate <= endDate) {
+      dates.push({
+        date: getCurrentDateFormatted(new Date(startDate)),
         routes: null,
-        date:
-          year +
-          '-' +
-          month.padStart(2, '0') +
-          '-' +
-          (i + 1).toString().padStart(2, '0'),
-        day: i + 1
-      }
-    })
-
-    /**
-     * 步行全部列表
-     */
-    const routerAll = await Promise.all(
-      routeList.map(async (item) => {
-        /** 获取当天打卡记录列表 */
-        const routes = await this.userRouteEntity.find({
-          where: { list_id: item.list_id },
-          select: [
-            'list_id',
-            'route_id',
-            'province_code',
-            'create_at',
-            'city',
-            'province',
-            'latitude',
-            'longitude',
-            'content',
-            'location_name',
-            'address',
-            'picture',
-            'travel_type',
-            'mood_color'
-          ]
-        })
-
-        /** 获取到当天的日期 */
-        const day = new Date(item.create_at).getDate()
-
-        return {
-          day,
-          routes,
-          list_id: item.list_id,
-          route_count: routes.length,
-          background_color: this.getHeatmapColor(routes.length)
-        } as const
       })
-    )
 
-    // 将查询结果插入到天数数组中
-    routerAll.forEach((item) => {
-      const dayDetail = monthMap[item.day - 1]
+      startDate.setDate(startDate.getDate() + 1)
+    }
 
-      monthMap[item.day - 1] = {
-        ...dayDetail,
-        ...item
+    return dates
+  }
+
+  /**
+   * 获取省份经验值颜色
+   * 
+   * @param value 经验值
+   */
+  private getJigsawColor(value: number) {
+    if (value < 1000) {
+      return heatmapColor[0]
+    }
+    else if (value >= 1000 && value < 2000) {
+      return heatmapColor[1]
+    }
+    else if (value >= 2000 && value < 3000) {
+      return heatmapColor[2]
+    }
+    else if (value >= 3000 && value < 4000) {
+      return heatmapColor[3]
+    }
+    else if (value >= 4000) {
+      return heatmapColor[4]
+    }
+
+    return heatmapColor[0]
+  }
+
+  /**
+   * 合并数组
+   * 
+   * @param monthMap 日期数据
+   * @param routeListMap 数据
+   */
+  private mergeData(
+    monthMap: { date: string, routes: any }[],
+    routeListMap: { date: string, routes: any }[]
+  ) {
+    const result = monthMap.map(month => {
+      /**
+       * 是否有对应的数据
+       */
+      const correspondingData = routeListMap.find(route => route.date === month.date)
+
+      if (correspondingData) {
+        return {
+          ...month,
+          ...correspondingData,
+          routes: correspondingData.routes
+        }
       }
+
+      return { ...month, routes: [] }
     })
 
-    return new Result(HttpCode.OK, 'ok', monthMap)
+    return result
   }
 }
