@@ -360,6 +360,7 @@ export class LocationService {
     this.loggerService.log('创建新的打卡地点详情：' + createRouteRes)
 
     return new Result(HttpCode.OK, 'ok', {
+      province_code,
       route_id: createRouteRes.route_id,
       /**
        * 是否为中国大陆
@@ -375,18 +376,10 @@ export class LocationService {
        * 经验值
        */
       experience: provinceExperience.experience_value,
-      /**
-       * 省份名称
-       */
       province: `${province}` || '未知省份',
-      /**
-       * 城市
-       */
       city: `${city}` || '未知城市',
-      /**
-       * 当前经验值颜色
-       */
       background_color: this.getJigsawColor(provinceExperience.experience_value),
+      content: '再获取245经验将会升温版图'
     })
   }
 
