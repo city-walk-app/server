@@ -27,7 +27,7 @@ import { UserInfo } from '../user'
 
 @Injectable()
 export class LocationService {
-  /** 
+  /**
    * 高德地图密钥
    */
   private apiKey: string
@@ -95,7 +95,7 @@ export class LocationService {
     const response = await this.httpService.axiosRef.get(AMap.weather, {
       params: {
         key: this.apiKey,
-        city: province_code, // 城市编码
+        city: province_code // 城市编码
       }
     })
 
@@ -223,7 +223,7 @@ export class LocationService {
       select: ['experience_value', 'province_code', 'province_name', 'vis_id']
     })
 
-    const data = provinceList.map(item => {
+    const data = provinceList.map((item) => {
       return {
         ...item,
         background_color: this.getJigsawColor(item.experience_value)
@@ -303,7 +303,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-      JSON.stringify(locationInfo.regeocode.addressComponent)
+        JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -316,7 +316,7 @@ export class LocationService {
 
     /**
      * 获取当前省份的版图
-     * 
+     *
      * 通过用户 id 和省份 code 获取到当前用户所获的的当前省份的累积经验值
      *
      * 也可以作为是否为新省份的标识，如果没有获取到，则说明当前用户还没有在当前省份获取到过经验值，也就是未解锁
@@ -405,7 +405,9 @@ export class LocationService {
       experience: provinceExperience.experience_value,
       province: `${province}` || '未知省份',
       city: `${city}` || '未知城市',
-      background_color: this.getJigsawColor(provinceExperience.experience_value),
+      background_color: this.getJigsawColor(
+        provinceExperience.experience_value
+      ),
       content: '再获取245经验将会升温版图'
     })
   }
@@ -423,7 +425,7 @@ export class LocationService {
      * 获取开始和结束时间
      */
     const { startDate, endDate } = this.getUserMonthHeatmapDate(date)
-    /** 
+    /**
      * 获取到当年指定用户打卡记录
      */
     const routeList = await this.userRouteListEntity
@@ -595,7 +597,7 @@ export class LocationService {
 
   /**
    * 获取热力图开始和结束时间
-   * 
+   *
    * @param date 日期
    */
   private getUserMonthHeatmapDate(date?: GetUserMonthHeatmapDto['date']) {
@@ -621,7 +623,7 @@ export class LocationService {
 
   /**
    * 获取一个时间段区间的日期映射
-   * 
+   *
    * @param start 开始时间
    * @param end 结束时间
    */
@@ -633,7 +635,7 @@ export class LocationService {
     while (startDate <= endDate) {
       dates.push({
         date: getCurrentDateFormatted(new Date(startDate)),
-        routes: null,
+        routes: null
       })
 
       startDate.setDate(startDate.getDate() + 1)
@@ -644,23 +646,19 @@ export class LocationService {
 
   /**
    * 获取省份经验值颜色
-   * 
+   *
    * @param value 经验值
    */
   private getJigsawColor(value: number) {
     if (value < 1000) {
       return heatmapColor[0]
-    }
-    else if (value >= 1000 && value < 2000) {
+    } else if (value >= 1000 && value < 2000) {
       return heatmapColor[1]
-    }
-    else if (value >= 2000 && value < 3000) {
+    } else if (value >= 2000 && value < 3000) {
       return heatmapColor[2]
-    }
-    else if (value >= 3000 && value < 4000) {
+    } else if (value >= 3000 && value < 4000) {
       return heatmapColor[3]
-    }
-    else if (value >= 4000) {
+    } else if (value >= 4000) {
       return heatmapColor[4]
     }
 
@@ -669,19 +667,21 @@ export class LocationService {
 
   /**
    * 合并数组
-   * 
+   *
    * @param monthMap 日期数据
    * @param routeListMap 数据
    */
   private mergeData(
-    monthMap: { date: string, routes: any }[],
-    routeListMap: { date: string, routes: any }[]
+    monthMap: { date: string; routes: any }[],
+    routeListMap: { date: string; routes: any }[]
   ) {
-    const result = monthMap.map(month => {
+    const result = monthMap.map((month) => {
       /**
        * 是否有对应的数据
        */
-      const correspondingData = routeListMap.find(route => route.date === month.date)
+      const correspondingData = routeListMap.find(
+        (route) => route.date === month.date
+      )
 
       if (correspondingData) {
         return {

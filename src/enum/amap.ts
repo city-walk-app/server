@@ -25,7 +25,7 @@ export enum AMap {
 
   /**
    * 天气查询
-   * 
+   *
    * @see weatherinfo https://lbs.amap.com/api/webservice/guide/api/weatherinfo
    */
   weather = 'https://restapi.amap.com/v3/weather/weatherInfo'
