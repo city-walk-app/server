@@ -118,9 +118,16 @@ export class LocationService {
       route_id: body.route_id
     })
 
+    console.log('传入的参数', body)
+
     routeDetail.content = body.content // 内容
     routeDetail.mood_color = body.mood_color // 出行方式
     routeDetail.travel_type = body.travel_type // 心情颜色
+    routeDetail.address = body.address
+
+    if (body.picture && body.picture.length) {
+      routeDetail.picture = body.picture.join(',')
+    }
 
     const data = await this.userRouteEntity.save(routeDetail)
 
