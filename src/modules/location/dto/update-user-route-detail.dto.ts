@@ -31,4 +31,10 @@ export class UpdateUserRouteDetailDto {
    */
   @ApiProperty()
   mood_color?: string
+
+  /**
+   * 照片
+   */
+  @ApiProperty()
+  picture?: string[]
 }
