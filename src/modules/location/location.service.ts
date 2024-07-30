@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { Result, renderID, getCurrentDateFormatted } from 'src/utils'
+import { Result, renderID, getCurrentDateFormatted, isArray, isString } from 'src/utils'
 import {
   HttpCode,
   AMap,
@@ -314,7 +314,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-        JSON.stringify(locationInfo.regeocode.addressComponent)
+      JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -468,7 +468,6 @@ export class LocationService {
             'latitude',
             'longitude',
             'content',
-            'location_name',
             'address',
             'picture',
             'travel_type',
@@ -698,7 +697,14 @@ export class LocationService {
         return {
           ...month,
           ...correspondingData,
-          routes: correspondingData.routes
+          routes: isArray(correspondingData.routes)
+            ? correspondingData.routes.map(item => {
+              return {
+                ...item,
+                picture: isString(item.picture) ? item.picture.split(',') : item.picture,
+              }
+            })
+            : []
         }
       }
 

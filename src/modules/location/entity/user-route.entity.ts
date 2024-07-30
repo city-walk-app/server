@@ -63,10 +63,6 @@ export class UserRoute {
   @Column({ type: 'varchar', length: 255, comment: '发布的内容' })
   content: string
 
-  /** 地点名称 */
-  @Column({ type: 'varchar', length: 255, comment: '地点名称' })
-  location_name: string
-
   /** 详细地址 */
   @Column({ type: 'varchar', length: 255, comment: '详细地址' })
   address: string
