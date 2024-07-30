@@ -118,6 +118,10 @@ export class LocationService {
       route_id: body.route_id
     })
 
+    if (!routeDetail) {
+      return new Result(HttpCode.ERR, '未找到记录')
+    }
+
     console.log('传入的参数', body)
 
     routeDetail.content = body.content // 内容
