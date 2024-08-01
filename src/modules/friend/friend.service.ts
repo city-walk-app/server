@@ -11,7 +11,7 @@ import { UserRoute } from '../location'
 export class FriendService {
   /**
    * @param userFriendInviteEntity 用户好友关系表
-   * @param userFriendRelationEntity 用户好友邀请表
+   * @param userFriendRelationEntity 用户好友关系表
    * @param userInfoEntity 用户表
    * @param userRouteEntity 用户步行地址信息详情表
    */
@@ -250,6 +250,11 @@ export class FriendService {
     return new Result(HttpCode.OK, 'ok', data)
   }
 
+  /**
+   * 查询当前用户当天所打卡的所有地点
+   *
+   * @param user_id 用户 id
+   */
   private async getFriendTodayExperience(user_id: string) {
     const currentDate = new Date()
     currentDate.setHours(0, 0, 0, 0) // 设置时间为当天的开始时间

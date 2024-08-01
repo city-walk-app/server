@@ -203,7 +203,17 @@ export class UserService {
     const data = await this.userInfoEntity.save(user)
 
     if (data) {
-      return new Result(HttpCode.OK, '修改成功', data)
+      return new Result(HttpCode.OK, '修改成功', {
+        user_id: data.user_id,
+        nick_name: data.nick_name,
+        email: data.email,
+        mobile: data.mobile,
+        avatar: data.avatar,
+        signature: data.signature,
+        birthday: data.birthday,
+        gender: data.gender,
+        preference_type: data.preference_type
+      })
     }
 
     return new Result(HttpCode.ERR, '修改失败')

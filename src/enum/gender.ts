@@ -3,11 +3,6 @@
  */
 export enum Gender {
   /**
-   * 隐私的
-   */
-  privacy = '0',
-
-  /**
    * 男
    */
   male = '1',
@@ -15,5 +10,10 @@ export enum Gender {
   /**
    * 女
    */
-  female = '2'
+  female = '2',
+
+  /**
+   * 隐私的
+   */
+  privacy = '3'
 }

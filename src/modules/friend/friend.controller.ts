@@ -13,7 +13,7 @@ export class FriendController {
   /**
    * @param friendService 好友服务
    */
-  constructor(private readonly friendService: FriendService) { }
+  constructor(private readonly friendService: FriendService) {}
 
   @ApiOperation({ summary: '邀请朋友' })
   @ApiResponse({ status: HttpCode.OK, description: 'ok' })
@@ -39,10 +39,7 @@ export class FriendController {
    * @param body 请求体
    */
   @Post('/get/invite/info')
-  getFriendInviteInfo(
-    @Req() req: Request,
-    @Body() body: ConfirmInviteDto
-  ) {
+  getFriendInviteInfo(@Req() req: Request, @Body() body: ConfirmInviteDto) {
     const { user_id } = req[USER_INFO]
 
     return this.friendService.getFriendInviteInfo(user_id, body.invite_id)
