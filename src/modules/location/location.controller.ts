@@ -142,13 +142,8 @@ export class LocationController {
    * @param body 请求参数
    */
   @Post('/get/user/heatmap')
-  getUserMonthHeatmap(
-    @Req() req: Request,
-    @Body() body: GetUserMonthHeatmapDto
-  ) {
-    const { user_id } = req[USER_INFO]
-
-    return this.locationService.getUserMonthHeatmap(user_id, body.date)
+  getUserMonthHeatmap(@Body() body: GetUserMonthHeatmapDto) {
+    return this.locationService.getUserMonthHeatmap(body.user_id, body.date)
   }
 
   @ApiOperation({ summary: '获取当前地区的天气' })

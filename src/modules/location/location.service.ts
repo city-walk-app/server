@@ -452,6 +452,8 @@ export class LocationService {
       .andWhere('user_route_list.user_id = :user_id', { user_id })
       .getMany()
 
+    console.log('列表', routeList)
+
     /**
      * 初始化一个月的天数数组
      */

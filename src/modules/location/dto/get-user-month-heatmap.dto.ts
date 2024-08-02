@@ -6,6 +6,14 @@ import { ApiProperty } from '@nestjs/swagger'
  */
 export class GetUserMonthHeatmapDto {
   /**
+   * 用户 id
+   */
+  @IsString({ message: '参数类型错误' })
+  @IsNotEmpty({ message: '用户 id 参数缺失' })
+  @ApiProperty()
+  user_id: string
+
+  /**
    * 日期
    */
   // @IsNotEmpty({ message: '参数缺失' })
