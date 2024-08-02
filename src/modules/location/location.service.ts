@@ -435,13 +435,15 @@ export class LocationService {
    * @param user_id 用户 id
    */
   async getUserMonthHeatmap(
-    user_id: string,
-    date?: GetUserMonthHeatmapDto['date']
+    user_id: GetUserMonthHeatmapDto['user_id'],
+    date?: string
   ) {
     /**
      * 获取开始和结束时间
      */
     const { startDate, endDate } = this.getUserMonthHeatmapDate(date)
+
+    console.log(startDate, endDate)
     /**
      * 获取到当年指定用户打卡记录
      */
@@ -618,7 +620,8 @@ export class LocationService {
    *
    * @param date 日期
    */
-  private getUserMonthHeatmapDate(date?: GetUserMonthHeatmapDto['date']) {
+  private getUserMonthHeatmapDate(date?: string) {
+    console.log(date)
     if (date) {
       const [year, month] = date.split('-')
       /** 开始时间 */
