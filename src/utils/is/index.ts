@@ -11,7 +11,6 @@ const is = (value: unknown, type: string): boolean => {
   return toString.call(value) === `[object ${type}]`
 }
 
-
 /**
  * 检测一个数据是否为 string 类型
  *

@@ -25,5 +25,12 @@ export enum HttpCode {
    *
    * 服务器内部错误
    */
-  INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR
+  INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR,
+
+  /**
+   * 401
+   *
+   * 未登录
+   */
+  UNAUTHORIZED = HttpStatus.UNAUTHORIZED
 }

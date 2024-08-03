@@ -1,34 +1,41 @@
 /**
  * 心情状态颜色
+ *
+ * 心情希望都是积极向上的，最差的就是灰色-中性的，希望各位使用的时候都有着开心的心情，避免糟糕的情绪
  */
 export enum MoodColor {
   /**
-   * 开心
+   * 红色-兴奋的
    */
-  happy = '#FFD700', // 金黄色
+  RED = 'Excited',
 
   /**
-   * 平静
+   * 橙色-热情的
    */
-  calm = '#00FFFF', // 青色
+  ORANGE = 'Enthusiastic',
 
   /**
-   * 悲伤
+   * 黄色-快乐的
    */
-  sad = '#0000FF', // 蓝色
+  YELLOW = 'Happy',
 
   /**
-   * 生气
+   * 绿色-放松的
    */
-  angry = '#FF0000', // 红色
+  GREEN = 'Relaxed',
 
   /**
-   * 紧张
+   * 蓝色-平静的
    */
-  nervous = '#FFA500', // 橙色
+  BLUE = 'Calm',
 
   /**
-   * 疲惫
+   * 紫色-神秘的
    */
-  tired = '#808080' // 灰色
+  PURPLE = 'Mysterious',
+
+  /**
+   * 灰色-中性的
+   */
+  GRAY = 'Neutral'
 }
