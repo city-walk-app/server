@@ -188,7 +188,7 @@ export class UserService {
 
     // 如果没查到，返回错误信息
     if (!user) {
-      return new Result(HttpCode.ERR, '用户不存在，请检查参数')
+      return new Result(HttpCode.ERR, '用户不存在')
     }
 
     // 设置手机
@@ -210,6 +210,12 @@ export class UserService {
     if (birthday && isString(birthday)) {
       user.birthday = birthday
     }
+
+    // 设置性别
+    if (gender && isString(gender)) {
+      user.gender = gender
+    }
+
 
     // 设置头像
     if (avatar && isString(avatar)) {
