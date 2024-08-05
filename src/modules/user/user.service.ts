@@ -216,7 +216,6 @@ export class UserService {
       user.gender = gender
     }
 
-
     // 设置头像
     if (avatar && isString(avatar)) {
       user.avatar = avatar
