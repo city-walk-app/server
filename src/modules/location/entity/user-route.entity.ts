@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn
 } from 'typeorm'
-import { TravelType } from 'src/enum'
+import { TravelType, MoodColor } from 'src/enum'
 
 /**
  * 用户步行地址信息详情
@@ -78,9 +78,9 @@ export class UserRoute {
     comment: '出行方式',
     enum: TravelType
   })
-  travel_type: string
+  travel_type: TravelType
 
   /** 心情颜色 */
-  @Column({ type: 'varchar', length: 255, comment: '心情颜色' })
-  mood_color: string
+  @Column({ type: 'varchar', length: 255, comment: '心情颜色', enum: MoodColor })
+  mood_color: MoodColor
 }

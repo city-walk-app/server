@@ -7,35 +7,48 @@ export enum MoodColor {
   /**
    * 红色-兴奋的
    */
-  RED = 'Excited',
+  EXCITED = 'EXCITED',
 
   /**
    * 橙色-热情的
    */
-  ORANGE = 'Enthusiastic',
+  ENTHUSIASTIC = 'ENTHUSIASTIC',
 
   /**
    * 黄色-快乐的
    */
-  YELLOW = 'Happy',
+  HAPPY = 'HAPPY',
 
   /**
    * 绿色-放松的
    */
-  GREEN = 'Relaxed',
+  RELAXED = 'RELAXED',
 
   /**
    * 蓝色-平静的
    */
-  BLUE = 'Calm',
+  CALM = 'CALM',
 
   /**
    * 紫色-神秘的
    */
-  PURPLE = 'Mysterious',
+  MYSTERIOUS = 'MYSTERIOUS',
 
   /**
    * 灰色-中性的
    */
-  GRAY = 'Neutral'
+  NEUTRAL = 'NEUTRAL'
+}
+
+/**
+ * 心情颜色枚举
+ */
+export const moodColorMap = {
+  [MoodColor.EXCITED]: '#f16a59',
+  [MoodColor.ENTHUSIASTIC]: '#f6a552',
+  [MoodColor.HAPPY]: '#fad35c',
+  [MoodColor.RELAXED]: '#74cd6d',
+  [MoodColor.CALM]: '#4a8cf9',
+  [MoodColor.MYSTERIOUS]: '#af72dc',
+  [MoodColor.NEUTRAL]: '#9b9ca0',
 }

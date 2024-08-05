@@ -1,4 +1,4 @@
-import { TravelType } from 'src/enum'
+import { TravelType, MoodColor } from 'src/enum'
 import { IsString, IsNotEmpty } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
@@ -30,7 +30,7 @@ export class UpdateUserRouteDetailDto {
    * 心情颜色
    */
   @ApiProperty()
-  mood_color?: string
+  mood_color?: MoodColor
 
   /**
    * 心情颜色

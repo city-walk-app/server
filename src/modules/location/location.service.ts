@@ -16,7 +16,10 @@ import {
   Experience,
   PreferenceMap,
   PreferenceKey,
-  heatmapColor
+  heatmapColor,
+  moodColorMap,
+  MoodColor,
+  TravelType
 } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import {
@@ -135,7 +138,7 @@ export class LocationService {
     routeDetail.travel_type = body.travel_type // 心情颜色
     routeDetail.address = body.address
 
-    if (body.picture && body.picture.length) {
+    if (isArray(body.picture) && body.picture.length && body.picture.every(z => isString(z))) {
       routeDetail.picture = body.picture.join(',')
     }
 
@@ -255,6 +258,38 @@ export class LocationService {
   }
 
   /**
+   * 找到一个输入中重复最多的元素
+   * 
+   * @param data 数据
+   * @param field 查找的键
+   */
+  private findMost<T>(data: T[], field: keyof T): string | null {
+    const fieldCount: Record<string, number> = {}
+
+    data.forEach(item => {
+      const value = String(item[field])
+
+      if (fieldCount[value]) {
+        fieldCount[value]++
+      } else {
+        fieldCount[value] = 1
+      }
+    })
+
+    let maxCount = 0
+    let result = null
+
+    for (const value in fieldCount) {
+      if (fieldCount[value] > maxCount) {
+        maxCount = fieldCount[value]
+        result = value === 'null' || !value ? null : value
+      }
+    }
+
+    return result
+  }
+
+  /**
    * 获取用户步行记录列表
    *
    * @param user_id 用户 id
@@ -268,8 +303,18 @@ export class LocationService {
           list_id: item.list_id
         })
 
+        /** 最多的心情颜色类型 */
+        const moodColorActive = this.findMost<UserRoute>(route, 'mood_color') as MoodColor
+        /** 最多的出行方式类型 */
+        const travelTypeActive = this.findMost<UserRoute>(route, 'travel_type') as TravelType
+
+        console.log('mood_color', moodColorActive)
+
         return {
           ...item,
+          route,
+          mood_color: moodColorMap[moodColorActive] || null,
+          travel_type: travelTypeActive,
           count: route.length
         }
       })
@@ -320,7 +365,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-        JSON.stringify(locationInfo.regeocode.addressComponent)
+      JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -710,13 +755,13 @@ export class LocationService {
           ...correspondingData,
           routes: isArray(correspondingData.routes)
             ? correspondingData.routes.map((item) => {
-                return {
-                  ...item,
-                  picture: isString(item.picture)
-                    ? item.picture.split(',')
-                    : item.picture
-                }
-              })
+              return {
+                ...item,
+                picture: isString(item.picture)
+                  ? item.picture.split(',')
+                  : item.picture
+              }
+            })
             : []
         }
       }

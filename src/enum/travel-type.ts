@@ -5,40 +5,40 @@ export enum TravelType {
   /**
    * 步行
    */
-  walking = 'walking',
+  WALKING = 'WALKING',
 
   /**
    * 自行车
    */
-  bicycle = 'bicycle',
+  BICYCLE = 'BICYCLE',
 
   /**
    * 汽车
    */
-  car = 'car',
+  CAR = 'CAR',
 
   /**
    * 公共汽车
    */
-  bus = 'bus',
+  BUS = 'BUS',
 
   /**
    * 地铁
    */
-  metro = 'metro',
+  METRO = 'METRO',
 
   /**
    * 火车
    */
-  train = 'train',
+  TRAIN = 'TRAIN',
 
   /**
    * 飞机
    */
-  airplane = 'airplane',
+  AIRPLANE = 'AIRPLANE',
 
   /**
    * 船
    */
-  ship = 'ship'
+  SHIP = 'SHIP'
 }
