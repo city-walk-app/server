@@ -25,7 +25,7 @@ export class UserMiddleware implements NestMiddleware {
 
     if (!token) {
       return res
-        .status(HttpStatus.UNAUTHORIZED)
+        .status(HttpStatus.OK)
         .json(new Result(HttpCode.ERR, '未登录'))
     }
 

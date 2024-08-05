@@ -24,7 +24,7 @@ export class FriendService {
     private readonly userInfoEntity: Repository<UserInfo>,
     @InjectRepository(UserRoute)
     private readonly userRouteEntity: Repository<UserRoute>
-  ) {}
+  ) { }
 
   /**
    * 邀请朋友
@@ -204,12 +204,16 @@ export class FriendService {
       state: FriendState.normal
     })
 
-    if (!friends || !friends.length) {
+    const main = await this.userInfoEntity.findOneBy({ user_id })
+
+    const userList = [...friends, main]
+
+    if (!userList || !userList.length) {
       return new Result(HttpCode.OK, 'ok', [])
     }
 
     const data = await Promise.all(
-      friends.map(async (item) => {
+      userList.map(async (item) => {
         /**
          * 获取当前用户身份信息
          */

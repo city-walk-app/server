@@ -90,6 +90,7 @@ export class UserService {
         user.email = email
         user.created_at = new Date()
         user.user_id = renderID(PrefixID.user).toString()
+        user.nick_name = this.geteDefaultNickName()
 
         // 设置 open id
         if (wx_open_id) {
@@ -247,5 +248,21 @@ export class UserService {
     }
 
     return new Result(HttpCode.ERR, '修改失败')
+  }
+
+  /**
+   * 获取默认用户名
+   */
+  private geteDefaultNickName(): string {
+    const prefix = '新用户'
+    const letters = 'AdBCDEdaFGdasdaHIJfsKLMNOerPQRtdSTdUVfdsdatWXYZabdcdefgyohijklmnobpqrsktuvwxyz'
+    let randomLetters = ''
+
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * letters.length)
+      randomLetters += letters[randomIndex]
+    }
+
+    return prefix + randomLetters
   }
 }

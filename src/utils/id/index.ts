@@ -1,4 +1,5 @@
 import { PrefixID } from 'src/enum'
+import * as crypto from 'crypto'
 
 /**
  * 格式化 uuid

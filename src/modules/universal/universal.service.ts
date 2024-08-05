@@ -11,7 +11,7 @@ export class UniversalService {
   constructor(
     private readonly configService: ConfigService,
     private readonly ossService: OssService
-  ) {}
+  ) { }
 
   /**
    * 生成文件名
@@ -19,7 +19,7 @@ export class UniversalService {
   private renderFileName() {
     /** 获取当前时间的时间戳 */
     const timestamp = Date.now()
-    /** 生成一个随机的16进制字符串 */
+    /** 生成一个随机的 16 进制字符串 */
     const randomId = crypto.randomBytes(8).toString('hex')
 
     return `${timestamp}-${randomId}`
