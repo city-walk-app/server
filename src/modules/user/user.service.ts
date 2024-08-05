@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { UserInfo } from './entity'
-import { Result, renderID } from 'src/utils'
+import { Result, isArray, isString, renderID } from 'src/utils'
 import { HttpCode, PrefixID } from 'src/enum'
 import { SetUserInfoDto } from './dto'
 
@@ -23,7 +23,7 @@ export class UserService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService
-  ) {}
+  ) { }
 
   /**
    * 生成 token
@@ -85,22 +85,22 @@ export class UserService {
     const userInfo = foundUserInfo
       ? foundUserInfo
       : await (async () => {
-          const user = new UserInfo()
+        const user = new UserInfo()
 
-          user.email = email
-          user.created_at = new Date()
-          user.user_id = renderID(PrefixID.user).toString()
+        user.email = email
+        user.created_at = new Date()
+        user.user_id = renderID(PrefixID.user).toString()
 
-          // 设置 open id
-          if (wx_open_id) {
-            user.wx_open_id = wx_open_id
-          }
+        // 设置 open id
+        if (wx_open_id) {
+          user.wx_open_id = wx_open_id
+        }
 
-          /** 用户参数列表 */
-          const newUser = this.userInfoEntity.create(user)
+        /** 用户参数列表 */
+        const newUser = this.userInfoEntity.create(user)
 
-          return await this.userInfoEntity.save(newUser)
-        })()
+        return await this.userInfoEntity.save(newUser)
+      })()
 
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
@@ -175,13 +175,15 @@ export class UserService {
   async setUserInfo(
     body: SetUserInfoDto & { user_id: string; avatar?: string }
   ) {
+    const { mobile, nick_name, signature, birthday, gender, avatar, preference_type, user_id } = body
+
     /**
      * 通过 id 和邮箱查找用户
      *
      * @see EntityManager https://typeorm.io/working-with-entity-manager
      */
     const user: UserInfo = await this.userInfoEntity.findOneBy({
-      user_id: body.user_id
+      user_id
     })
 
     // 如果没查到，返回错误信息
@@ -189,14 +191,37 @@ export class UserService {
       return new Result(HttpCode.ERR, '用户不存在，请检查参数')
     }
 
-    /** 获取参数键数组 */
-    const bodyKeys: string[] = Object.keys(body).filter(
-      (item) => item !== 'user_id'
-    )
+    // 设置手机
+    if (mobile && isString(mobile)) {
+      user.mobile = mobile
+    }
 
-    for (const key of bodyKeys) {
-      if (body[key] && key in user) {
-        user[key] = body[key]
+    // 设置昵称
+    if (nick_name && isString(nick_name)) {
+      user.nick_name = nick_name
+    }
+
+    // 设置签名
+    if (signature && isString(signature)) {
+      user.signature = signature
+    }
+
+    // 设置生日
+    if (birthday && isString(birthday)) {
+      user.birthday = birthday
+    }
+
+    // 设置头像
+    if (avatar && isString(avatar)) {
+      user.avatar = avatar
+    }
+
+    // 设置性别
+    if (preference_type && isArray(preference_type)) {
+      const isCorrectPreference = preference_type.every(item => isString(item))
+
+      if (isCorrectPreference) {
+        user.preference_type = preference_type.join(',')
       }
     }
 
@@ -212,7 +237,7 @@ export class UserService {
         signature: data.signature,
         birthday: data.birthday,
         gender: data.gender,
-        preference_type: data.preference_type
+        preference_type: data.preference_type ? data.preference_type.split(',') : null,
       })
     }
 
