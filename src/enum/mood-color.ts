@@ -50,5 +50,5 @@ export const moodColorMap = {
   [MoodColor.RELAXED]: '#74cd6d',
   [MoodColor.CALM]: '#4a8cf9',
   [MoodColor.MYSTERIOUS]: '#af72dc',
-  [MoodColor.NEUTRAL]: '#9b9ca0',
+  [MoodColor.NEUTRAL]: '#9b9ca0'
 }

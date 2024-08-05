@@ -24,7 +24,7 @@ export class FriendService {
     private readonly userInfoEntity: Repository<UserInfo>,
     @InjectRepository(UserRoute)
     private readonly userRouteEntity: Repository<UserRoute>
-  ) { }
+  ) {}
 
   /**
    * 邀请朋友
@@ -83,7 +83,9 @@ export class FriendService {
     }
 
     /** 获取邀请人信息 */
-    const userInfo = await this.userInfoEntity.findOneBy({ user_id })
+    const userInfo = await this.userInfoEntity.findOneBy({
+      user_id: inviteRes.user_id
+    })
 
     return new Result(HttpCode.OK, 'ok', {
       name: userInfo.nick_name,
