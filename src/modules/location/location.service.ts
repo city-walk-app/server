@@ -19,7 +19,8 @@ import {
   heatmapColor,
   moodColorMap,
   MoodColor,
-  TravelType
+  TravelType,
+  ExperienceStep
 } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import {
@@ -375,7 +376,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-        JSON.stringify(locationInfo.regeocode.addressComponent)
+      JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -399,6 +400,11 @@ export class LocationService {
         province_code
       })
 
+    /**
+     * 旧的经验值
+     */
+    const oldExperienceValue = Number(provinceExperience.experience_value || '0')
+
     /** 是否为解锁的新省份 */
     const is_new_province = !provinceExperience
 
@@ -410,7 +416,7 @@ export class LocationService {
       newProvinceExperience.province_code = province_code
       newProvinceExperience.province_name = province
       newProvinceExperience.vis_id = renderID(PrefixID.visitedProvince)
-      newProvinceExperience.experience_value = Experience.entry
+      newProvinceExperience.experience_value = Experience.ENTRY
 
       const result = await this.userVisitedProvinceEntity.save(
         newProvinceExperience
@@ -426,8 +432,7 @@ export class LocationService {
       /**
        * 最新的经验值
        */
-      const experience_value =
-        Number(provinceExperience.experience_value || '0') + Experience.entry
+      const experience_value = oldExperienceValue + Experience.ENTRY
 
       provinceExperience.experience_value = experience_value
 
@@ -480,8 +485,102 @@ export class LocationService {
       background_color: this.getJigsawColor(
         provinceExperience.experience_value
       ),
-      content: '再获取245经验将会升温版图'
+      content: this.getCreatePositionRecordContent(
+        oldExperienceValue,
+        provinceExperience.experience_value,
+        Experience.ENTRY,
+        `${province}` || '未知省份'
+      )
     })
+  }
+
+  /**
+   * 获取打卡经验值文案
+   * 
+   * @param oldValue 旧的经验值
+   * @param newValue 新的经验值
+   * @param addValue 增加的经验值
+   * @param province 省份名称
+   */
+  private getCreatePositionRecordContent(oldValue: number, newValue: number, addValue: number, province: string): string {
+    /** 相差的值，在这个值之内才显示还要 xx 经验解锁 */
+    const count = 500
+
+
+    if (!oldValue || oldValue < ExperienceStep.D) {
+
+      if (oldValue + addValue >= ExperienceStep.D) {
+        return `恭喜你升温了${province}版图`
+      }
+
+      return `还需要获得${ExperienceStep.D - newValue}经验将会升温版图`
+    }
+
+    else if (oldValue >= ExperienceStep.D && oldValue < ExperienceStep.C) {
+
+      if (oldValue + addValue >= ExperienceStep.C) {
+        return `恭喜你升温了${province}版图`
+      }
+
+      const diff = ExperienceStep.C - newValue
+
+      if (diff >= count) {
+        return '随机文案'
+      }
+
+      return `还需要获得${diff}经验将会升温版图`
+    }
+
+    else if (oldValue >= ExperienceStep.C && oldValue < ExperienceStep.B) {
+
+      if (oldValue + addValue >= ExperienceStep.B) {
+        return `恭喜你升温了${province}版图`
+      }
+
+      const diff = ExperienceStep.B - newValue
+
+      if (diff >= count) {
+        return '随机文案'
+      }
+
+      return `还需要获得${diff}经验将会升温版图`
+    }
+
+    else if (oldValue >= ExperienceStep.B && oldValue < ExperienceStep.A) {
+
+      if (oldValue + addValue >= ExperienceStep.A) {
+        return `恭喜你升温了${province}版图`
+      }
+
+      const diff = ExperienceStep.A - newValue
+
+      if (diff >= count) {
+        return '随机文案'
+      }
+
+      return `还需要获得${diff}经验将会升温版图`
+    }
+
+    else if (oldValue >= ExperienceStep.A && oldValue < ExperienceStep.S) {
+
+      if (oldValue + addValue >= ExperienceStep.S) {
+        return `恭喜你${province}版图已经升温到最高等级`
+      }
+
+      const diff = ExperienceStep.S - newValue
+
+      if (diff >= count) {
+        return '随机文案'
+      }
+
+      return `还需要获得${diff}经验将会升温版图`
+    }
+
+    else if (oldValue >= ExperienceStep.S) {
+      return '随机文案'
+    }
+
+    return '随机文案'
   }
 
   /**
@@ -592,7 +691,7 @@ export class LocationService {
     newUserRoute.province_code = options.province_code
     newUserRoute.province = options.province
     newUserRoute.create_at = options.create_at
-    newUserRoute.experience_value = Experience.entry
+    newUserRoute.experience_value = Experience.ENTRY
 
     const result = await this.userRouteEntity.save(newUserRoute)
 
@@ -765,13 +864,13 @@ export class LocationService {
           ...correspondingData,
           routes: isArray(correspondingData.routes)
             ? correspondingData.routes.map((item) => {
-                return {
-                  ...item,
-                  picture: isString(item.picture)
-                    ? item.picture.split(',')
-                    : item.picture
-                }
-              })
+              return {
+                ...item,
+                picture: isString(item.picture)
+                  ? item.picture.split(',')
+                  : item.picture
+              }
+            })
             : []
         }
       }

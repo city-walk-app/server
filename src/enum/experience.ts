@@ -5,30 +5,42 @@ export enum Experience {
   /**
    * 入门的
    */
-  entry = 20,
+  ENTRY = 20,
 
   /**
    * 基本的
    */
-  basic = 30,
+  BASIC = 30,
 
   /**
    * 初级的
    */
-  primary = 40,
+  PRIMARY = 40,
 
   /**
    * 中级的
    */
-  intermediate = 50,
+  INTERMEDIATE = 50,
 
   /**
    * 高级的
    */
-  advanced = 60,
+  ADVANCED = 60,
 
   /**
    * 专家的
    */
-  expert = 70
+  EXPERT = 70
+}
+
+export enum ExperienceStep {
+  D = 900,
+
+  C = 2000,
+
+  B = 4000,
+
+  A = 9000,
+
+  S = 21998
 }
