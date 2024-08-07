@@ -141,20 +141,34 @@ export class LocationService {
     routeDetail.address = body.address
 
     /** 上传的照片是否合法 */
-    const isPictureOk = !!(isArray(body.picture) && body.picture.length && body.picture.every((z) => isString(z)))
+    const isPictureOk = !!(
+      isArray(body.picture) &&
+      body.picture.length &&
+      body.picture.every((z) => isString(z))
+    )
 
     if (isPictureOk) {
       routeDetail.picture = body.picture.join(',')
     }
 
     /** 完善的信息内容映射 */
-    const paramsMap = [!!body.content, !!body.mood_color, !!body.travel_type, !!body.address, isPictureOk]
+    const paramsMap = [
+      !!body.content,
+      !!body.mood_color,
+      !!body.travel_type,
+      !!body.address,
+      isPictureOk
+    ]
     /** 完善的信息数量 */
     const paramsCount = paramsMap.filter(Boolean).length
 
     // 完善了版图的信息，增加额外经验值
     if (isNumber(paramsCount) && paramsCount > 0) {
-      await this.additionalProvinceExperience(user_id, paramsCount, routeDetail.province_code)
+      await this.additionalProvinceExperience(
+        user_id,
+        paramsCount,
+        routeDetail.province_code
+      )
     }
 
     const data = await this.userRouteEntity.save(routeDetail)
@@ -166,12 +180,16 @@ export class LocationService {
 
   /**
    * 增加额外的经验值
-   * 
+   *
    * @param user_id 用户 id
    * @param count 增加的量级
    * @param province_code 增加的省份 code
    */
-  private async additionalProvinceExperience(user_id: string, count: number, province_code: string) {
+  private async additionalProvinceExperience(
+    user_id: string,
+    count: number,
+    province_code: string
+  ) {
     const provinceExperience = await this.userVisitedProvinceEntity.findOneBy({
       user_id,
       province_code
@@ -184,10 +202,12 @@ export class LocationService {
     /**
      * 旧的经验值
      */
-    const oldExperienceValue = Number(provinceExperience.experience_value || '0')
+    const oldExperienceValue = Number(
+      provinceExperience.experience_value || '0'
+    )
     /**
-    * 最新的经验值
-    */
+     * 最新的经验值
+     */
     const experience_value = oldExperienceValue + addCount
 
     provinceExperience.experience_value = experience_value
@@ -417,7 +437,7 @@ export class LocationService {
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-      JSON.stringify(locationInfo.regeocode.addressComponent)
+        JSON.stringify(locationInfo.regeocode.addressComponent)
     )
 
     /** 格式化后的省份编码 */
@@ -444,7 +464,9 @@ export class LocationService {
     /**
      * 旧的经验值
      */
-    const oldExperienceValue = Number(provinceExperience.experience_value || '0')
+    const oldExperienceValue = Number(
+      provinceExperience.experience_value || '0'
+    )
 
     /** 是否为解锁的新省份 */
     const is_new_province = !provinceExperience
@@ -537,28 +559,28 @@ export class LocationService {
 
   /**
    * 获取打卡经验值文案
-   * 
+   *
    * @param oldValue 旧的经验值
    * @param newValue 新的经验值
    * @param addValue 增加的经验值
    * @param province 省份名称
    */
-  private getCreatePositionRecordContent(oldValue: number, newValue: number, addValue: number, province: string): string {
+  private getCreatePositionRecordContent(
+    oldValue: number,
+    newValue: number,
+    addValue: number,
+    province: string
+  ): string {
     /** 相差的值，在这个值之内才显示还要 xx 经验解锁 */
     const count = 500
 
-
     if (!oldValue || oldValue < ExperienceStep.D) {
-
       if (oldValue + addValue >= ExperienceStep.D) {
         return `恭喜你升温了${province}版图`
       }
 
       return `还需要获得${ExperienceStep.D - newValue}经验将会升温版图`
-    }
-
-    else if (oldValue >= ExperienceStep.D && oldValue < ExperienceStep.C) {
-
+    } else if (oldValue >= ExperienceStep.D && oldValue < ExperienceStep.C) {
       if (oldValue + addValue >= ExperienceStep.C) {
         return `恭喜你升温了${province}版图`
       }
@@ -570,10 +592,7 @@ export class LocationService {
       }
 
       return `还需要获得${diff}经验将会升温版图`
-    }
-
-    else if (oldValue >= ExperienceStep.C && oldValue < ExperienceStep.B) {
-
+    } else if (oldValue >= ExperienceStep.C && oldValue < ExperienceStep.B) {
       if (oldValue + addValue >= ExperienceStep.B) {
         return `恭喜你升温了${province}版图`
       }
@@ -585,10 +604,7 @@ export class LocationService {
       }
 
       return `还需要获得${diff}经验将会升温版图`
-    }
-
-    else if (oldValue >= ExperienceStep.B && oldValue < ExperienceStep.A) {
-
+    } else if (oldValue >= ExperienceStep.B && oldValue < ExperienceStep.A) {
       if (oldValue + addValue >= ExperienceStep.A) {
         return `恭喜你升温了${province}版图`
       }
@@ -600,10 +616,7 @@ export class LocationService {
       }
 
       return `还需要获得${diff}经验将会升温版图`
-    }
-
-    else if (oldValue >= ExperienceStep.A && oldValue < ExperienceStep.S) {
-
+    } else if (oldValue >= ExperienceStep.A && oldValue < ExperienceStep.S) {
       if (oldValue + addValue >= ExperienceStep.S) {
         return `恭喜你${province}版图已经升温到最高等级`
       }
@@ -615,9 +628,7 @@ export class LocationService {
       }
 
       return `还需要获得${diff}经验将会升温版图`
-    }
-
-    else if (oldValue >= ExperienceStep.S) {
+    } else if (oldValue >= ExperienceStep.S) {
       return '随机文案'
     }
 
@@ -905,13 +916,13 @@ export class LocationService {
           ...correspondingData,
           routes: isArray(correspondingData.routes)
             ? correspondingData.routes.map((item) => {
-              return {
-                ...item,
-                picture: isString(item.picture)
-                  ? item.picture.split(',')
-                  : item.picture
-              }
-            })
+                return {
+                  ...item,
+                  picture: isString(item.picture)
+                    ? item.picture.split(',')
+                    : item.picture
+                }
+              })
             : []
         }
       }
