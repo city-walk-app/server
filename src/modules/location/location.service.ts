@@ -8,7 +8,8 @@ import {
   isArray,
   isString,
   isNumber,
-  isEmptyArray
+  isEmptyArray,
+  getRandomNumber
 } from 'src/utils'
 import {
   HttpCode,
@@ -22,7 +23,8 @@ import {
   moodColorMap,
   MoodColor,
   TravelType,
-  ExperienceStep
+  ExperienceStep,
+  defaultExperienceContents
 } from 'src/enum'
 import { ConfigService } from '@nestjs/config'
 import {
@@ -174,6 +176,15 @@ export class LocationService {
   }
 
   /**
+   * 获取随机打卡文案
+   */
+  private getExperienceContents() {
+    const num = getRandomNumber(defaultExperienceContents.length)
+
+    return defaultExperienceContents[num]
+  }
+
+  /**
    * 增加额外的经验值
    *
    * @param user_id 用户 id
@@ -193,7 +204,7 @@ export class LocationService {
     /**
      * 需要增加的经验值
      */
-    const addCount = Experience.DEFAULT * count
+    const addCount = Experience.ADDITIONAL * count
     /**
      * 旧的经验值
      */
@@ -481,7 +492,7 @@ export class LocationService {
     /**
      * 最新的经验值
      */
-    const experience_value = oldExperienceValue + Experience.ENTRY
+    const experience_value = oldExperienceValue + Experience.CREATE
 
     provinceExperience.experience_value = experience_value
 
@@ -544,7 +555,7 @@ export class LocationService {
       content: this.getCreatePositionRecordContent(
         oldExperienceValue,
         provinceExperience.experience_value,
-        Experience.ENTRY,
+        Experience.CREATE,
         `${province}` || '未知省份'
       )
     })
@@ -565,7 +576,7 @@ export class LocationService {
       newProvinceExperience.province_code = options.province_code
       newProvinceExperience.province_name = options.province_name
       newProvinceExperience.vis_id = renderID(PrefixID.visitedProvince)
-      newProvinceExperience.experience_value = Experience.ENTRY
+      newProvinceExperience.experience_value = Experience.CREATE
 
       const result = await this.userVisitedProvinceEntity.save(
         newProvinceExperience
@@ -594,6 +605,8 @@ export class LocationService {
   ): string {
     /** 相差的值，在这个值之内才显示还要 xx 经验解锁 */
     const count = 500
+    /** 随机文案 */
+    const randomContent = this.getExperienceContents()
 
     if (!oldValue || oldValue < ExperienceStep.D) {
       if (oldValue + addValue >= ExperienceStep.D) {
@@ -609,7 +622,7 @@ export class LocationService {
       const diff = ExperienceStep.C - newValue
 
       if (diff >= count) {
-        return '随机文案'
+        return randomContent
       }
 
       return `还需要获得${diff}经验将会升温版图`
@@ -621,7 +634,7 @@ export class LocationService {
       const diff = ExperienceStep.B - newValue
 
       if (diff >= count) {
-        return '随机文案'
+        return randomContent
       }
 
       return `还需要获得${diff}经验将会升温版图`
@@ -633,7 +646,7 @@ export class LocationService {
       const diff = ExperienceStep.A - newValue
 
       if (diff >= count) {
-        return '随机文案'
+        return randomContent
       }
 
       return `还需要获得${diff}经验将会升温版图`
@@ -645,15 +658,15 @@ export class LocationService {
       const diff = ExperienceStep.S - newValue
 
       if (diff >= count) {
-        return '随机文案'
+        return randomContent
       }
 
       return `还需要获得${diff}经验将会升温版图`
     } else if (oldValue >= ExperienceStep.S) {
-      return '随机文案'
+      return randomContent
     }
 
-    return '随机文案'
+    return randomContent
   }
 
   /**
@@ -794,7 +807,7 @@ export class LocationService {
       newUserRoute.province_code = options.province_code
       newUserRoute.province = options.province
       newUserRoute.create_at = options.create_at
-      newUserRoute.experience_value = Experience.ENTRY
+      newUserRoute.experience_value = Experience.CREATE
 
       const result = await this.userRouteEntity.save(newUserRoute)
 
