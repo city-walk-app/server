@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, BadRequestException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import {
@@ -7,7 +7,8 @@ import {
   getCurrentDateFormatted,
   isArray,
   isString,
-  isNumber
+  isNumber,
+  isEmptyArray
 } from 'src/utils'
 import {
   HttpCode,
@@ -84,23 +85,17 @@ export class LocationService {
      */
     const locationInfo = await this.getLocationInfo(longitude, latitude)
 
-    // 避免高德地图接口响应错误
-    if (
-      !locationInfo ||
-      locationInfo.status !== '1' ||
-      !locationInfo.regeocode.addressComponent
-    ) {
-      return new Result(HttpCode.ERR, '获取位置错误')
+    // 非中国地区
+    if (!locationInfo) {
+      throw new BadRequestException('当前位置无法获取天气')
     }
 
-    const { adcode } = locationInfo.regeocode.addressComponent
-
     /** 格式化后的省份编码 */
-    const province_code = `${adcode}`.slice(0, 2) + '0000'
+    const province_code = `${locationInfo.adcode}`.slice(0, 2) + '0000'
 
     // 如果数组中不存在格式化后的数组，则说明编码不正确，提前拦截
     if (!(province_code in CITY_NAME_CODE)) {
-      return new Result(HttpCode.ERR, '无效省份编码')
+      throw new BadRequestException('无效省份编码')
     }
 
     const response = await this.httpService.axiosRef.get(AMap.weather, {
@@ -114,7 +109,7 @@ export class LocationService {
       return new Result(HttpCode.OK, 'ok', response.data.lives[0])
     }
 
-    return new Result(HttpCode.ERR, '天气获取异常')
+    throw new BadRequestException('天气获取异常')
   }
 
   /**
@@ -130,7 +125,7 @@ export class LocationService {
     })
 
     if (!routeDetail) {
-      return new Result(HttpCode.ERR, '未找到记录')
+      throw new BadRequestException('未找到记录')
     }
 
     console.log('传入的参数', body)
@@ -424,20 +419,16 @@ export class LocationService {
      */
     const locationInfo = await this.getLocationInfo(longitude, latitude)
 
-    // 避免高德地图接口响应错误
-    if (
-      !locationInfo ||
-      locationInfo.status !== '1' ||
-      !locationInfo.regeocode.addressComponent
-    ) {
-      return new Result(HttpCode.ERR, '获取位置错误')
+    // 非中国地区
+    if (!locationInfo) {
+      throw new BadRequestException('当前位置无法打卡')
     }
 
-    const { adcode, province, city } = locationInfo.regeocode.addressComponent
+    const { adcode, province, city } = locationInfo
 
     this.loggerService.log(
       '创建当前位置记录，打卡当前位置，高的地图返回：' +
-        JSON.stringify(locationInfo.regeocode.addressComponent)
+        JSON.stringify(locationInfo)
     )
 
     /** 格式化后的省份编码 */
@@ -445,7 +436,7 @@ export class LocationService {
 
     // 如果数组中不存在格式化后的数组，则说明编码不正确，提前拦截
     if (!(province_code in CITY_NAME_CODE)) {
-      return new Result(HttpCode.ERR, '无效省份编码')
+      throw new BadRequestException('无效省份编码')
     }
 
     /**
@@ -455,11 +446,30 @@ export class LocationService {
      *
      * 也可以作为是否为新省份的标识，如果没有获取到，则说明当前用户还没有在当前省份获取到过经验值，也就是未解锁
      */
-    let provinceExperience: UserVisitedProvince | null =
-      await this.userVisitedProvinceEntity.findOneBy({
+    let provinceExperience = await this.userVisitedProvinceEntity.findOneBy({
+      user_id,
+      province_code
+    })
+
+    /**
+     * 是否为解锁的新省份版图
+     */
+    const is_new_province = !provinceExperience
+
+    // 判断当前省份经验值是否存在，如果存在则使用，不存在就创建一条新的
+    if (!provinceExperience) {
+      /** 新的省份版图 */
+      provinceExperience = await this.createUserVisitedProvince({
         user_id,
-        province_code
+        province_code,
+        province_name: province
       })
+    }
+
+    // 避免上一步创建失败
+    if (!provinceExperience) {
+      throw new BadRequestException('创建新的省份版图错误')
+    }
 
     /**
      * 旧的经验值
@@ -468,53 +478,34 @@ export class LocationService {
       provinceExperience.experience_value || '0'
     )
 
-    /** 是否为解锁的新省份 */
-    const is_new_province = !provinceExperience
+    /**
+     * 最新的经验值
+     */
+    const experience_value = oldExperienceValue + Experience.ENTRY
 
-    // 判断当前省份经验值是否存在，如果存在则使用，不存在就创建一条新的
-    if (!provinceExperience) {
-      const newProvinceExperience = new UserVisitedProvince()
+    provinceExperience.experience_value = experience_value
 
-      newProvinceExperience.user_id = user_id
-      newProvinceExperience.province_code = province_code
-      newProvinceExperience.province_name = province
-      newProvinceExperience.vis_id = renderID(PrefixID.visitedProvince)
-      newProvinceExperience.experience_value = Experience.ENTRY
+    const res = await this.userVisitedProvinceEntity.save(provinceExperience)
 
-      const result = await this.userVisitedProvinceEntity.save(
-        newProvinceExperience
-      )
-
-      // 避免上一步创建失败
-      if (!result) {
-        return new Result(HttpCode.ERR, '创建新的省份错误')
-      }
-
-      provinceExperience = result
-    } else {
-      /**
-       * 最新的经验值
-       */
-      const experience_value = oldExperienceValue + Experience.ENTRY
-
-      provinceExperience.experience_value = experience_value
-
-      const res = await this.userVisitedProvinceEntity.save(provinceExperience)
-
-      // 避免上一步创建失败
-      if (!res) {
-        return new Result(HttpCode.ERR, '增加经验值错误')
-      }
+    // 避免上一步创建失败
+    if (!res) {
+      throw new BadRequestException('增加经验值错误')
     }
 
-    // 创建步行记录
-    const createRouteListRes = await this.createRouteList(user_id)
+    /**
+     * 创建步行记录列表数据
+     */
+    const createRouteListResult = await this.createRouteList(user_id)
+
+    if (!createRouteListResult) {
+      throw new BadRequestException('创建步行记录列表数据失败')
+    }
 
     /**
      * 创建新的打卡地点详情
      */
-    const createRouteRes = await this.createRoute({
-      list_id: createRouteListRes.list_id,
+    const createRouteResult = await this.createRoute({
+      list_id: createRouteListResult.list_id,
       user_id,
       longitude,
       latitude,
@@ -524,17 +515,19 @@ export class LocationService {
       create_at: new Date()
     })
 
-    this.loggerService.log('创建新的打卡地点详情：' + createRouteRes)
+    if (!createRouteResult) {
+      throw new BadRequestException('创建新的打卡地点详情失败')
+    }
+
+    this.loggerService.log('创建新的打卡地点详情：' + createRouteResult)
 
     return new Result(HttpCode.OK, 'ok', {
       province_code,
-      route_id: createRouteRes.route_id,
+      route_id: createRouteResult.route_id,
       /**
        * 是否为中国大陆
-       *
-       * 判断当前位置的省份编码是否存在
        */
-      is_in_china: !!(adcode && adcode.length),
+      is_in_china: true,
       /**
        * 是否为新省份
        */
@@ -555,6 +548,34 @@ export class LocationService {
         `${province}` || '未知省份'
       )
     })
+  }
+
+  /**
+   * 创建省份版图
+   *
+   * @param options 创建省份版图数据的参数列表
+   */
+  private async createUserVisitedProvince(
+    options: Partial<UserVisitedProvince>
+  ) {
+    try {
+      const newProvinceExperience = new UserVisitedProvince()
+
+      newProvinceExperience.user_id = options.user_id
+      newProvinceExperience.province_code = options.province_code
+      newProvinceExperience.province_name = options.province_name
+      newProvinceExperience.vis_id = renderID(PrefixID.visitedProvince)
+      newProvinceExperience.experience_value = Experience.ENTRY
+
+      const result = await this.userVisitedProvinceEntity.save(
+        newProvinceExperience
+      )
+
+      return result
+    } catch (err) {
+      this.loggerService.log(`创建省份版图方法异常${err}`)
+      return err
+    }
   }
 
   /**
@@ -649,7 +670,6 @@ export class LocationService {
      */
     const { startDate, endDate } = this.getUserMonthHeatmapDate(date)
 
-    console.log(startDate, endDate)
     /**
      * 获取到当年指定用户打卡记录
      */
@@ -709,6 +729,8 @@ export class LocationService {
   /**
    * 通过经纬度获取位置信息
    *
+   * 只有在中国大陆/台湾/香港澳门特别行政区才会返回位置信息详情，否则都返回 null
+   *
    * @param longitude 经度
    * @param latitude 纬度
    */
@@ -716,14 +738,42 @@ export class LocationService {
     longitude: CreatePositionRecordDto['longitude'],
     latitude: CreatePositionRecordDto['latitude']
   ) {
-    const response = await this.httpService.axiosRef.get(AMap.geocode_regeo, {
-      params: {
-        key: this.apiKey,
-        location: `${longitude}, ${latitude}`
-      }
-    })
+    try {
+      const response = await this.httpService.axiosRef.get(AMap.geocode_regeo, {
+        params: {
+          key: this.apiKey,
+          location: `${longitude}, ${latitude}`
+        }
+      })
 
-    return response.data
+      // 获取位置信息错误
+      if (
+        !response.data ||
+        response.data.status !== '1' ||
+        !response.data.regeocode.addressComponent
+      ) {
+        return null
+      }
+
+      const { adcode, province, city } =
+        response.data.regeocode.addressComponent
+
+      console.log(isEmptyArray)
+
+      // 非中国大陆/台湾/香港澳门特别行政区地址
+      if (
+        isEmptyArray(adcode) &&
+        isEmptyArray(province) &&
+        isEmptyArray(city)
+      ) {
+        return null
+      }
+
+      return response.data.regeocode.addressComponent
+    } catch (err) {
+      this.loggerService.log(`通过经纬度获取位置信息方法异常${err}`)
+      return null
+    }
   }
 
   /**
@@ -732,22 +782,27 @@ export class LocationService {
    * @param options 参数列表
    */
   private async createRoute(options: Partial<UserRoute>) {
-    const newUserRoute = new UserRoute()
+    try {
+      const newUserRoute = new UserRoute()
 
-    newUserRoute.route_id = renderID(PrefixID.route)
-    newUserRoute.list_id = options.list_id
-    newUserRoute.user_id = options.user_id
-    newUserRoute.longitude = options.longitude
-    newUserRoute.latitude = options.latitude
-    newUserRoute.city = options.city
-    newUserRoute.province_code = options.province_code
-    newUserRoute.province = options.province
-    newUserRoute.create_at = options.create_at
-    newUserRoute.experience_value = Experience.ENTRY
+      newUserRoute.route_id = renderID(PrefixID.route)
+      newUserRoute.list_id = options.list_id
+      newUserRoute.user_id = options.user_id
+      newUserRoute.longitude = options.longitude
+      newUserRoute.latitude = options.latitude
+      newUserRoute.city = options.city
+      newUserRoute.province_code = options.province_code
+      newUserRoute.province = options.province
+      newUserRoute.create_at = options.create_at
+      newUserRoute.experience_value = Experience.ENTRY
 
-    const result = await this.userRouteEntity.save(newUserRoute)
+      const result = await this.userRouteEntity.save(newUserRoute)
 
-    return result
+      return result
+    } catch (err) {
+      this.loggerService.log(`创建步行记录单独一项方法错误：${err}`)
+      return null
+    }
   }
 
   /**
@@ -756,50 +811,57 @@ export class LocationService {
    * @param user_id 用户 id
    */
   private async createRouteList(user_id: string) {
-    const currentDate = new Date()
+    try {
+      const currentDate = new Date()
 
-    /**
-     * @see Date.prototype.setHours() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date/setHours
-     */
-    currentDate.setHours(0, 0, 0, 0) // 设置时间为当天的开始时间
+      /**
+       * @see Date.prototype.setHours() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date/setHours
+       */
+      currentDate.setHours(0, 0, 0, 0) // 设置时间为当天的开始时间
 
-    /**
-     * @see 使用查询生成器选择 https://typeorm.io/select-query-builder
-     * @see 什么是QueryBuilder https://typeorm.io/select-query-builder#what-is-querybuilder
-     */
-    const queryBuilder = await this.userRouteListEntity.createQueryBuilder(
-      'userRouteListEntity'
-    )
+      /**
+       * @see 使用查询生成器选择 https://typeorm.io/select-query-builder
+       * @see 什么是QueryBuilder https://typeorm.io/select-query-builder#what-is-querybuilder
+       */
+      const queryBuilder = await this.userRouteListEntity.createQueryBuilder(
+        'userRouteListEntity'
+      )
 
-    /**
-     * 查询今天是否发布过内容
-     *
-     * 要从数据库获取所有数据需要使用 getMany
-     * 要从数据库获取指定一个数据需要使用 getOne
-     *
-     * @see 使用获取值QueryBuilder https://typeorm.io/select-query-builder#getting-values-using-querybuilder
-     */
-    const todayRelease: UserRouteList = await queryBuilder
-      .where('userRouteListEntity.user_id = :userId', { userId: user_id })
-      .andWhere('userRouteListEntity.create_at >= :currentDate', {
-        currentDate
-      })
-      .getOne()
+      /**
+       * 查询今天是否发布过内容
+       *
+       * 要从数据库获取所有数据需要使用 getMany
+       * 要从数据库获取指定一个数据需要使用 getOne
+       *
+       * @see 使用获取值QueryBuilder https://typeorm.io/select-query-builder#getting-values-using-querybuilder
+       */
+      const todayRelease: UserRouteList = await queryBuilder
+        .where('userRouteListEntity.user_id = :userId', { userId: user_id })
+        .andWhere('userRouteListEntity.create_at >= :currentDate', {
+          currentDate
+        })
+        .getOne()
 
-    // 如果今天发布过
-    if (todayRelease) {
-      return todayRelease
+      // 如果今天发布过
+      if (todayRelease) {
+        return todayRelease
+      }
+
+      const newRouteList = new UserRouteList()
+
+      newRouteList.user_id = user_id
+      newRouteList.list_id = renderID(PrefixID.routeList)
+      newRouteList.create_at = new Date()
+
+      const newRouteListResult = await this.userRouteListEntity.save(
+        newRouteList
+      )
+
+      return newRouteListResult
+    } catch (err) {
+      this.loggerService.log(`创建步行记录集合方法错误：${err}`)
+      return null
     }
-
-    const newRouteList = new UserRouteList()
-
-    newRouteList.user_id = user_id
-    newRouteList.list_id = renderID(PrefixID.routeList)
-    newRouteList.create_at = new Date()
-
-    const newRouteListResult = await this.userRouteListEntity.save(newRouteList)
-
-    return newRouteListResult
   }
 
   /**

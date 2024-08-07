@@ -1,4 +1,9 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common'
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus
+} from '@nestjs/common'
 import { HttpCode } from 'src/enum'
 import { Result } from 'src/utils'
 
@@ -24,7 +29,6 @@ export class CustomExceptionFilter implements ExceptionFilter {
       console.error('全局错误拦截：', exception)
     }
 
-    response.status(HttpStatus.OK)
-      .json(new Result(HttpCode.ERR, message))
+    response.status(HttpStatus.OK).json(new Result(HttpCode.ERR, message))
   }
 }

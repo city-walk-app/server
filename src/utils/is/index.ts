@@ -7,7 +7,7 @@ const { toString } = Object.prototype
  * @param type 预期类型
  * @returns { boolean } 这个值是否为传入的类型
  */
-const is = (value: unknown, type: string): boolean => {
+const is = (value: any, type: string): boolean => {
   return toString.call(value) === `[object ${type}]`
 }
 
@@ -27,7 +27,7 @@ export const isString = (value: any): value is string =>
  * @returns { boolean }
  * @see isNaN() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/isNaN
  */
-export const isNumber = (value: unknown): value is number =>
+export const isNumber = (value: any): value is number =>
   typeof value === 'number' && !isNaN(value)
 
 /**
@@ -36,8 +36,7 @@ export const isNumber = (value: unknown): value is number =>
  * @param { * } value 要检测的数据
  * @returns { boolean }
  */
-export const isBoolean = (value: unknown): value is boolean =>
-  is(value, 'Boolean')
+export const isBoolean = (value: any): value is boolean => is(value, 'Boolean')
 
 /**
  * 判断一个值是否为 array 类型
@@ -46,3 +45,12 @@ export const isBoolean = (value: unknown): value is boolean =>
  * @returns { boolean }
  */
 export const isArray = Array.isArray
+
+/**
+ * 是否为空数组
+ *
+ * @param value 值
+ */
+export const isEmptyArray = (value: any): boolean => {
+  return isArray(value) && !value.length
+}

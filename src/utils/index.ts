@@ -1,5 +1,5 @@
 export * from './date'
-export * from './is'
+export * from './is/index'
 export * from './result'
 export * from './id'
 export * from './sensitive-word'
