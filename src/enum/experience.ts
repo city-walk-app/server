@@ -2,6 +2,8 @@
  * 经验分配
  */
 export enum Experience {
+  DEFAULT = 10,
+
   /**
    * 入门的
    */

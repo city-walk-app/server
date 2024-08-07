@@ -6,7 +6,8 @@ import {
   renderID,
   getCurrentDateFormatted,
   isArray,
-  isString
+  isString,
+  isNumber
 } from 'src/utils'
 import {
   HttpCode,
@@ -139,12 +140,21 @@ export class LocationService {
     routeDetail.travel_type = body.travel_type // 心情颜色
     routeDetail.address = body.address
 
-    if (
-      isArray(body.picture) &&
-      body.picture.length &&
-      body.picture.every((z) => isString(z))
-    ) {
+    /** 上传的照片是否合法 */
+    const isPictureOk = !!(isArray(body.picture) && body.picture.length && body.picture.every((z) => isString(z)))
+
+    if (isPictureOk) {
       routeDetail.picture = body.picture.join(',')
+    }
+
+    /** 完善的信息内容映射 */
+    const paramsMap = [!!body.content, !!body.mood_color, !!body.travel_type, !!body.address, isPictureOk]
+    /** 完善的信息数量 */
+    const paramsCount = paramsMap.filter(Boolean).length
+
+    // 完善了版图的信息，增加额外经验值
+    if (isNumber(paramsCount) && paramsCount > 0) {
+      await this.additionalProvinceExperience(user_id, paramsCount, routeDetail.province_code)
     }
 
     const data = await this.userRouteEntity.save(routeDetail)
@@ -152,6 +162,37 @@ export class LocationService {
     console.log('完善步行打卡记录详情', data)
 
     return new Result(HttpCode.OK, 'ok')
+  }
+
+  /**
+   * 增加额外的经验值
+   * 
+   * @param user_id 用户 id
+   * @param count 增加的量级
+   * @param province_code 增加的省份 code
+   */
+  private async additionalProvinceExperience(user_id: string, count: number, province_code: string) {
+    const provinceExperience = await this.userVisitedProvinceEntity.findOneBy({
+      user_id,
+      province_code
+    })
+
+    /**
+     * 需要增加的经验值
+     */
+    const addCount = Experience.DEFAULT * count
+    /**
+     * 旧的经验值
+     */
+    const oldExperienceValue = Number(provinceExperience.experience_value || '0')
+    /**
+    * 最新的经验值
+    */
+    const experience_value = oldExperienceValue + addCount
+
+    provinceExperience.experience_value = experience_value
+
+    await this.userVisitedProvinceEntity.save(provinceExperience)
   }
 
   /**
