@@ -81,6 +81,11 @@ export class UserRoute {
   travel_type: TravelType
 
   /** 心情颜色 */
-  @Column({ type: 'varchar', length: 255, comment: '心情颜色', enum: MoodColor })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    comment: '心情颜色',
+    enum: MoodColor
+  })
   mood_color: MoodColor
 }

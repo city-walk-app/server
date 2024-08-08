@@ -522,8 +522,7 @@ export class LocationService {
       latitude,
       province_code,
       province: `${province}` || '未知省份',
-      city: `${city}` || '未知城市',
-      create_at: new Date()
+      city: `${city}` || '未知城市'
     })
 
     if (!createRouteResult) {
@@ -806,7 +805,7 @@ export class LocationService {
       newUserRoute.city = options.city
       newUserRoute.province_code = options.province_code
       newUserRoute.province = options.province
-      newUserRoute.create_at = options.create_at
+      newUserRoute.create_at = new Date()
       newUserRoute.experience_value = Experience.CREATE
 
       const result = await this.userRouteEntity.save(newUserRoute)
