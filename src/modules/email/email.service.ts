@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable
+} from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
 // import Redis from 'ioredis'
 import { ConfigService } from '@nestjs/config'
@@ -94,7 +98,7 @@ export class EmailService {
 
     // 如果没有查找到该邮箱的
     if (!all) {
-      return new Result(HttpCode.ERR, '邮箱错误')
+      throw new BadGatewayException('邮箱错误')
     }
 
     /** 获取当前时间戳 */
@@ -103,15 +107,15 @@ export class EmailService {
     // 验证码过期
     if (time - Number(all.time) > EXPIRE_TIME) {
       redisInstance.del(email)
-      return new Result(HttpCode.ERR, '验证码已失效，请重新获取')
+      throw new BadGatewayException('验证码已失效，请重新获取')
     }
 
-    // 验证码正确
-    if (all.code === code) {
-      redisInstance.del(email)
-      return new Result(HttpCode.OK, '验证码正确')
+    // 验证码不正确
+    if (all.code !== code) {
+      throw new BadRequestException('验证码错误')
     }
 
-    return new Result(HttpCode.ERR, '验证码错误')
+    redisInstance.del(email)
+    return new Result(HttpCode.OK, '验证码正确')
   }
 }

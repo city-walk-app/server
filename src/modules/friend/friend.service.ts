@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadGatewayException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Result, renderID } from 'src/utils'
@@ -46,7 +46,7 @@ export class FriendService {
       return new Result(HttpCode.OK, 'ok', result.invite_id)
     }
 
-    return new Result(HttpCode.ERR, '邀请异常')
+    throw new BadGatewayException('邀请异常')
   }
 
   /**
@@ -65,11 +65,11 @@ export class FriendService {
     })
 
     if (!inviteRes) {
-      return new Result(HttpCode.ERR, '暂无邀请')
+      throw new BadGatewayException('暂无邀请')
     }
 
     if (inviteRes.user_id === user_id) {
-      return new Result(HttpCode.ERR, '不能添加自己')
+      throw new BadGatewayException('不能添加自己')
     }
 
     /** 是否已经存在用户关系 */
@@ -79,7 +79,7 @@ export class FriendService {
     })
 
     if (isHaveRelation) {
-      return new Result(HttpCode.ERR, '已经是好友了')
+      throw new BadGatewayException('已经是好友了')
     }
 
     /** 获取邀请人信息 */
@@ -135,7 +135,7 @@ export class FriendService {
     })
 
     if (!inviteInfo) {
-      return new Result(HttpCode.ERR, '邀请不存在')
+      throw new BadGatewayException('邀请不存在')
     }
 
     console.log(inviteInfo)
@@ -182,7 +182,7 @@ export class FriendService {
     })
 
     if (!inviteInfo) {
-      return new Result(HttpCode.ERR, '邀请不存在')
+      throw new BadGatewayException('邀请不存在')
     }
 
     inviteInfo.state = FriendState.rejected

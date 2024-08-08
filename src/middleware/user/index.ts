@@ -1,4 +1,9 @@
-import { Injectable, NestMiddleware, HttpStatus } from '@nestjs/common'
+import {
+  Injectable,
+  NestMiddleware,
+  HttpStatus,
+  BadRequestException
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { Request, Response, NextFunction } from 'express'
@@ -24,9 +29,7 @@ export class UserMiddleware implements NestMiddleware {
     const token = req.headers['token'] as string
 
     if (!token) {
-      return res
-        .status(HttpStatus.OK)
-        .json(new Result(HttpCode.ERR, '未登录'))
+      throw new BadRequestException('未登录')
     }
 
     console.log('进入中间件', token)

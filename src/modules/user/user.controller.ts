@@ -1,8 +1,13 @@
-import { Controller, Post, Body, Req } from '@nestjs/common'
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  BadGatewayException
+} from '@nestjs/common'
 import { EmailService } from '../email'
 import { UserService } from './user.service'
 import { HttpCode, USER_INFO } from 'src/enum'
-import { Result } from 'src/utils'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import {
   LoginEmailDto,
@@ -24,7 +29,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly emailService: EmailService
-  ) { }
+  ) {}
 
   @ApiOperation({ summary: '邮箱验证码登录' })
   @ApiResponse({ status: HttpCode.OK, description: '登录成功' })
@@ -54,8 +59,7 @@ export class UserController {
       return await this.userService.loginEmail(body.email)
     }
 
-    // 验证码不正确
-    return new Result(HttpCode.ERR, '验证码不正确')
+    throw new BadGatewayException('验证码不正确')
   }
 
   @ApiOperation({ summary: '获取指定用户信息' })

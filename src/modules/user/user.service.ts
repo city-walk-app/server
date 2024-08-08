@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { MailerService } from '@nestjs-modules/mailer'
 import { ConfigService } from '@nestjs/config'
@@ -23,7 +23,7 @@ export class UserService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService
-  ) { }
+  ) {}
 
   /**
    * 生成 token
@@ -85,23 +85,23 @@ export class UserService {
     const userInfo = foundUserInfo
       ? foundUserInfo
       : await (async () => {
-        const user = new UserInfo()
+          const user = new UserInfo()
 
-        user.email = email
-        user.created_at = new Date()
-        user.user_id = renderID(PrefixID.user).toString()
-        user.nick_name = this.geteDefaultNickName()
+          user.email = email
+          user.created_at = new Date()
+          user.user_id = renderID(PrefixID.user).toString()
+          user.nick_name = this.geteDefaultNickName()
 
-        // 设置 open id
-        if (wx_open_id) {
-          user.wx_open_id = wx_open_id
-        }
+          // 设置 open id
+          if (wx_open_id) {
+            user.wx_open_id = wx_open_id
+          }
 
-        /** 用户参数列表 */
-        const newUser = this.userInfoEntity.create(user)
+          /** 用户参数列表 */
+          const newUser = this.userInfoEntity.create(user)
 
-        return await this.userInfoEntity.save(newUser)
-      })()
+          return await this.userInfoEntity.save(newUser)
+        })()
 
     return new Result(HttpCode.OK, '登录成功', {
       token: this.createToken({ user_id: userInfo.user_id }),
@@ -132,7 +132,7 @@ export class UserService {
     console.log('openid', userInfo)
 
     if (!userInfo) {
-      return new Result(HttpCode.ERR, '未注册')
+      throw new BadRequestException('未注册')
     }
 
     return new Result(HttpCode.OK, '登录成功', {
@@ -159,13 +159,25 @@ export class UserService {
    */
   async getUserInfo(user_id: string) {
     /** 返回当前用户信息 */
-    const data = await this.userInfoEntity.findOneBy({ user_id })
+    const userInfo = await this.userInfoEntity.findOneBy({ user_id })
 
-    if (data) {
-      return new Result(HttpCode.OK, 'ok', data)
+    if (!userInfo) {
+      throw new BadRequestException('用户不存在')
     }
 
-    return new Result(HttpCode.ERR, '用户不存在')
+    return new Result(HttpCode.OK, 'ok', {
+      user_id: userInfo.user_id,
+      nick_name: userInfo.nick_name,
+      email: userInfo.email,
+      mobile: userInfo.mobile,
+      avatar: userInfo.avatar,
+      signature: userInfo.signature,
+      birthday: userInfo.birthday,
+      gender: userInfo.gender,
+      preference_type: isString(userInfo.preference_type)
+        ? userInfo.preference_type.split(',')
+        : null
+    })
   }
 
   /**
@@ -176,7 +188,16 @@ export class UserService {
   async setUserInfo(
     body: SetUserInfoDto & { user_id: string; avatar?: string }
   ) {
-    const { mobile, nick_name, signature, birthday, gender, avatar, preference_type, user_id } = body
+    const {
+      mobile,
+      nick_name,
+      signature,
+      birthday,
+      gender,
+      avatar,
+      preference_type,
+      user_id
+    } = body
 
     /**
      * 通过 id 和邮箱查找用户
@@ -189,7 +210,7 @@ export class UserService {
 
     // 如果没查到，返回错误信息
     if (!user) {
-      return new Result(HttpCode.ERR, '用户不存在')
+      throw new BadRequestException('用户不存在')
     }
 
     // 设置手机
@@ -224,7 +245,9 @@ export class UserService {
 
     // 设置性别
     if (preference_type && isArray(preference_type)) {
-      const isCorrectPreference = preference_type.every(item => isString(item))
+      const isCorrectPreference = preference_type.every((item) =>
+        isString(item)
+      )
 
       if (isCorrectPreference) {
         user.preference_type = preference_type.join(',')
@@ -243,11 +266,13 @@ export class UserService {
         signature: data.signature,
         birthday: data.birthday,
         gender: data.gender,
-        preference_type: data.preference_type ? data.preference_type.split(',') : null,
+        preference_type: isString(data.preference_type)
+          ? data.preference_type.split(',')
+          : null
       })
     }
 
-    return new Result(HttpCode.ERR, '修改失败')
+    throw new BadRequestException('修改失败')
   }
 
   /**
@@ -255,7 +280,8 @@ export class UserService {
    */
   private geteDefaultNickName(): string {
     const prefix = '新用户'
-    const letters = 'AdBCDEdaFGdasdaHIJfsKLMNOerPQRtdSTdUVfdsdatWXYZabdcdefgyohijklmnobpqrsktuvwxyz'
+    const letters =
+      'AdBCDEdaFGdasdaHIJfsKLMNOerPQRtdSTdUVfdsdatWXYZabdcdefgyohijklmnobpqrsktuvwxyz'
     let randomLetters = ''
 
     for (let i = 0; i < 6; i++) {

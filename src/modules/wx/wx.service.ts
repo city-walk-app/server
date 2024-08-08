@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import {
+  Injectable,
+  BadGatewayException,
+  BadRequestException
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { HttpCode, Wx } from 'src/enum'
 import { Result } from 'src/utils'
@@ -34,7 +38,7 @@ export class WxService {
     console.log(res.data)
 
     if (!res.data || !Buffer.isBuffer(res.data)) {
-      return new Result(HttpCode.ERR, '二维码生成错误')
+      throw new BadGatewayException('二维码生成错误')
     }
 
     const base64Image = Buffer.from(res.data).toString('base64')
@@ -56,7 +60,7 @@ export class WxService {
     })
 
     if (!res.data || !res.data.access_token) {
-      return new Result(HttpCode.ERR, '获取 access_token 异常')
+      throw new BadRequestException('获取 access_token 异常')
     }
 
     return res.data
