@@ -167,7 +167,20 @@ export class LocationService {
         routeDetail.province_code
       )
 
-      await this.additionalRouteExperience(user_id, body.route_id, paramsCount)
+      /**
+       * 需要增加的经验值
+       */
+      const addCount = Experience.ADDITIONAL * paramsCount
+      /**
+       * 旧的经验值
+       */
+      const oldExperienceValue = Number(routeDetail.experience_value || '0')
+      /**
+       * 最新的经验值
+       */
+      const experience_value = oldExperienceValue + addCount
+
+      routeDetail.experience_value = experience_value
     }
 
     const data = await this.userRouteEntity.save(routeDetail)
@@ -184,49 +197,6 @@ export class LocationService {
     const num = getRandomNumber(defaultExperienceContents.length)
 
     return defaultExperienceContents[num]
-  }
-
-  /**
-   * 增加额外的打卡记录经验值
-   *
-   * @param user_id 用户 id
-   * @param route_id 步行 id
-   * @param count 增加的量级
-   */
-  private async additionalRouteExperience(
-    user_id: string,
-    route_id: string,
-    count: number
-  ) {
-    try {
-      const routeDetail = await this.userRouteEntity.findOneBy({
-        user_id,
-        route_id
-      })
-
-      if (!routeDetail) {
-        return
-      }
-
-      /**
-       * 需要增加的经验值
-       */
-      const addCount = Experience.ADDITIONAL * count
-      /**
-       * 旧的经验值
-       */
-      const oldExperienceValue = Number(routeDetail.experience_value || '0')
-      /**
-       * 最新的经验值
-       */
-      const experience_value = oldExperienceValue + addCount
-
-      routeDetail.experience_value = experience_value
-
-      await this.userRouteEntity.save(routeDetail)
-    } catch (err) {
-      this.loggerService.log('增加额外的打卡记录经验值方法异常' + err)
-    }
   }
 
   /**
