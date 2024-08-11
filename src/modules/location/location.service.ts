@@ -166,6 +166,8 @@ export class LocationService {
         paramsCount,
         routeDetail.province_code
       )
+
+      await this.additionalRouteExperience(user_id, body.route_id, paramsCount)
     }
 
     const data = await this.userRouteEntity.save(routeDetail)
@@ -185,7 +187,50 @@ export class LocationService {
   }
 
   /**
-   * 增加额外的经验值
+   * 增加额外的打卡记录经验值
+   *
+   * @param user_id 用户 id
+   * @param route_id 步行 id
+   * @param count 增加的量级
+   */
+  private async additionalRouteExperience(
+    user_id: string,
+    route_id: string,
+    count: number
+  ) {
+    try {
+      const routeDetail = await this.userRouteEntity.findOneBy({
+        user_id,
+        route_id
+      })
+
+      if (!routeDetail) {
+        return
+      }
+
+      /**
+       * 需要增加的经验值
+       */
+      const addCount = Experience.ADDITIONAL * count
+      /**
+       * 旧的经验值
+       */
+      const oldExperienceValue = Number(routeDetail.experience_value || '0')
+      /**
+       * 最新的经验值
+       */
+      const experience_value = oldExperienceValue + addCount
+
+      routeDetail.experience_value = experience_value
+
+      await this.userRouteEntity.save(routeDetail)
+    } catch (err) {
+      this.loggerService.log('增加额外的打卡记录经验值方法异常' + err)
+    }
+  }
+
+  /**
+   * 增加额外的省份经验值
    *
    * @param user_id 用户 id
    * @param count 增加的量级
@@ -196,29 +241,39 @@ export class LocationService {
     count: number,
     province_code: string
   ) {
-    const provinceExperience = await this.userVisitedProvinceEntity.findOneBy({
-      user_id,
-      province_code
-    })
+    try {
+      const provinceExperience = await this.userVisitedProvinceEntity.findOneBy(
+        {
+          user_id,
+          province_code
+        }
+      )
 
-    /**
-     * 需要增加的经验值
-     */
-    const addCount = Experience.ADDITIONAL * count
-    /**
-     * 旧的经验值
-     */
-    const oldExperienceValue = Number(
-      provinceExperience.experience_value || '0'
-    )
-    /**
-     * 最新的经验值
-     */
-    const experience_value = oldExperienceValue + addCount
+      if (!provinceExperience) {
+        return null
+      }
 
-    provinceExperience.experience_value = experience_value
+      /**
+       * 需要增加的经验值
+       */
+      const addCount = Experience.ADDITIONAL * count
+      /**
+       * 旧的经验值
+       */
+      const oldExperienceValue = Number(
+        provinceExperience.experience_value || '0'
+      )
+      /**
+       * 最新的经验值
+       */
+      const experience_value = oldExperienceValue + addCount
 
-    await this.userVisitedProvinceEntity.save(provinceExperience)
+      provinceExperience.experience_value = experience_value
+
+      await this.userVisitedProvinceEntity.save(provinceExperience)
+    } catch (err) {
+      this.loggerService.log('增加额外的省份经验值' + err)
+    }
   }
 
   /**
