@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : city_walk
+ Source Server         : tyh2001
  Source Server Type    : MySQL
- Source Server Version : 80300 (8.3.0)
+ Source Server Version : 80031
  Source Host           : localhost:3306
  Source Schema         : city_walk
 
  Target Server Type    : MySQL
- Target Server Version : 80300 (8.3.0)
+ Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 30/07/2024 11:50:29
+ Date: 12/08/2024 14:02:48
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,7 @@ CREATE TABLE `cw_user_friend_invite` (
 -- Records of cw_user_friend_invite
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_friend_invite` (`id`, `user_id`, `invite_id`, `created_at`, `state`) VALUES (1, 'U131995175454824711531011225172573302849', 'IN229937362204761823663034603774649036424', '2024-07-10 10:48:02.966', 'applying');
+INSERT INTO `cw_user_friend_invite` VALUES (1, 'U131995175454824711531011225172573302849', 'IN229937362204761823663034603774649036424', '2024-07-10 10:48:02.966', 'applying');
 COMMIT;
 
 -- ----------------------------
@@ -54,8 +54,8 @@ CREATE TABLE `cw_user_friend_relation` (
 -- Records of cw_user_friend_relation
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_friend_relation` (`id`, `user_id`, `friend_id`, `state`, `created_at`) VALUES (1, 'U131995175454824711531011225172573302849', 'U295968060973022087457575540143943214943', 'normal', '2024-07-10 09:19:32.796');
-INSERT INTO `cw_user_friend_relation` (`id`, `user_id`, `friend_id`, `state`, `created_at`) VALUES (2, 'U295968060973022087457575540143943214943', 'U131995175454824711531011225172573302849', 'normal', '2024-07-10 09:19:32.804');
+INSERT INTO `cw_user_friend_relation` VALUES (1, 'U131995175454824711531011225172573302849', 'U295968060973022087457575540143943214943', 'normal', '2024-07-10 09:19:32.796');
+INSERT INTO `cw_user_friend_relation` VALUES (2, 'U295968060973022087457575540143943214943', 'U131995175454824711531011225172573302849', 'normal', '2024-07-10 09:19:32.804');
 COMMIT;
 
 -- ----------------------------
@@ -80,20 +80,21 @@ CREATE TABLE `cw_user_info` (
   `province` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT '省份',
   `preference_type` varchar(255) DEFAULT NULL COMMENT '偏好类型',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of cw_user_info
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (1, '', '_1469442737@qq.com', '15211111111', NULL, '最怕你一生碌碌无为，还安慰自己平凡可贵。', '杭州市', '2023-09-26 15:31:52', '2001-01-03', '男', '田', '/uploads/avatar/2024-05-15/1715748167980-702831789.jpg', NULL, NULL, '浙江省', NULL);
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (2, '', 'haiyetianguoqiang@126.com', NULL, NULL, NULL, NULL, '2023-10-01 21:57:09', NULL, NULL, '强', '/uploads/avatar/2023-10-01/1696168654117-483818004.jpg', NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (3, '', '1050527857@qq.com', NULL, NULL, NULL, NULL, '2023-10-01 21:58:56', NULL, NULL, '欢欢乐乐', '/uploads/avatar/2023-10-01/1696168799735-403821510.jpg', NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (4, '', '542219987@qq.com', NULL, NULL, NULL, NULL, '2023-11-02 10:33:15', NULL, NULL, '2', '/uploads/avatar/2023-11-02/1698892442746-825618819.jpg', NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (5, '111', '1741342007@qq.com', NULL, NULL, NULL, NULL, '2023-11-16 08:27:42', NULL, NULL, '维', '/uploads/avatar/2023-11-16/1700094491342-260377542.jpg', NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (31, 'U300102695417628064381040124321866117463', '_1469442737@qq.com', NULL, NULL, NULL, NULL, '2024-06-27 21:38:25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (32, 'U131995175454824711531011225172573302849', '1469442737@qq.com', '15211111111', 'oTN5263v8ClvzXtV4zQ1Jkx5Dv4w', '大撒回家都会撒娇的哈是假的', NULL, '2024-06-27 22:14:30', NULL, NULL, '田同学', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_info` (`id`, `user_id`, `email`, `mobile`, `wx_open_id`, `signature`, `city`, `created_at`, `birthday`, `gender`, `nick_name`, `avatar`, `ip_address`, `ip_info`, `province`, `preference_type`) VALUES (33, 'U295968060973022087457575540143943214943', '1469442702@qq.com', NULL, NULL, '大撒健康大数据打卡时间打卡', NULL, '2024-07-09 22:24:12', NULL, NULL, '03么么', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (1, '', '_1469442737@qq.com', '15211111111', NULL, '最怕你一生碌碌无为，还安慰自己平凡可贵。', '杭州市', '2023-09-26 15:31:52', '2001-01-03', '男', '田', '/uploads/avatar/2024-05-15/1715748167980-702831789.jpg', NULL, NULL, '浙江省', NULL);
+INSERT INTO `cw_user_info` VALUES (2, '', 'haiyetianguoqiang@126.com', NULL, NULL, NULL, NULL, '2023-10-01 21:57:09', NULL, NULL, '强', '/uploads/avatar/2023-10-01/1696168654117-483818004.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (3, '', '1050527857@qq.com', NULL, NULL, NULL, NULL, '2023-10-01 21:58:56', NULL, NULL, '欢欢乐乐', '/uploads/avatar/2023-10-01/1696168799735-403821510.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (4, '', '542219987@qq.com', NULL, NULL, NULL, NULL, '2023-11-02 10:33:15', NULL, NULL, '2', '/uploads/avatar/2023-11-02/1698892442746-825618819.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (5, '111', '1741342007@qq.com', NULL, NULL, NULL, NULL, '2023-11-16 08:27:42', NULL, NULL, '维', '/uploads/avatar/2023-11-16/1700094491342-260377542.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (31, 'U300102695417628064381040124321866117463', '_1469442737@qq.com', NULL, NULL, NULL, NULL, '2024-06-27 21:38:25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (32, 'U131995175454824711531011225172573302849', '_1469442737@qq.com', '15211111111', 'oTN5263v8ClvzXtV4zQ1Jkx5Dv4w', '大撒回家都会撒娇的哈是假的', NULL, '2024-06-27 22:14:30', NULL, NULL, '田同学', 'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-08-02/1722607019444-2215a44ec70e54d0.jpg', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (33, 'U295968060973022087457575540143943214943', '1469442702@qq.com', NULL, NULL, '大撒健康大数据打卡时间打卡', NULL, '2024-07-09 22:24:12', NULL, NULL, '03么么', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_info` VALUES (34, 'U121265108647261607713708547156458596612', '1469442737@qq.com', '15212111111', NULL, NULL, NULL, '2024-08-08 13:11:55', NULL, '3', '新用户abpfHi', 'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-08-08/1723102174099-87a5ed47b842d0c0.jpg', NULL, NULL, NULL, 'EDUCATION_CULTURE,CAFE');
 COMMIT;
 
 -- ----------------------------
@@ -105,10 +106,10 @@ CREATE TABLE `cw_user_route` (
   `list_id` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '列表 id',
   `route_id` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '步行 id',
   `user_id` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '用户 id',
-  `province_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '省份编码',
+  `province_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci DEFAULT NULL COMMENT '省份编码',
   `create_at` datetime NOT NULL COMMENT '创建时间',
-  `city` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '当前城市',
-  `province` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '当前省份',
+  `city` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci DEFAULT NULL COMMENT '当前城市',
+  `province` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci DEFAULT NULL COMMENT '当前省份',
   `latitude` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '纬度',
   `longitude` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL DEFAULT '0' COMMENT '经度',
   `experience_value` int NOT NULL COMMENT '所获得的经验值\n',
@@ -118,45 +119,58 @@ CREATE TABLE `cw_user_route` (
   `travel_type` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci DEFAULT NULL COMMENT '出行方式',
   `mood_color` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci DEFAULT NULL COMMENT '心情颜色',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of cw_user_route
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (1, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-08 16:02:24', '舟山市', '浙江省', '30.709778', '122.455646', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (2, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-08 16:03:48', '湖州市', '浙江省', '30.709778', '120.455646', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (3, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-08 16:04:58', '湖州市', '浙江省', '30.709778', '120.1', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (4, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:07:51', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (5, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:08:19', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (6, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:09:04', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (7, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:10:20', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (8, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-08 16:10:29', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (9, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-08 17:08:06', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (10, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 14:17:24', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (11, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-10 14:17:44', '杭州市', '浙江省', '30.18534', '120.26457', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (12, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-10 14:17:50', '杭州市', '浙江省', '30.186253', '120.263447', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (13, 'RO258108557155974638866580180270375839596', '1', 'U295968060973022087457575540143943214943', '330000', '2024-07-10 14:31:17', '杭州市', '浙江省', '30.186673', '120.265205', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (14, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 14:31:34', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (15, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 15:31:57', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (16, 'RO231856961144380610669955067372390220743', 'RE196915658644689638543634390399215706137', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 15:41:19', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, '的杀菌等哈说几1212121', NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (17, 'RO231856961144380610669955067372390220743', 'RE308570001790654280704360610061631337894', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 15:42:05', '那曲市', '西藏自治区', '30.709778', '93.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (18, 'RO231856961144380610669955067372390220743', 'RE140826640094695849029983957655619714759', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 17:06:16', '那曲市', '西藏自治区', '30.709778', '93.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (19, 'RO231856961144380610669955067372390220743', 'RE307251808459748498906654824027553121964', 'U131995175454824711531011225172573302849', '330000', '2024-07-10 17:06:29', '湖州市', '浙江省', '30.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (20, 'RO231856961144380610669955067372390220743', 'RE2519270719645528978746428833225643313', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:06:48', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (21, 'RO231856961144380610669955067372390220743', 'RE153805636287302760114527901017775779257', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:07:44', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (22, 'RO231856961144380610669955067372390220743', 'RE299013488893584643406066524560270885235', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:13', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (23, 'RO231856961144380610669955067372390220743', 'RE167731908540643950868389963006489384466', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:14', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (24, 'RO231856961144380610669955067372390220743', 'RE130210241139147239808398631755246847234', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:25', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (25, 'RO231856961144380610669955067372390220743', 'RE285853696616731493919865206338008687542', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:27', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (26, 'RO231856961144380610669955067372390220743', 'RE249236555370264852025791901506872631546', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:27', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (27, 'RO231856961144380610669955067372390220743', 'RE270146761892607848143265661925106090248', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:28', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (28, 'RO231856961144380610669955067372390220743', 'RE317945911962830690512310351160578241522', 'U131995175454824711531011225172573302849', '420000', '2024-07-10 20:08:33', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (29, 'RL160711928118473770198663599548116416237', 'RE84290806060835425835261071975028371817', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 13:53:56', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (30, 'RL160711928118473770198663599548116416237', 'RE276309371034988120091536743933345893185', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 14:54:42', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (31, 'RL160711928118473770198663599548116416237', 'RE119610635216258272723493927678679461165', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 14:58:41', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (32, 'RL160711928118473770198663599548116416237', 'RE97429096841716460141300728394000898274', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 14:59:38', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cw_user_route` (`id`, `list_id`, `route_id`, `user_id`, `province_code`, `create_at`, `city`, `province`, `latitude`, `longitude`, `experience_value`, `content`, `address`, `picture`, `travel_type`, `mood_color`) VALUES (33, 'RL93848726908147504497767681701990565337', 'RE280211965497922339840927200749687431655', 'U131995175454824711531011225172573302849', '330000', '2024-07-30 11:32:16', '杭州市', '浙江省', '30.183897', '120.272255', 20, '今天的心情真不错12121', '浙江省杭州市萧山区永久路219号银河小区', 'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-07-30/1722310558843-73e867adfcf072b9.jpg,http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-07-30/1722310558849-653dd2606779a5cc.jpg', '', '');
+INSERT INTO `cw_user_route` VALUES (1, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-08 16:02:24', '舟山市', '浙江省', '30.709778', '122.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (2, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-08 16:03:48', '湖州市', '浙江省', '30.709778', '120.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (3, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-08 16:04:58', '湖州市', '浙江省', '30.709778', '120.1', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (4, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:07:51', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (5, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:08:19', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (6, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:09:04', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (7, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '310000', '2024-07-08 16:10:20', '未知城市', '上海市', '30.709778', '121.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (8, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-08 16:10:29', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (9, 'RO220454790246139943250231328418604080958', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-08 17:08:06', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (10, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 14:17:24', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (11, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-10 14:17:44', '杭州市', '浙江省', '30.18534', '120.26457', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (12, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '330000', '2024-07-10 14:17:50', '杭州市', '浙江省', '30.186253', '120.263447', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (13, 'RO258108557155974638866580180270375839596', '1', 'U295968060973022087457575540143943214943', '330000', '2024-07-10 14:31:17', '杭州市', '浙江省', '30.186673', '120.265205', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (14, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 14:31:34', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (15, 'RO231856961144380610669955067372390220743', '1', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 15:31:57', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (16, 'RO231856961144380610669955067372390220743', 'RE196915658644689638543634390399215706137', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 15:41:19', '拉萨市', '西藏自治区', '30.709778', '91.3333', 20, '的杀菌等哈说几1212121', NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (17, 'RO231856961144380610669955067372390220743', 'RE308570001790654280704360610061631337894', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 15:42:05', '那曲市', '西藏自治区', '30.709778', '93.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (18, 'RO231856961144380610669955067372390220743', 'RE140826640094695849029983957655619714759', 'U131995175454824711531011225172573302849', '540000', '2024-07-10 17:06:16', '那曲市', '西藏自治区', '30.709778', '93.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (19, 'RO231856961144380610669955067372390220743', 'RE307251808459748498906654824027553121964', 'U131995175454824711531011225172573302849', '330000', '2024-07-10 17:06:29', '湖州市', '浙江省', '30.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (20, 'RO231856961144380610669955067372390220743', 'RE2519270719645528978746428833225643313', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:06:48', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (21, 'RO231856961144380610669955067372390220743', 'RE153805636287302760114527901017775779257', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:07:44', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (22, 'RO231856961144380610669955067372390220743', 'RE299013488893584643406066524560270885235', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:13', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (23, 'RO231856961144380610669955067372390220743', 'RE167731908540643950868389963006489384466', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:14', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (24, 'RO231856961144380610669955067372390220743', 'RE130210241139147239808398631755246847234', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:25', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (25, 'RO231856961144380610669955067372390220743', 'RE285853696616731493919865206338008687542', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:27', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (26, 'RO231856961144380610669955067372390220743', 'RE249236555370264852025791901506872631546', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:27', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (27, 'RO231856961144380610669955067372390220743', 'RE270146761892607848143265661925106090248', 'U131995175454824711531011225172573302849', '210000', '2024-07-10 17:09:28', '葫芦岛市', '辽宁省', '40.709778', '120.3333', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (28, 'RO231856961144380610669955067372390220743', 'RE317945911962830690512310351160578241522', 'U131995175454824711531011225172573302849', '420000', '2024-07-10 20:08:33', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (29, 'RL160711928118473770198663599548116416237', 'RE84290806060835425835261071975028371817', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 13:53:56', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (30, 'RL160711928118473770198663599548116416237', 'RE276309371034988120091536743933345893185', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 14:54:42', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (31, 'RL160711928118473770198663599548116416237', 'RE119610635216258272723493927678679461165', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 14:58:41', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (32, 'RL160711928118473770198663599548116416237', 'RE97429096841716460141300728394000898274', 'U131995175454824711531011225172573302849', '420000', '2024-07-27 14:59:38', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (33, 'RL93848726908147504497767681701990565337', 'RE280211965497922339840927200749687431655', 'U131995175454824711531011225172573302849', '330000', '2024-07-30 11:32:16', '杭州市', '浙江省', '30.183897', '120.272255', 20, '今天的心情真不错12121', '浙江省杭州市萧山区永久路219号银河小区', 'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-07-30/1722310558843-73e867adfcf072b9.jpg,http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-07-30/1722310558849-653dd2606779a5cc.jpg', '', '');
+INSERT INTO `cw_user_route` VALUES (34, 'RL118132044888047937630137124323218596110', 'RE17820103066152720012505901418771087465', 'U131995175454824711531011225172573302849', '420000', '2024-08-07 14:45:22', '荆门市', '湖北省', '30.709778', '112.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (35, 'RL118132044888047937630137124323218596110', 'RE70455729524588155489565387654375343281', 'U131995175454824711531011225172573302849', NULL, '2024-08-07 17:11:41', NULL, NULL, '130.709778', '82.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (36, 'RL118132044888047937630137124323218596110', 'RE318980788748016597563279887170274514748', 'U131995175454824711531011225172573302849', '540000', '2024-08-07 17:40:56', '阿里地区', '西藏自治区', '30.709778', '82.455646', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (37, 'RL235332518451660594253162982257440393924', 'RE132480627764335040246365720540075144264', 'U131995175454824711531011225172573302849', '330000', '2024-08-08 16:21:32', '杭州市', '浙江省', '30.41875', '120.298501', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (38, 'RL235332518451660594253162982257440393924', 'RE212151259786725734217196432395853662233', 'U131995175454824711531011225172573302849', '330000', '2024-08-08 16:22:00', '杭州市', '浙江省', '30.41875', '120.298501', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (39, 'RL235332518451660594253162982257440393924', 'RE328869714079403804972040314049887018462', 'U131995175454824711531011225172573302849', '330000', '2024-08-08 16:23:05', '杭州市', '浙江省', '30.41875', '120.298501', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (40, 'RL235332518451660594253162982257440393924', 'RE58378628880869204805197163425298370452', 'U131995175454824711531011225172573302849', '330000', '2024-08-08 16:27:04', '杭州市', '浙江省', '30.41875', '120.298501', 20, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `cw_user_route` VALUES (41, 'RL121414535105088630027513314120190363780', 'RE339582745858825357496564616418364732890', 'U131995175454824711531011225172573302849', '330000', '2024-08-11 18:31:12', '杭州市', '浙江省', '30.41875', '120.298501', 20, '12313213', '浙江省杭州市临平区龙王塘路67号杭州市临平区人民政府(龙王塘路东)', 'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-08-11/1723372284409-bacc5a2a5f97db29.jpg', '', 'CALM');
+INSERT INTO `cw_user_route` VALUES (42, 'RL121414535105088630027513314120190363780', 'RE326412063889718397500231474221169677556', 'U131995175454824711531011225172573302849', '330000', '2024-08-11 18:32:32', '杭州市', '浙江省', '30.41923', '120.297835', 20, '121', '浙江省杭州市临平区龙王塘路87号(邱山大街地铁站D口步行350米)利宾饭店(龙王塘路店)', NULL, '', 'RELAXED');
+INSERT INTO `cw_user_route` VALUES (43, 'RL121414535105088630027513314120190363780', 'RE87008497107907509937283390097602106595', 'U131995175454824711531011225172573302849', '330000', '2024-08-11 18:33:21', '杭州市', '浙江省', '30.41875', '120.298501', 20, '1212', '浙江省杭州市', NULL, '', 'RELAXED');
+INSERT INTO `cw_user_route` VALUES (44, 'RL121414535105088630027513314120190363780', 'RE104643046125991419511628557725540200009', 'U131995175454824711531011225172573302849', '330000', '2024-08-11 18:37:11', '杭州市', '浙江省', '30.41923', '120.297835', 40, '', '浙江省杭州市临平区龙王塘路87号(邱山大街地铁站D口步行350米)利宾饭店(龙王塘路店)', NULL, '', 'HAPPY');
+INSERT INTO `cw_user_route` VALUES (45, 'RL121414535105088630027513314120190363780', 'RE197898340078042143770785515181741049060', 'U131995175454824711531011225172573302849', '330000', '2024-08-11 18:37:43', '杭州市', '浙江省', '30.41923', '120.297835', 60, '121', '浙江省杭州市临平区龙王塘路87号(邱山大街地铁站D口步行350米)利宾饭店(龙王塘路店)', 'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-08-11/1723372675197-77a943c4238db3e9.jpg', '', 'HAPPY');
+INSERT INTO `cw_user_route` VALUES (46, 'RL121414535105088630027513314120190363780', 'RE75155354461959145736231312120973241569', 'U131995175454824711531011225172573302849', '330000', '2024-08-11 18:38:21', '杭州市', '浙江省', '30.41875', '120.298501', 60, '121', '浙江省杭州市临平区龙王塘路67号杭州市临平区人民政府(龙王塘路东)', 'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-08-11/1723372706694-6a2ea4278388e249.jpg', '', 'CALM');
 COMMIT;
 
 -- ----------------------------
@@ -169,17 +183,20 @@ CREATE TABLE `cw_user_route_list` (
   `user_id` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL COMMENT '用户 id',
   `create_at` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=FIXED;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_danish_ci ROW_FORMAT=FIXED;
 
 -- ----------------------------
 -- Records of cw_user_route_list
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_route_list` (`id`, `list_id`, `user_id`, `create_at`) VALUES (2, 'RO220454790246139943250231328418604080958', 'U131995175454824711531011225172573302849', '2024-07-08 15:54:22');
-INSERT INTO `cw_user_route_list` (`id`, `list_id`, `user_id`, `create_at`) VALUES (3, 'RO231856961144380610669955067372390220743', 'U131995175454824711531011225172573302849', '2024-07-10 14:05:51');
-INSERT INTO `cw_user_route_list` (`id`, `list_id`, `user_id`, `create_at`) VALUES (4, 'RO258108557155974638866580180270375839596', 'U295968060973022087457575540143943214943', '2024-07-10 14:31:17');
-INSERT INTO `cw_user_route_list` (`id`, `list_id`, `user_id`, `create_at`) VALUES (5, 'RL160711928118473770198663599548116416237', 'U131995175454824711531011225172573302849', '2024-07-27 13:53:56');
-INSERT INTO `cw_user_route_list` (`id`, `list_id`, `user_id`, `create_at`) VALUES (6, 'RL93848726908147504497767681701990565337', 'U131995175454824711531011225172573302849', '2024-07-30 11:32:16');
+INSERT INTO `cw_user_route_list` VALUES (2, 'RO220454790246139943250231328418604080958', 'U131995175454824711531011225172573302849', '2024-07-08 15:54:22');
+INSERT INTO `cw_user_route_list` VALUES (3, 'RO231856961144380610669955067372390220743', 'U131995175454824711531011225172573302849', '2024-07-10 14:05:51');
+INSERT INTO `cw_user_route_list` VALUES (4, 'RO258108557155974638866580180270375839596', 'U295968060973022087457575540143943214943', '2024-07-10 14:31:17');
+INSERT INTO `cw_user_route_list` VALUES (5, 'RL160711928118473770198663599548116416237', 'U131995175454824711531011225172573302849', '2024-07-27 13:53:56');
+INSERT INTO `cw_user_route_list` VALUES (6, 'RL93848726908147504497767681701990565337', 'U131995175454824711531011225172573302849', '2024-07-30 11:32:16');
+INSERT INTO `cw_user_route_list` VALUES (7, 'RL118132044888047937630137124323218596110', 'U131995175454824711531011225172573302849', '2024-08-07 14:45:22');
+INSERT INTO `cw_user_route_list` VALUES (8, 'RL235332518451660594253162982257440393924', 'U131995175454824711531011225172573302849', '2024-08-08 16:21:32');
+INSERT INTO `cw_user_route_list` VALUES (9, 'RL121414535105088630027513314120190363780', 'U131995175454824711531011225172573302849', '2024-08-11 18:31:12');
 COMMIT;
 
 -- ----------------------------
@@ -200,13 +217,13 @@ CREATE TABLE `cw_user_visited_province` (
 -- Records of cw_user_visited_province
 -- ----------------------------
 BEGIN;
-INSERT INTO `cw_user_visited_province` (`id`, `vis_id`, `user_id`, `province_code`, `province_name`, `experience_value`) VALUES (2, 'VIS165577110277401578717087648494990815791', 'U131995175454824711531011225172573302849', '330000', '浙江省', 1720);
-INSERT INTO `cw_user_visited_province` (`id`, `vis_id`, `user_id`, `province_code`, `province_name`, `experience_value`) VALUES (3, 'VIS31641110319140132264666038695908363882', 'U131995175454824711531011225172573302849', '510000', '四川省', 40);
-INSERT INTO `cw_user_visited_province` (`id`, `vis_id`, `user_id`, `province_code`, `province_name`, `experience_value`) VALUES (4, 'VIS169369425513711531359349849739489571299', 'U131995175454824711531011225172573302849', '420000', '湖北省', 2460);
-INSERT INTO `cw_user_visited_province` (`id`, `vis_id`, `user_id`, `province_code`, `province_name`, `experience_value`) VALUES (5, 'VIS164511652947648828322693781494491035658', 'U131995175454824711531011225172573302849', '310000', '上海市', 140);
-INSERT INTO `cw_user_visited_province` (`id`, `vis_id`, `user_id`, `province_code`, `province_name`, `experience_value`) VALUES (6, 'VIS156624802457223725839386130664692004012', 'U131995175454824711531011225172573302849', '540000', '西藏自治区', 200);
-INSERT INTO `cw_user_visited_province` (`id`, `vis_id`, `user_id`, `province_code`, `province_name`, `experience_value`) VALUES (7, 'VIS43080646306514827873303451662482043218', 'U295968060973022087457575540143943214943', '330000', '浙江省', 20);
-INSERT INTO `cw_user_visited_province` (`id`, `vis_id`, `user_id`, `province_code`, `province_name`, `experience_value`) VALUES (10, 'VP196412813324151697553999254081789453151', 'U131995175454824711531011225172573302849', '210000', '辽宁省', 11180);
+INSERT INTO `cw_user_visited_province` VALUES (2, 'VIS165577110277401578717087648494990815791', 'U131995175454824711531011225172573302849', '330000', '浙江省', 2120);
+INSERT INTO `cw_user_visited_province` VALUES (3, 'VIS31641110319140132264666038695908363882', 'U131995175454824711531011225172573302849', '510000', '四川省', 40);
+INSERT INTO `cw_user_visited_province` VALUES (4, 'VIS169369425513711531359349849739489571299', 'U131995175454824711531011225172573302849', '420000', '湖北省', 2480);
+INSERT INTO `cw_user_visited_province` VALUES (5, 'VIS164511652947648828322693781494491035658', 'U131995175454824711531011225172573302849', '310000', '上海市', 140);
+INSERT INTO `cw_user_visited_province` VALUES (6, 'VIS156624802457223725839386130664692004012', 'U131995175454824711531011225172573302849', '540000', '西藏自治区', 280);
+INSERT INTO `cw_user_visited_province` VALUES (7, 'VIS43080646306514827873303451662482043218', 'U295968060973022087457575540143943214943', '330000', '浙江省', 20);
+INSERT INTO `cw_user_visited_province` VALUES (10, 'VP196412813324151697553999254081789453151', 'U131995175454824711531011225172573302849', '210000', '辽宁省', 11180);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
