@@ -39,7 +39,8 @@ async function bootstrap() {
 
   await app.init()
 
-  const host = process.env.NODE_ENV === 'development' ? 1219 : 2108
+  // const host = process.env.NODE_ENV === 'production' ? 9912 : 1219
+  const host = 1219
 
   await app.listen(host, '0.0.0.0', () => {
     console.log(
