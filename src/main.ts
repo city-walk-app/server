@@ -10,9 +10,9 @@ async function bootstrap() {
   app.useLogger(loggerService)
 
   // 允许跨域
-  if (process.env.NODE_ENV === 'development') {
-    app.enableCors()
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  app.enableCors()
+  // }
 
   /**
    * Swagger 配置
@@ -39,8 +39,8 @@ async function bootstrap() {
 
   await app.init()
 
-  // const host = process.env.NODE_ENV === 'production' ? 9912 : 1219
-  const host = 1219
+  const host = process.env.NODE_ENV === 'production' ? 2108 : 1219
+  console.log('端口号' + host)
 
   await app.listen(host, '0.0.0.0', () => {
     console.log(
