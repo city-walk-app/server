@@ -10,9 +10,9 @@ async function bootstrap() {
   app.useLogger(loggerService)
 
   // 允许跨域
-  // if (process.env.NODE_ENV === 'development') {
-  app.enableCors()
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors()
+  }
 
   /**
    * Swagger 配置
