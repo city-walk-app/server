@@ -414,8 +414,8 @@ export class LocationService {
         console.log('mood_color', moodColorActive)
 
         return {
-          ...item,
-          route,
+          list_id: item.list_id,
+          create_at: item.create_at,
           mood_color: moodColorMap[moodColorActive] || null,
           travel_type: travelTypeActive,
           count: route.length
@@ -732,14 +732,9 @@ export class LocationService {
         const routes = await this.userRouteEntity.find({
           where: { list_id: item.list_id },
           select: [
-            'list_id',
-            'route_id',
-            'province_code',
             'create_at',
             'city',
             'province',
-            'latitude',
-            'longitude',
             'content',
             'address',
             'picture',
