@@ -11,7 +11,7 @@ export class UniversalService {
   constructor(
     private readonly configService: ConfigService,
     private readonly ossService: OssService
-  ) { }
+  ) {}
 
   /**
    * 生成文件名
@@ -52,7 +52,7 @@ export class UniversalService {
 
     const bucket = this.configService.get('DB_OSS_BUCKET')
     const region = this.configService.get('DB_OSS_REGION')
-    const host = `http://${bucket}.${region}.aliyuncs.com`
+    const host = `https://${bucket}.${region}.aliyuncs.com`
     /** 上传的文件名 */
     const fileName = this.renderFileName() + body.suffix // 可以通过某种方式生成唯一的文件名称
     /** 上传的路径 */
