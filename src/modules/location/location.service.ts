@@ -1137,8 +1137,27 @@ export class LocationService {
         return new Result(HttpCode.OK, '今日暂无打卡记录')
       }
 
-      const data = await this.userRouteEntity.findBy({
-        list_id: todayRelease.list_id
+      const routers = await this.userRouteEntity.find({
+        where: { list_id: todayRelease.list_id },
+        select: [
+          'latitude',
+          'longitude',
+          'create_at',
+          'content',
+          'mood_color',
+          'picture',
+          'list_id',
+          'travel_type'
+        ]
+      })
+
+      const data = routers.map((item) => {
+        return {
+          ...item,
+          picture: isString(item.picture)
+            ? item.picture.split(',')
+            : item.picture
+        }
       })
 
       return new Result(HttpCode.OK, 'ok', data)
