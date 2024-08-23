@@ -9,7 +9,8 @@ import {
   UpdateUserRouteDetailDto,
   GetUserRouteListDto,
   GetUserProvinceJigsawDto,
-  GetUserMonthHeatmapDto
+  GetUserMonthHeatmapDto,
+  GetAroundAddressDto
 } from './dto'
 
 /**
@@ -161,7 +162,6 @@ export class LocationController {
   /**
    * 获取当前地区的天气
    *
-   * @param req 请求
    * @param body 请求参数
    */
   @Post('/get/weather/info')
@@ -169,5 +169,18 @@ export class LocationController {
     const { latitude, longitude } = body
 
     return this.locationService.getWeatherInfo(longitude, latitude)
+  }
+
+  /**
+   * 获取周边地址
+   *
+   * @param body 请求桉树
+   * @returns
+   */
+  @Post('/get/around/address')
+  getAroundAddress(@Body() body: GetAroundAddressDto) {
+    const { latitude, longitude, page_num } = body
+
+    return this.locationService.getAroundAddress(longitude, latitude, page_num)
   }
 }

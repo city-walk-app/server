@@ -100,18 +100,22 @@ export class LocationService {
       throw new BadRequestException('无效省份编码')
     }
 
-    const response = await this.httpService.axiosRef.get(AMap.weather, {
-      params: {
-        key: this.apiKey,
-        city: province_code // 城市编码
+    try {
+      const response = await this.httpService.axiosRef.get(AMap.weather, {
+        params: {
+          key: this.apiKey,
+          city: province_code // 城市编码
+        }
+      })
+
+      if (response.data.status === '1') {
+        return new Result(HttpCode.OK, 'ok', response.data.lives[0])
       }
-    })
 
-    if (response.data.status === '1') {
-      return new Result(HttpCode.OK, 'ok', response.data.lives[0])
+      throw new BadRequestException('天气获取异常')
+    } catch (err) {
+      return new BadRequestException('高德地图接口异常')
     }
-
-    throw new BadRequestException('天气获取异常')
   }
 
   /**
@@ -247,6 +251,86 @@ export class LocationService {
   }
 
   /**
+   * 获取周边地址
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   * @param page_num 页码
+   */
+  async getAroundAddress(
+    longitude: number,
+    latitude: number,
+    page_num: number
+  ) {
+    try {
+      const pois = await this.getPlaceAround(
+        longitude,
+        latitude,
+        '',
+        25,
+        page_num
+      )
+
+      console.log(pois)
+
+      if (!pois.length) {
+        return new Result(HttpCode.OK, '暂无地址', [])
+      }
+
+      const data = pois.map((item) => {
+        const [longitude, latitude] = item.location.split(',')
+
+        return {
+          longitude: Number(longitude),
+          latitude: Number(latitude),
+          name: item.name,
+          address: item.cityname + item.adname + item.address,
+          province: item.pname, // 省
+          city: item.cityname // 城市
+        }
+      })
+
+      return new Result(HttpCode.OK, 'ok', data)
+    } catch (err) {
+      throw new BadRequestException('获取周边地址异常')
+    }
+  }
+
+  /**
+   * 周边搜索
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   * @param types 类型
+   */
+  private async getPlaceAround(
+    longitude: number,
+    latitude: number,
+    types = '',
+    page_size = 25,
+    page_num = 1
+  ) {
+    const response = await this.httpService.axiosRef.get(AMap.place_around, {
+      params: {
+        key: this.apiKey,
+        location: `${longitude},${latitude}`,
+        radius: 5000,
+        page_size,
+        page_num,
+        types
+      }
+    })
+
+    if (
+      response.data.status === '1' &&
+      response.data.pois &&
+      response.data.pois.length
+    ) {
+      return response.data.pois
+    }
+  }
+
+  /**
    * 获取周边热门地点
    *
    * @param user_id 用户 id
@@ -258,60 +342,50 @@ export class LocationService {
     longitude: number,
     latitude: number
   ) {
-    /** 获取用户信息 */
-    const userInfo = await this.userInfoEntity.findOneBy({ user_id })
-    /** 地图获取类型 */
-    let types = ''
+    try {
+      /** 获取用户信息 */
+      const userInfo = await this.userInfoEntity.findOneBy({ user_id })
+      /** 地图获取类型 */
+      let types = ''
 
-    // 如果用户设置了喜欢的类型
-    if (userInfo.preference_type) {
-      try {
-        const preferenceType = JSON.parse(userInfo.preference_type)
+      // 如果用户设置了喜欢的类型
+      if (userInfo.preference_type) {
+        try {
+          const preferenceType = JSON.parse(userInfo.preference_type)
 
-        // 如果喜欢类型解析正确
-        if (preferenceType && preferenceType.length) {
-          let userTypes = ''
+          // 如果喜欢类型解析正确
+          if (preferenceType && preferenceType.length) {
+            let userTypes = ''
 
-          preferenceType.forEach((item: PreferenceKey, index: number) => {
-            if (index + 1 === preferenceType.length) {
-              userTypes = userTypes + PreferenceMap[item]
-              return
-            }
+            preferenceType.forEach((item: PreferenceKey, index: number) => {
+              if (index + 1 === preferenceType.length) {
+                userTypes = userTypes + PreferenceMap[item]
+                return
+              }
 
-            userTypes = userTypes + PreferenceMap[item] + '|'
-          })
+              userTypes = userTypes + PreferenceMap[item] + '|'
+            })
 
-          types = userTypes
+            types = userTypes
+          }
+        } catch (err) {
+          types = PreferenceMap.DEFAULT
         }
-      } catch (err) {
+      }
+      // 如果用户没有设置喜欢类型，则设置为默认
+      else {
         types = PreferenceMap.DEFAULT
       }
-    }
-    // 如果用户没有设置喜欢类型，则设置为默认
-    else {
-      types = PreferenceMap.DEFAULT
-    }
 
-    console.log(types)
+      console.log(types)
 
-    const response = await this.httpService.axiosRef.get(AMap.place_around, {
-      params: {
-        key: this.apiKey,
-        location: `${longitude},${latitude}`,
-        radius: 5000,
-        types,
-        page_size: 25
+      const pois = await this.getPlaceAround(longitude, latitude, types)
+
+      if (!pois.length) {
+        return new Result(HttpCode.OK, '暂无推荐地点', [])
       }
-    })
 
-    console.log(response.status)
-
-    if (
-      response.data.status === '1' &&
-      response.data.pois &&
-      response.data.pois.length
-    ) {
-      const data = response.data.pois.map((item) => {
+      const data = pois.map((item) => {
         const [longitude, latitude] = item.location.split(',')
 
         return {
@@ -324,9 +398,9 @@ export class LocationService {
       })
 
       return new Result(HttpCode.OK, 'ok', data)
+    } catch (err) {
+      throw new BadRequestException('获取周边热门地点异常')
     }
-
-    return new Result(HttpCode.OK, '暂无推荐地点', [])
   }
 
   /**
@@ -804,7 +878,7 @@ export class LocationService {
       return response.data.regeocode.addressComponent
     } catch (err) {
       this.loggerService.log(`通过经纬度获取位置信息方法异常${err}`)
-      return null
+      return new BadRequestException('高德地图接口异常')
     }
   }
 
