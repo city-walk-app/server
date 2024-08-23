@@ -183,4 +183,16 @@ export class LocationController {
 
     return this.locationService.getAroundAddress(longitude, latitude, page_num)
   }
+
+  /**
+   * 获取今天的打卡记录
+   *
+   * @param req 请求
+   */
+  @Post('/get/today/record')
+  getTodayRecord(@Req() req: Request) {
+    const { user_id } = req[USER_INFO]
+
+    return this.locationService.getTodayRecord(user_id)
+  }
 }

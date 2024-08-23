@@ -1100,4 +1100,50 @@ export class LocationService {
 
     return result
   }
+
+  /**
+   * 获取今天的打卡记录
+   *
+   * @param user_id 用户 id
+   */
+  async getTodayRecord(user_id: string) {
+    const currentDate = new Date()
+
+    /**
+     * @see Date.prototype.setHours() https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date/setHours
+     */
+    currentDate.setHours(0, 0, 0, 0) // 设置时间为当天的开始时间
+
+    try {
+      /**
+       * @see 使用查询生成器选择 https://typeorm.io/select-query-builder
+       * @see 什么是QueryBuilder https://typeorm.io/select-query-builder#what-is-querybuilder
+       */
+      const queryBuilder = await this.userRouteListEntity.createQueryBuilder(
+        'userRouteListEntity'
+      )
+
+      /**
+       * 查询今天是否发布过内容
+       */
+      const todayRelease: UserRouteList = await queryBuilder
+        .where('userRouteListEntity.user_id = :userId', { userId: user_id })
+        .andWhere('userRouteListEntity.create_at >= :currentDate', {
+          currentDate
+        })
+        .getOne()
+
+      if (!todayRelease || !todayRelease.list_id) {
+        return new Result(HttpCode.OK, '今日暂无打卡记录')
+      }
+
+      const data = await this.userRouteEntity.findBy({
+        list_id: todayRelease.list_id
+      })
+
+      return new Result(HttpCode.OK, 'ok', data)
+    } catch (err) {
+      throw new BadRequestException('获取今天的打卡记录异常')
+    }
+  }
 }
