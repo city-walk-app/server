@@ -171,11 +171,15 @@ export class LocationController {
     return this.locationService.getWeatherInfo(longitude, latitude)
   }
 
+  @ApiOperation({ summary: '获取周边地址' })
+  @ApiParam({ name: 'longitude', description: '经度', required: true })
+  @ApiParam({ name: 'latitude', description: '纬度', required: true })
+  @ApiParam({ name: 'page_num', description: '页码', required: true })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取周边地址
    *
    * @param body 请求桉树
-   * @returns
    */
   @Post('/get/around/address')
   getAroundAddress(@Body() body: GetAroundAddressDto) {
@@ -184,6 +188,8 @@ export class LocationController {
     return this.locationService.getAroundAddress(longitude, latitude, page_num)
   }
 
+  @ApiOperation({ summary: '获取今天的打卡记录' })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取今天的打卡记录
    *
