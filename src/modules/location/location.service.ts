@@ -17,8 +17,6 @@ import {
   PrefixID,
   CITY_NAME_CODE,
   Experience,
-  PreferenceMap,
-  PreferenceKey,
   heatmapColor,
   moodColorMap,
   MoodColor,
@@ -327,79 +325,6 @@ export class LocationService {
       response.data.pois.length
     ) {
       return response.data.pois
-    }
-  }
-
-  /**
-   * 获取周边热门地点
-   *
-   * @param user_id 用户 id
-   * @param longitude 经度
-   * @param latitude 纬度
-   */
-  async getPopularRecommends(
-    user_id: string,
-    longitude: number,
-    latitude: number
-  ) {
-    try {
-      /** 获取用户信息 */
-      const userInfo = await this.userInfoEntity.findOneBy({ user_id })
-      /** 地图获取类型 */
-      let types = ''
-
-      // 如果用户设置了喜欢的类型
-      if (userInfo.preference_type) {
-        try {
-          const preferenceType = JSON.parse(userInfo.preference_type)
-
-          // 如果喜欢类型解析正确
-          if (preferenceType && preferenceType.length) {
-            let userTypes = ''
-
-            preferenceType.forEach((item: PreferenceKey, index: number) => {
-              if (index + 1 === preferenceType.length) {
-                userTypes = userTypes + PreferenceMap[item]
-                return
-              }
-
-              userTypes = userTypes + PreferenceMap[item] + '|'
-            })
-
-            types = userTypes
-          }
-        } catch (err) {
-          types = PreferenceMap.DEFAULT
-        }
-      }
-      // 如果用户没有设置喜欢类型，则设置为默认
-      else {
-        types = PreferenceMap.DEFAULT
-      }
-
-      console.log(types)
-
-      const pois = await this.getPlaceAround(longitude, latitude, types)
-
-      if (!pois.length) {
-        return new Result(HttpCode.OK, '暂无推荐地点', [])
-      }
-
-      const data = pois.map((item) => {
-        const [longitude, latitude] = item.location.split(',')
-
-        return {
-          longitude: Number(longitude),
-          latitude: Number(latitude),
-          name: item.name,
-          province: item.pname, // 省
-          city: item.cityname // 城市
-        }
-      })
-
-      return new Result(HttpCode.OK, 'ok', data)
-    } catch (err) {
-      throw new BadRequestException('获取周边热门地点异常')
     }
   }
 

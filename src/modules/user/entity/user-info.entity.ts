@@ -80,12 +80,4 @@ export class UserInfo {
   /** ip 详细信息 */
   @Column({ type: 'varchar', length: 255, comment: 'ip 详细信息' })
   ip_info: string
-
-  /** 偏好类型 */
-  @Column({
-    type: 'varchar',
-    length: 255,
-    comment: '偏好类型'
-  })
-  preference_type: string
 }

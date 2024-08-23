@@ -10,7 +10,7 @@ import {
 } from 'class-validator'
 import { SensitiveWord } from 'src/utils'
 import { ApiProperty } from '@nestjs/swagger'
-import { PreferenceMap, Gender } from 'src/enum'
+import { Gender } from 'src/enum'
 
 const sensitiveWordChecker = SensitiveWord.instance
 
@@ -96,11 +96,4 @@ export class SetUserInfoDto {
   @IsString()
   @ApiProperty()
   avatar?: string
-
-  /**
-   * 喜欢的地点类型
-   */
-  @IsOptional()
-  @ApiProperty()
-  preference_type?: (keyof typeof PreferenceMap)[]
 }

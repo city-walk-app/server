@@ -3,7 +3,6 @@ import { LocationService } from './location.service'
 import { HttpCode, USER_INFO } from 'src/enum'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import {
-  GetPopularRecommendsDto,
   CreatePositionRecordDto,
   GetUserRouteDetailDto,
   UpdateUserRouteDetailDto,
@@ -20,31 +19,6 @@ import {
 @ApiTags('位置服务')
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
-
-  @ApiOperation({ summary: '获取周边热门地点推荐' })
-  @ApiParam({ name: 'longitude', description: '经度', required: true })
-  @ApiParam({ name: 'latitude', description: '纬度', required: true })
-  @ApiResponse({ status: HttpCode.OK, description: '成功' })
-  /**
-   * 获取周边热门地点
-   *
-   * @param req 请求
-   * @param body 请求参数
-   */
-  @Post('/get/popular/recommend')
-  getPopularRecommends(
-    @Req() req: Request,
-    @Body() body: GetPopularRecommendsDto
-  ) {
-    const { latitude, longitude } = body
-    const { user_id } = req[USER_INFO]
-
-    return this.locationService.getPopularRecommends(
-      user_id,
-      longitude,
-      latitude
-    )
-  }
 
   @ApiOperation({ summary: '创建当前位置记录（打卡地点）' })
   @ApiParam({ name: 'longitude', description: '经度', required: true })

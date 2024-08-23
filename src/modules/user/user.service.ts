@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { UserInfo } from './entity'
-import { Result, isArray, isString, renderID } from 'src/utils'
+import { Result, isString, renderID } from 'src/utils'
 import { HttpCode, PrefixID } from 'src/enum'
 import { SetUserInfoDto } from './dto'
 
@@ -114,8 +114,7 @@ export class UserService {
         avatar: userInfo.avatar,
         signature: userInfo.signature,
         birthday: userInfo.birthday,
-        gender: userInfo.gender,
-        preference_type: userInfo.preference_type
+        gender: userInfo.gender
       }
     })
   }
@@ -146,8 +145,7 @@ export class UserService {
         avatar: userInfo.avatar,
         signature: userInfo.signature,
         birthday: userInfo.birthday,
-        gender: userInfo.gender,
-        preference_type: userInfo.preference_type
+        gender: userInfo.gender
       }
     })
   }
@@ -173,10 +171,7 @@ export class UserService {
       avatar: userInfo.avatar,
       signature: userInfo.signature,
       birthday: userInfo.birthday,
-      gender: userInfo.gender,
-      preference_type: isString(userInfo.preference_type)
-        ? userInfo.preference_type.split(',')
-        : null
+      gender: userInfo.gender
     })
   }
 
@@ -188,16 +183,8 @@ export class UserService {
   async setUserInfo(
     body: SetUserInfoDto & { user_id: string; avatar?: string }
   ) {
-    const {
-      mobile,
-      nick_name,
-      signature,
-      birthday,
-      gender,
-      avatar,
-      preference_type,
-      user_id
-    } = body
+    const { mobile, nick_name, signature, birthday, gender, avatar, user_id } =
+      body
 
     /**
      * 通过 id 和邮箱查找用户
@@ -243,17 +230,6 @@ export class UserService {
       user.avatar = avatar
     }
 
-    // 设置性别
-    if (preference_type && isArray(preference_type)) {
-      const isCorrectPreference = preference_type.every((item) =>
-        isString(item)
-      )
-
-      if (isCorrectPreference) {
-        user.preference_type = preference_type.join(',')
-      }
-    }
-
     const data = await this.userInfoEntity.save(user)
 
     if (data) {
@@ -265,10 +241,7 @@ export class UserService {
         avatar: data.avatar,
         signature: data.signature,
         birthday: data.birthday,
-        gender: data.gender,
-        preference_type: isString(data.preference_type)
-          ? data.preference_type.split(',')
-          : null
+        gender: data.gender
       })
     }
 
