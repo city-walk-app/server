@@ -11,6 +11,10 @@ import { RedisService } from 'src/service'
 import { HttpCode } from 'src/enum'
 import { LoggerService } from 'src/common'
 
+/**
+ * @see QQ邮箱设置 https://wx.mail.qq.com/account/index?sid=zbF6RIzqa0oulTFWAFdKTAAA#/?tab=device
+ */
+
 /** 过期时间 */
 const EXPIRE_TIME = 300000
 
