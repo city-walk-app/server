@@ -360,9 +360,18 @@ export class LocationService {
    * @param field 查找的键
    */
   private findMost<T>(data: T[], field: keyof T): string | null {
+    if (!data.length) {
+      return null
+    }
+
     const fieldCount: Record<string, number> = {}
 
-    data.forEach((item) => {
+    /** 过滤出真值 */
+    const filterData = data.filter((item) => {
+      return item[field]
+    })
+
+    filterData.forEach((item) => {
       const value = String(item[field])
 
       if (fieldCount[value]) {
@@ -422,7 +431,12 @@ export class LocationService {
       })
     )
 
-    return new Result(HttpCode.OK, 'ok', data)
+    /**
+     * 反转数组
+     *
+     * @see reverse https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
+     */
+    return new Result(HttpCode.OK, 'ok', data.reverse())
   }
 
   /**
