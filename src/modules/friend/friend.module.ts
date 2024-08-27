@@ -6,6 +6,7 @@ import { EmailService } from '../email'
 import { UserFriendRelation, UserFriendInvite } from './entity'
 import { UserInfo } from '../user'
 import { UserRoute } from '../location'
+import { LoggerService } from 'src/common'
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { UserRoute } from '../location'
     ])
   ],
   controllers: [FriendController],
-  providers: [FriendService, EmailService],
+  providers: [FriendService, EmailService, LoggerService],
   exports: [FriendService]
 })
 export class FriendModule {}

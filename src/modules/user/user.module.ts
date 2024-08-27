@@ -6,6 +6,7 @@ import { UserController } from './user.controller'
 import { EmailService } from '../email'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
+import { LoggerService } from 'src/common'
 
 /**
  * 异常处理
@@ -25,7 +26,7 @@ const jwtModule = JwtModule.registerAsync({
 @Module({
   imports: [TypeOrmModule.forFeature([UserInfo]), jwtModule],
   controllers: [UserController],
-  providers: [UserService, EmailService],
+  providers: [UserService, EmailService, LoggerService],
   exports: [UserService]
 })
 export class UserModule {}

@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config'
 import { Result } from 'src/utils'
 import { RedisService } from 'src/service'
 import { HttpCode } from 'src/enum'
+import { LoggerService } from 'src/common'
 
 /** 过期时间 */
 const EXPIRE_TIME = 300000
@@ -21,17 +22,17 @@ export class EmailService {
   // private redisInstance: Redis
 
   /**
+   * @param loggerService 日志服务
    * @param mailerService 邮箱服务
    * @param configService 配置服务
    * @param redisService redis 服务
    */
   constructor(
+    private readonly loggerService: LoggerService,
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
     private readonly redisService: RedisService
-  ) {
-    // this.redisInstance = this.redisService.getInstance()
-  }
+  ) {}
 
   /**
    * 获取邮箱验证码
@@ -40,45 +41,50 @@ export class EmailService {
    * @param email 邮箱地址
    */
   async sendEmailCode(code: string, email: string) {
-    const redisInstance = this.redisService.getInstance()
+    try {
+      const redisInstance = this.redisService.getInstance()
 
-    await this.mailerService.sendMail({
+      await this.mailerService.sendMail({
+        /**
+         * 接收者的邮箱
+         */
+        to: email,
+        /**
+         * 发件人地址
+         */
+        from: this.configService.get('DB_EMAIL_SEND'),
+        /**
+         * 主题行
+         */
+        subject: `【City Walk】验证码 ${code}`,
+        /**
+         * HTML 正文内容
+         */
+        html: `你的验证码是：${code}</b>。不要告诉任何人！！！🤫🤫🤫 <br /><br /> 验证码有效时长为 5 分钟。`
+      })
+
+      /** 存储的数据 */
+      const data = {
+        email,
+        code,
+        time: new Date().getTime()
+      } as const
+
       /**
-       * 接收者的邮箱
+       * 使用 hash 存储数据
+       *
+       * @see hash https://github.com/luin/ioredis/blob/main/examples/hash.js
        */
-      to: email,
-      /**
-       * 发件人地址
-       */
-      from: this.configService.get('DB_EMAIL_SEND'),
-      /**
-       * 主题行
-       */
-      subject: `【City Walk】验证码 ${code}`,
-      /**
-       * HTML 正文内容
-       */
-      html: `你的验证码是：${code}</b>。不要告诉任何人！！！🤫🤫🤫 <br /><br /> 验证码有效时长为 5 分钟。`
-    })
+      await redisInstance.hmset(email, data)
 
-    /** 存储的数据 */
-    const data = {
-      email,
-      code,
-      time: new Date().getTime()
-    } as const
+      // 设置失效时间
+      await redisInstance.expire(email, EXPIRE_TIME)
 
-    /**
-     * 使用 hash 存储数据
-     *
-     * @see hash https://github.com/luin/ioredis/blob/main/examples/hash.js
-     */
-    await redisInstance.hmset(email, data)
-
-    // 设置失效时间
-    await redisInstance.expire(email, EXPIRE_TIME)
-
-    return new Result(HttpCode.OK, '获取成功')
+      return new Result(HttpCode.OK, '获取成功')
+    } catch (err) {
+      this.loggerService.log(`获取邮箱验证码异常：${err}`)
+      throw new BadRequestException('获取验证码异常')
+    }
   }
 
   /**

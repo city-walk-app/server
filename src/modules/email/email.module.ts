@@ -9,6 +9,11 @@ import { EmailController } from './email.controller'
 import { EmailService } from './email.service'
 import { ConfigService } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
+import { LoggerService } from 'src/common'
+
+/**
+ * @see QQ邮箱设置 https://wx.mail.qq.com/account/index?sid=zbF6RIzqa0oulTFWAFdKTAAA#/?tab=device
+ */
 
 @Module({
   imports: [
@@ -42,9 +47,9 @@ import { ThrottlerModule } from '@nestjs/throttler'
           }
         }
       }
-    }),
+    })
   ],
   controllers: [EmailController],
-  providers: [EmailService]
+  providers: [EmailService, LoggerService]
 })
-export class EmailModule { }
+export class EmailModule {}
