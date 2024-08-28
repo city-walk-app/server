@@ -1,5 +1,5 @@
 import { TravelType, MoodColor } from 'src/enum'
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsString, IsNotEmpty, IsOptional, Matches } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 /**
@@ -33,7 +33,7 @@ export class UpdateUserRouteDetailDto {
   mood_color?: MoodColor
 
   /**
-   * 心情颜色
+   * 地址信息
    */
   @ApiProperty()
   address?: string
@@ -43,4 +43,26 @@ export class UpdateUserRouteDetailDto {
    */
   @ApiProperty()
   picture?: string[]
+
+  /**
+   * 经度
+   */
+  @ApiProperty()
+  @IsOptional()
+  @IsString({ message: 'longitude 必须是字符串类型' })
+  @Matches(/^-?\d+(\.\d+)?$/, {
+    message: 'longitude 必须是有效的经度值'
+  })
+  longitude?: string
+
+  /**
+   * 纬度
+   */
+  @ApiProperty()
+  @IsOptional()
+  @IsString({ message: 'latitude 必须是字符串类型' })
+  @Matches(/^-?\d+(\.\d+)?$/, {
+    message: 'latitude 必须是有效的纬度值'
+  })
+  latitude?: string
 }

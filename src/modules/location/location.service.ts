@@ -137,7 +137,15 @@ export class LocationService {
     routeDetail.content = body.content // 内容
     routeDetail.mood_color = body.mood_color // 出行方式
     routeDetail.travel_type = body.travel_type // 心情颜色
-    routeDetail.address = body.address
+    routeDetail.address = body.address // 地址
+
+    if (body.latitude && isNumber(Number(body.latitude))) {
+      routeDetail.latitude = Number(body.latitude)
+    }
+
+    if (body.longitude && isNumber(Number(body.longitude))) {
+      routeDetail.longitude = Number(body.longitude)
+    }
 
     /** 上传的照片是否合法 */
     const isPictureOk = !!(
