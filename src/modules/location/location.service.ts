@@ -673,6 +673,7 @@ export class LocationService {
    * 获取用户步行记录列表
    *
    * @param user_id 用户 id
+   * @param date 日期
    */
   async getUserRouteList(user_id: string, date?: string) {
     /**
@@ -725,6 +726,142 @@ export class LocationService {
      * @see reverse https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
      */
     return new Result(HttpCode.OK, 'ok', data.reverse())
+  }
+
+  /**
+   * 获取用户步行历史记录
+   *
+   * @param user_id 用户 id
+   * @param date 日期
+   */
+  async getUserRouteHistory(user_id: string, date?: string) {
+    try {
+      /**
+       * 获取开始和结束时间
+       */
+      const { startDate, endDate } = this.getUserMonthHeatmapDate(date)
+
+      /**
+       * 获取到当年指定用户打卡记录
+       */
+      const routeList = await this.userRouteListEntity
+        .createQueryBuilder('user_route_list')
+        .where('user_route_list.create_at >= :startDate', { startDate })
+        .andWhere('user_route_list.create_at <= :endDate', { endDate })
+        .andWhere('user_route_list.user_id = :user_id', { user_id })
+        .getMany()
+
+      return new Result(HttpCode.OK, 'ok', {
+        routes: await this.formatRouteList(routeList),
+        heatmaps: await this.formatHeatmapList(routeList, startDate, endDate)
+      })
+    } catch (err) {
+      this.loggerService.log(`获取用户步行历史记录接口异常：${err}`)
+    }
+  }
+
+  /**
+   * 格式化热力图
+   *
+   * @param routeList 步行记录
+   */
+  private async formatHeatmapList(
+    routeList: UserRouteList[],
+    startDate: Date,
+    endDate: Date
+  ) {
+    if (!isArray(routeList) || !routeList.length) {
+      return []
+    }
+
+    /**
+     * 初始化一个月的天数数组
+     */
+    const monthMap = this.getDatesBetween(startDate, endDate)
+    /**
+     * 步行全部列表
+     */
+    const routeListMap = await Promise.all(
+      routeList.map(async (item) => {
+        /** 获取当天打卡记录列表 */
+        const routes = await this.userRouteEntity.find({
+          where: { list_id: item.list_id },
+          select: [
+            'create_at',
+            'city',
+            'province',
+            'content',
+            'address',
+            'picture',
+            'travel_type',
+            'mood_color'
+          ]
+        })
+
+        return {
+          date: getCurrentDateFormatted(new Date(item.create_at)),
+          routes,
+          list_id: item.list_id,
+          route_count: routes.length,
+          background_color: this.getHeatmapColor(routes.length)
+        } as const
+      })
+    )
+
+    const data = this.mergeData(monthMap, routeListMap)
+
+    return data
+  }
+
+  /**
+   * 格式化步行记录
+   *
+   * @param routeList 步行记录
+   */
+  private async formatRouteList(routeList: UserRouteList[]) {
+    if (!isArray(routeList) || !routeList.length) {
+      return []
+    }
+
+    const data = await Promise.all(
+      routeList.map(async (item) => {
+        const route = await this.userRouteEntity.findBy({
+          list_id: item.list_id
+        })
+
+        /** 最多的心情颜色类型 */
+        const moodColorActive = this.findMost<UserRoute>(
+          route,
+          'mood_color'
+        ) as MoodColor
+        /** 最多的出行方式类型 */
+        const travelTypeActive = this.findMost<UserRoute>(
+          route,
+          'travel_type'
+        ) as TravelType
+
+        // console.log('mood_color', moodColorActive)
+
+        return {
+          list_id: item.list_id,
+          create_at: item.create_at,
+          mood_color: moodColorMap[moodColorActive] || null,
+          travel_type: travelTypeActive,
+          count: route.length
+        }
+      })
+    )
+
+    /**
+     * 反转数组
+     *
+     * @see reverse https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
+     */
+    data.reverse()
+
+    console.log('----', data)
+
+    return data
   }
 
   /**
@@ -950,7 +1087,7 @@ export class LocationService {
   }
 
   /**
-   * 获取热力图开始和结束时间
+   * 获取指定日期开始和结束时间
    *
    * @param date 日期
    */

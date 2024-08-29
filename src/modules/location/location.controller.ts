@@ -62,29 +62,6 @@ export class LocationController {
     return this.locationService.getUserProvinceJigsaw(body.user_id)
   }
 
-  @ApiOperation({ summary: '获取用户步行记录列表' })
-  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
-  @ApiParam({ name: 'year', description: '年份', required: false })
-  @ApiParam({ name: 'month', description: '月份', required: false })
-  @ApiResponse({ status: HttpCode.OK, description: '成功' })
-  /**
-   * 获取用户步行记录列表
-   *
-   * @param body 请求参数
-   */
-  @Post('/get/user/route/list')
-  async getUserRouteList(@Body() body: GetUserRouteListDto) {
-    let date = ''
-
-    const { user_id, year, month } = body
-
-    if (month && year) {
-      date = year + '-' + month + '-' + '1'
-    }
-
-    return this.locationService.getUserRouteList(user_id, date)
-  }
-
   @ApiOperation({ summary: '获取用户步行记录详情' })
   @ApiParam({ name: 'user_id', description: '用户 id', required: true })
   @ApiParam({ name: 'list_id', description: '列表 id', required: true })
@@ -138,6 +115,52 @@ export class LocationController {
     }
 
     return this.locationService.getUserMonthHeatmap(user_id, date)
+  }
+
+  @ApiOperation({ summary: '获取用户步行记录列表' })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
+  @ApiParam({ name: 'year', description: '年份', required: false })
+  @ApiParam({ name: 'month', description: '月份', required: false })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
+  /**
+   * 获取用户步行记录列表
+   *
+   * @param body 请求参数
+   */
+  @Post('/get/user/route/list')
+  getUserRouteList(@Body() body: GetUserRouteListDto) {
+    let date = ''
+
+    const { user_id, year, month } = body
+
+    if (month && year) {
+      date = year + '-' + month + '-' + '1'
+    }
+
+    return this.locationService.getUserRouteList(user_id, date)
+  }
+
+  @ApiOperation({ summary: '获取用户步行历史记录' })
+  @ApiParam({ name: 'user_id', description: '用户 id', required: true })
+  @ApiParam({ name: 'year', description: '年份', required: false })
+  @ApiParam({ name: 'month', description: '月份', required: false })
+  @ApiResponse({ status: HttpCode.OK, description: '成功' })
+  /**
+   * 获取用户步行历史记录
+   *
+   * @param body 请求参数
+   */
+  @Post('/get/user/route/history')
+  getUserRouteHistory(@Body() body: GetUserRouteListDto) {
+    let date = ''
+
+    const { user_id, year, month } = body
+
+    if (month && year) {
+      date = year + '-' + month + '-' + '1'
+    }
+
+    return this.locationService.getUserRouteHistory(user_id, date)
   }
 
   @ApiOperation({ summary: '获取当前地区的天气' })
