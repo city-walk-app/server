@@ -403,51 +403,6 @@ export class LocationService {
   }
 
   /**
-   * 获取用户步行记录列表
-   *
-   * @param user_id 用户 id
-   */
-  async getUserRouteList(user_id: string) {
-    const routeList = await this.userRouteListEntity.findBy({ user_id })
-
-    const data = await Promise.all(
-      routeList.map(async (item) => {
-        const route = await this.userRouteEntity.findBy({
-          list_id: item.list_id
-        })
-
-        /** 最多的心情颜色类型 */
-        const moodColorActive = this.findMost<UserRoute>(
-          route,
-          'mood_color'
-        ) as MoodColor
-        /** 最多的出行方式类型 */
-        const travelTypeActive = this.findMost<UserRoute>(
-          route,
-          'travel_type'
-        ) as TravelType
-
-        console.log('mood_color', moodColorActive)
-
-        return {
-          list_id: item.list_id,
-          create_at: item.create_at,
-          mood_color: moodColorMap[moodColorActive] || null,
-          travel_type: travelTypeActive,
-          count: route.length
-        }
-      })
-    )
-
-    /**
-     * 反转数组
-     *
-     * @see reverse https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
-     */
-    return new Result(HttpCode.OK, 'ok', data.reverse())
-  }
-
-  /**
    * 获取用户步行记录详情
    *
    * @param user_id 用户 id
@@ -712,6 +667,64 @@ export class LocationService {
     }
 
     return randomContent
+  }
+
+  /**
+   * 获取用户步行记录列表
+   *
+   * @param user_id 用户 id
+   */
+  async getUserRouteList(user_id: string, date?: string) {
+    /**
+     * 获取开始和结束时间
+     */
+    const { startDate, endDate } = this.getUserMonthHeatmapDate(date)
+
+    /**
+     * 获取到当年指定用户打卡记录
+     */
+    const routeList = await this.userRouteListEntity
+      .createQueryBuilder('user_route_list')
+      .where('user_route_list.create_at >= :startDate', { startDate })
+      .andWhere('user_route_list.create_at <= :endDate', { endDate })
+      .andWhere('user_route_list.user_id = :user_id', { user_id })
+      .getMany()
+
+    const data = await Promise.all(
+      routeList.map(async (item) => {
+        const route = await this.userRouteEntity.findBy({
+          list_id: item.list_id
+        })
+
+        /** 最多的心情颜色类型 */
+        const moodColorActive = this.findMost<UserRoute>(
+          route,
+          'mood_color'
+        ) as MoodColor
+        /** 最多的出行方式类型 */
+        const travelTypeActive = this.findMost<UserRoute>(
+          route,
+          'travel_type'
+        ) as TravelType
+
+        console.log('mood_color', moodColorActive)
+
+        return {
+          list_id: item.list_id,
+          create_at: item.create_at,
+          mood_color: moodColorMap[moodColorActive] || null,
+          travel_type: travelTypeActive,
+          count: route.length
+        }
+      })
+    )
+
+    /**
+     * 反转数组
+     *
+     * @see reverse https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
+     */
+    return new Result(HttpCode.OK, 'ok', data.reverse())
   }
 
   /**

@@ -64,6 +64,8 @@ export class LocationController {
 
   @ApiOperation({ summary: '获取用户步行记录列表' })
   @ApiParam({ name: 'user_id', description: '用户 id', required: true })
+  @ApiParam({ name: 'year', description: '年份', required: false })
+  @ApiParam({ name: 'month', description: '月份', required: false })
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户步行记录列表
@@ -72,7 +74,15 @@ export class LocationController {
    */
   @Post('/get/user/route/list')
   async getUserRouteList(@Body() body: GetUserRouteListDto) {
-    return this.locationService.getUserRouteList(body.user_id)
+    let date = ''
+
+    const { user_id, year, month } = body
+
+    if (month && year) {
+      date = year + '-' + month + '-' + '1'
+    }
+
+    return this.locationService.getUserRouteList(user_id, date)
   }
 
   @ApiOperation({ summary: '获取用户步行记录详情' })
@@ -108,7 +118,8 @@ export class LocationController {
   }
 
   @ApiOperation({ summary: '获取用户指定月份打卡热力图' })
-  @ApiParam({ name: 'date', description: '日期', required: true })
+  @ApiParam({ name: 'year', description: '年份', required: false })
+  @ApiParam({ name: 'month', description: '月份', required: false })
   @ApiResponse({ status: HttpCode.OK, description: '成功' })
   /**
    * 获取用户指定月份打卡热力图
