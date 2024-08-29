@@ -708,7 +708,7 @@ export class LocationService {
           'travel_type'
         ) as TravelType
 
-        console.log('mood_color', moodColorActive)
+        // console.log('mood_color', moodColorActive)
 
         return {
           list_id: item.list_id,
