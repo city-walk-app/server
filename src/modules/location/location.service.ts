@@ -412,9 +412,22 @@ export class LocationService {
     user_id: GetUserRouteDetailDto['user_id'],
     list_id: GetUserRouteDetailDto['list_id']
   ) {
-    const data = await this.userRouteEntity.findBy({ user_id, list_id })
+    try {
+      const routes = await this.userRouteEntity.findBy({ user_id, list_id })
 
-    return new Result(HttpCode.OK, 'ok', data)
+      const data = routes.map((item) => {
+        return {
+          ...item,
+          picture: isString(item.picture)
+            ? item.picture.split(',')
+            : item.picture
+        }
+      })
+
+      return new Result(HttpCode.OK, 'ok', data)
+    } catch (err) {
+      throw new BadRequestException('获取步行记录详情异常')
+    }
   }
 
   /**
