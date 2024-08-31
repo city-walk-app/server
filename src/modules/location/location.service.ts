@@ -431,6 +431,50 @@ export class LocationService {
   }
 
   /**
+   * 创建海外打开区域记录
+   *
+   * @param user_id 用户 id
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  private async createOverseasAreaRecord(user_id, longitude, latitude) {
+    /**
+     * 创建步行记录列表数据
+     */
+    const createRouteListResult = await this.createRouteList(user_id)
+
+    if (!createRouteListResult) {
+      throw new BadRequestException('创建步行记录列表数据失败')
+    }
+
+    /**
+     * 创建新的打卡地点详情
+     */
+    const createRouteResult = await this.createRoute({
+      list_id: createRouteListResult.list_id,
+      user_id,
+      longitude,
+      latitude
+    })
+
+    if (!createRouteResult) {
+      throw new BadRequestException('创建新的打卡地点详情失败')
+    }
+
+    return {
+      province_code: null,
+      route_id: createRouteResult.route_id,
+      is_in_china: false,
+      is_new_province: null,
+      experience: null,
+      province: null,
+      city: null,
+      background_color: null,
+      content: null
+    }
+  }
+
+  /**
    * 创建当前位置记录，打卡当前位置
    *
    * @param user_id 用户 id
@@ -446,7 +490,15 @@ export class LocationService {
 
     // 非中国地区
     if (!locationInfo) {
-      throw new BadRequestException('当前位置无法打卡')
+      // throw new BadRequestException('当前位置无法打卡')
+
+      const externalRes = await this.createOverseasAreaRecord(
+        user_id,
+        longitude,
+        latitude
+      )
+
+      return new Result(HttpCode.OK, 'ok', externalRes)
     }
 
     const { adcode, province, city } = locationInfo
