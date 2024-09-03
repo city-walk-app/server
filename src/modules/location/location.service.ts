@@ -197,7 +197,16 @@ export class LocationService {
 
     console.log('完善步行打卡记录详情', data)
 
-    return new Result(HttpCode.OK, 'ok')
+    return new Result(HttpCode.OK, 'ok', {
+      latitude: data.latitude,
+      longitude: data.longitude,
+      create_at: data.create_at,
+      content: data.content,
+      mood_color: data.mood_color,
+      picture: isString(data.picture) ? data.picture.split(',') : data.picture,
+      list_id: data.list_id,
+      travel_type: data.travel_type
+    })
   }
 
   /**
@@ -843,6 +852,7 @@ export class LocationService {
      * 初始化一个月的天数数组
      */
     const monthMap = this.getDatesBetween(startDate, endDate)
+
     /**
      * 步行全部列表
      */
@@ -1296,7 +1306,7 @@ export class LocationService {
         .getOne()
 
       if (!todayRelease || !todayRelease.list_id) {
-        return new Result(HttpCode.OK, '今日暂无打卡记录')
+        return new Result(HttpCode.OK, '今日暂无打卡记录', [])
       }
 
       const routers = await this.userRouteEntity.find({
