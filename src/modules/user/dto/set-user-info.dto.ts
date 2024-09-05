@@ -59,7 +59,7 @@ export class SetUserInfoDto {
   @IsOptional()
   @IsString()
   @IsHaveSensitive({ message: '昵称包含敏感词' }) // 使用自定义校验器
-  @Length(1, 16, { message: '昵称长度不规范' })
+  @Length(1, 12, { message: '昵称长度不规范' })
   @ApiProperty()
   nick_name?: string
 
@@ -69,7 +69,7 @@ export class SetUserInfoDto {
   @IsOptional()
   @IsString()
   @IsHaveSensitive({ message: '签名包含敏感词' }) // 使用自定义校验器
-  @Length(1, 30, { message: '签名长度不规范' })
+  @Length(1, 255, { message: '签名长度不规范' })
   @ApiProperty()
   signature?: string
 
