@@ -10,7 +10,7 @@ import {
 } from 'class-validator'
 import { SensitiveWord } from 'src/utils'
 import { ApiProperty } from '@nestjs/swagger'
-import { Gender } from 'src/enum'
+import { Gender, signatureMaxLength, nickNameMaxLength } from 'src/enum'
 
 const sensitiveWordChecker = SensitiveWord.instance
 
@@ -49,7 +49,7 @@ export class SetUserInfoDto {
    */
   @IsOptional()
   @IsString()
-  @Matches(/^[1][3-9][0-9]{9}$/, { message: '手机号格式不正确' })
+  @Matches(/(^$)|(^[1][3-9][0-9]{9}$)/, { message: '手机号格式不正确' })
   @ApiProperty()
   mobile?: string
 
@@ -59,7 +59,7 @@ export class SetUserInfoDto {
   @IsOptional()
   @IsString()
   @IsHaveSensitive({ message: '昵称包含敏感词' }) // 使用自定义校验器
-  @Length(1, 12, { message: '昵称长度不规范' })
+  @Length(1, nickNameMaxLength, { message: '昵称长度不规范' })
   @ApiProperty()
   nick_name?: string
 
@@ -69,7 +69,7 @@ export class SetUserInfoDto {
   @IsOptional()
   @IsString()
   @IsHaveSensitive({ message: '签名包含敏感词' }) // 使用自定义校验器
-  @Length(1, 255, { message: '签名长度不规范' })
+  @Length(1, signatureMaxLength, { message: '签名长度不规范' })
   @ApiProperty()
   signature?: string
 
