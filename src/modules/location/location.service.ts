@@ -79,7 +79,7 @@ export class LocationService {
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async getWeatherInfo(longitude: number, latitude: number) {
+  async getWeatherInfo(longitude: string, latitude: string) {
     /**
      * 通过经纬度调用高德地图 API 获取当前的位置信息
      */
@@ -140,11 +140,11 @@ export class LocationService {
     routeDetail.address = body.address // 地址
 
     if (body.latitude && isNumber(Number(body.latitude))) {
-      routeDetail.latitude = Number(body.latitude)
+      routeDetail.latitude = body.latitude
     }
 
     if (body.longitude && isNumber(Number(body.longitude))) {
-      routeDetail.longitude = Number(body.longitude)
+      routeDetail.longitude = body.longitude
     }
 
     /** 上传的照片是否合法 */
@@ -195,7 +195,16 @@ export class LocationService {
 
     const data = await this.userRouteEntity.save(routeDetail)
 
-    console.log('完善步行打卡记录详情', data)
+    console.log('完善步行打卡记录详情', data, {
+      latitude: data.latitude,
+      longitude: data.longitude,
+      create_at: data.create_at,
+      content: data.content,
+      mood_color: data.mood_color,
+      picture: isString(data.picture) ? data.picture.split(',') : data.picture,
+      list_id: data.list_id,
+      travel_type: data.travel_type
+    })
 
     return new Result(HttpCode.OK, 'ok', {
       latitude: data.latitude,
@@ -273,8 +282,8 @@ export class LocationService {
    * @param page_num 页码
    */
   async getAroundAddress(
-    longitude: number,
-    latitude: number,
+    longitude: string,
+    latitude: string,
     page_num: number
   ) {
     try {
@@ -296,8 +305,8 @@ export class LocationService {
         const [longitude, latitude] = item.location.split(',')
 
         return {
-          longitude: Number(longitude),
-          latitude: Number(latitude),
+          longitude,
+          latitude,
           name: item.name,
           address: item.cityname + item.adname + item.address,
           province: item.pname, // 省
@@ -319,8 +328,8 @@ export class LocationService {
    * @param types 类型
    */
   private async getPlaceAround(
-    longitude: number,
-    latitude: number,
+    longitude: string,
+    latitude: string,
     types = '',
     page_size = 25,
     page_num = 1

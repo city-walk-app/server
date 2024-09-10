@@ -10,14 +10,14 @@ export class GetAroundAddressDto {
    */
   @IsNotEmpty({ message: 'longitude 参数缺失' })
   @ApiProperty()
-  longitude: number
+  longitude: string
 
   /**
    * 纬度
    */
   @IsNotEmpty({ message: 'latitude 参数缺失' })
   @ApiProperty()
-  latitude: number
+  latitude: string
 
   /**
    * 页码

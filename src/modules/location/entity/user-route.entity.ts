@@ -49,11 +49,11 @@ export class UserRoute {
 
   /** 纬度 */
   @Column({ type: 'varchar', length: 255, comment: '纬度' })
-  latitude: number
+  latitude: string
 
   /** 经度 */
   @Column({ type: 'varchar', length: 255, comment: '经度' })
-  longitude: number
+  longitude: string
 
   /** 所获得的经验值 */
   @Column({ type: 'int', comment: '所获得的经验值' })
